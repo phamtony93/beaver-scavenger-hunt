@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'rules_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
@@ -7,7 +8,32 @@ class LoginScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Login'),
       ),
-      body: Center(child: Text('Hello World'))
+      body: SizedBox.expand(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image(image: AssetImage('assets/images/osu_logo.png')),
+            Text('Scavenger', style: TextStyle(fontSize: 60)),
+            Text('Hunt', style: TextStyle(fontSize: 60)),
+            SizedBox(
+               height: 50,
+            ),
+            RaisedButton(
+              child: Text('Hunt Rules'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RulesScreen())
+                );
+              }
+            ),
+            RaisedButton(
+              child: Text('Begin Hunt'),
+              onPressed: () => print('Begin!'),
+            ),
+          ]
+        )
+      )
     );
   }
 }
