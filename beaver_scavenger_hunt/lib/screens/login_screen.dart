@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/clue_location_model.dart';
 import 'clue_screen.dart';
+import 'camera_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
@@ -41,6 +42,12 @@ class LoginScreen extends StatelessWidget {
 
                 Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: allLocations, whichLocation: 0,)));
               }
+            ),
+            RaisedButton(
+              child: Text('Camera Screen'),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraScreen() ));
+              },
             )
           ]
         )
