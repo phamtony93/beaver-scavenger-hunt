@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'rules_screen.dart';
+import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
+import 'package:beaver_scavenger_hunt/classes/ProviderDetails.dart';
+// import 'profile_screen.dart';
+import 'welcome_screen.dart';
 
 class LoginScreen extends StatefulWidget{
   @override
@@ -15,7 +18,7 @@ class _LoginScreen extends State<LoginScreen> {
   String email;
   String photoUrl;
 
-  Future<FirebaseUser> _signIn(BuildContext context) async {
+  Future<AuthResult> _signIn(BuildContext context) async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
     final AuthCredential credential = GoogleAuthProvider.getCredential(
@@ -24,12 +27,26 @@ class _LoginScreen extends State<LoginScreen> {
     );
 
     final AuthResult userDetails = await _firebaseAuth.signInWithCredential(credential);
-    final FirebaseUser user = userDetails.user;
 
-    final FirebaseUser currentUser = await _firebaseAuth.currentUser();
-    print('$userDetails');
-    assert(user.uid == currentUser.uid);
+    ProviderDetails providerInfo = ProviderDetails(userDetails.additionalUserInfo.providerId);
 
+    List<ProviderDetails> providerData = List<ProviderDetails>();
+    providerData.add(providerInfo);
+
+    UserDetails details = UserDetails(
+      userDetails.user.providerId,
+      userDetails.user.displayName,
+      userDetails.user.photoUrl,
+      userDetails.user.email,
+      providerData
+    );
+
+    Navigator.push(context,
+    MaterialPageRoute(
+      builder: (context) => WelcomeScreen(),
+    ));
+
+    return userDetails;
  
   }
 
