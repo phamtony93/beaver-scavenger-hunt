@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
-import 'screens/rules_screen.dart';
+// import 'screens/rules_screen.dart';
 
 class App extends StatelessWidget {
   static final routes = {
     '/': (context) => LoginScreen(),
-    'rules_screen': (context) => RulesScreen(),
+    // 'rules_screen': (context) => RulesScreen(),
 };
 
   @override

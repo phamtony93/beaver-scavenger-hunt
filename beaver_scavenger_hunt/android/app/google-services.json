@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1050117315679",
+    "firebase_url": "https://beaver-scavenger-hunt-firebase.firebaseio.com",
+    "project_id": "beaver-scavenger-hunt-firebase",
+    "storage_bucket": "beaver-scavenger-hunt-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1050117315679:android:030e470775f7e1b7c3cfea",
+        "android_client_info": {
+          "package_name": "com.example.beaver_scavenger_hunt_1bkg"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1050117315679-j6ip64h6aq03grlbvu7d3qlcov9bhbc2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQyhq0tY9QMTcHRPV1fBvhpL-blKHXM-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1050117315679-j6ip64h6aq03grlbvu7d3qlcov9bhbc2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
