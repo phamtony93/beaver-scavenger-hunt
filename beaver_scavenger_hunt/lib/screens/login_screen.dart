@@ -43,7 +43,7 @@ class _LoginScreen extends State<LoginScreen> {
 
     Navigator.push(context,
     MaterialPageRoute(
-      builder: (context) => WelcomeScreen(),
+      builder: (context) => WelcomeScreen(userDetails: details),
     ));
 
     return userDetails;
@@ -60,7 +60,10 @@ class _LoginScreen extends State<LoginScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image(image: AssetImage('assets/images/osu_logo.png')),
+            Image(
+              height: 275,
+              width: 275,
+              image: AssetImage('assets/images/osu_logo.png')),
             Text('Scavenger', style: TextStyle(fontSize: 60)),
             Text('Hunt', style: TextStyle(fontSize: 60)),
             SizedBox(
