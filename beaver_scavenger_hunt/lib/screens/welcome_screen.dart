@@ -13,7 +13,7 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${userDetails.userEmail}'),  //Replace with 'Welcome' and create profile button
+        title: Text('Welcome!'),  //Replace with 'Welcome' and create profile button
       ),
       body: SizedBox.expand(
         child: Column(
