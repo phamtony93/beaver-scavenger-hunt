@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
 import 'screens/welcome_screen.dart';
+import 'screens/challenge_screen.dart';
 // import 'screens/rules_screen.dart';
 
 class App extends StatelessWidget {
