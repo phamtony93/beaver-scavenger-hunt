@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/clue_location_model.dart';
 import 'correct_solution_screen.dart';
+import '../screens/rules_screen.dart';
 
 class ClueScreen extends StatefulWidget {
   
@@ -19,12 +20,13 @@ class _ClueScreenState extends State<ClueScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screen_width = MediaQuery.of(context).size.width;
-    final screen_height = MediaQuery.of(context).size.height;
+    var screen_width = MediaQuery.of(context).size.width;
+    var screen_height = MediaQuery.of(context).size.height;
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        backgroundColor: Colors.orange,
-        title: Text('Clue #${widget.allLocations[widget.whichLocation].number}', style: TextStyle(fontSize: 30),),
+        backgroundColor: Colors.black,
+        title: Text('Clue #${widget.allLocations[widget.whichLocation].number}', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
         centerTitle: true,
       ),
       drawer: Builder(
@@ -32,24 +34,28 @@ class _ClueScreenState extends State<ClueScreen> {
           return MenuDrawer(context, widget.allLocations, widget.whichLocation);
         }
       ),
-      body: SingleChildScrollView( 
-        child: Column(
-          children: <Widget> [ 
-            SizedBox(height:screen_height*0.0225),
-            ClueContainer(context, '${widget.allLocations[widget.whichLocation].clue}', screen_width, screen_height),
-            Divider(thickness: 5, indent: screen_height*0.05, endIndent: screen_height*0.05, height: screen_height*0.05,),
-            widget.allLocations[widget.whichLocation].solved == false ?
-            GuessForm(context, formKey, widget.allLocations, widget.whichLocation)
-            : Text(
-              "This clue has been solved",
-              style: TextStyle(fontSize: 30),
-              textAlign: TextAlign.center,
-            ),
-          ]
-        ),
-      ),
+      body: ClueScreenWidget(context, widget.allLocations, formKey, widget.whichLocation, screen_height, screen_width)
     );
   }
+}
+
+Widget ClueScreenWidget(BuildContext context, List<ClueLocation> allLocations, formKey, int whichLocation, double screen_height, double screen_width){
+  return SingleChildScrollView( 
+    child: Column(
+      children: <Widget> [ 
+        SizedBox(height:screen_height*0.0225),
+        ClueContainer(context, '${allLocations[whichLocation].clue}', screen_width, screen_height),
+        Divider(thickness: 5, indent: screen_height*0.05, endIndent: screen_height*0.05, height: screen_height*0.05,),
+        allLocations[whichLocation].solved == false ?
+        GuessForm(context, formKey, allLocations, whichLocation)
+        : Text(
+          "This clue has been solved",
+          style: TextStyle(fontSize: 30),
+          textAlign: TextAlign.center,
+        ),
+      ]
+    ),
+  );
 }
 
 Widget ClueContainer(BuildContext context, String clue, double screen_width, double screen_height){
@@ -58,7 +64,6 @@ Widget ClueContainer(BuildContext context, String clue, double screen_width, dou
       height: screen_height*0.3,
       width: screen_width*0.95,
       child: Container(
-        color: Colors.grey,
         child: FittedBox(
           child: Text(
             "$clue", 
@@ -78,17 +83,18 @@ Widget GuessForm(BuildContext context, formKey, List<ClueLocation> allLocations,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          //GuessInputBox(context, allLocations, whichLocation),
+          GuessInputBox(context, allLocations, whichLocation),
+          SizedBox(height: 10),
           Text(
             "Guess carefully.\n"
           +"Each incorrect guess will add 5 minutes to your overall time.",
             textAlign: TextAlign.center
           ),
-          Divider(height: 30, thickness: 5,),
+          Divider(height: 30, thickness: 5, indent: 25, endIndent: 25,),
           EnterGuessButton(context, "Enter Guess", formKey, allLocations, whichLocation)
         ]
       )
-    ),
+    )
   );
 }
 
@@ -126,9 +132,10 @@ Widget EnterGuessButton(BuildContext context, String label, formKey, List<ClueLo
     child: ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: RaisedButton(
+        color: Colors.black,
         child: Text(
           label,
-          style: TextStyle(color: Colors.black, fontSize: 25),
+          style: TextStyle(color: Color.fromRGBO(255,117, 26, 1), fontSize: 25),
           textAlign: TextAlign.center,
           ),
         onPressed: () async {
@@ -138,7 +145,7 @@ Widget EnterGuessButton(BuildContext context, String label, formKey, List<ClueLo
             Navigator.push(context, MaterialPageRoute(builder: (context) => CorrectSolutionScreen(allLocations: allLocations, whichLocation: whichLocation,)));
           }
         },
-        splashColor: Colors.blue,
+        splashColor: Color.fromRGBO(255,117, 26, 1),
       ),
     ),
   );
@@ -187,7 +194,7 @@ Widget MyDrawerHeader(BuildContext context){
         height: 55,
         child: Container(
           padding: EdgeInsets.all(10),
-          color: Colors.orange,
+          color: Colors.black,
           child: Text(
             'Menu', 
             style: TextStyle(color: Colors.white, fontSize: 30,), 
@@ -208,7 +215,7 @@ MenuRulesWidget(BuildContext context){
         borderRadius: BorderRadius.circular(10),
         child: Container(
           height: 30,
-          color: Colors.deepOrange,
+          color: Color.fromRGBO(255,117, 26, 1),
           child: FittedBox( 
             child: Text("Rules", style: TextStyle(color: Colors.white, fontSize: 20),),
           ),
@@ -216,6 +223,7 @@ MenuRulesWidget(BuildContext context){
     ),
     onTap: () {
       //navigate to rules
+      Navigator.push(context, MaterialPageRoute(builder: (context) => RulesScreen()));
     },
   );
 }
@@ -227,7 +235,7 @@ MenuChallengesWidget(BuildContext context){
         borderRadius: BorderRadius.circular(10),
         child: Container(
           height: 30,
-          color: Colors.deepOrange,
+          color: Color.fromRGBO(255,117, 26, 1),
           child: FittedBox( 
             child: Text("Challenges", style: TextStyle(color: Colors.white, fontSize: 20),),
           ),
@@ -246,7 +254,7 @@ Widget MenuClueWidget(BuildContext context, List<ClueLocation> allLocations, int
         borderRadius: BorderRadius.circular(10),
         child: Container(
           height: 30,
-          color: Colors.deepOrange,
+          color: Color.fromRGBO(255,117, 26, 1),
           child: FittedBox( 
             child: Text("Clue${allLocations[which].number}", style: TextStyle(color: allLocations[which].available == true ? Colors.white : Colors.grey, fontSize: 20),),
           ),
