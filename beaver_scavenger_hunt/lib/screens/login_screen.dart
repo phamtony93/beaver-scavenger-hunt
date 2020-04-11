@@ -4,6 +4,7 @@ import 'clue_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:beaver_scavenger_hunt/functions/new_user_challeges.dart';
+import 'package:beaver_scavenger_hunt/functions/is_new_user.dart';
 import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
 import 'package:beaver_scavenger_hunt/classes/ProviderDetails.dart';
 // import 'profile_screen.dart';
@@ -101,9 +102,12 @@ class _LoginScreen extends State<LoginScreen> {
                   'photoURL',
                   'tester1@gmail.com'
                 );
-
-                uploadNewUserAndChallenges(user.uid);
-
+          
+                if (is_new_user(user.uid)) {
+                  print("this activated");
+                  uploadNewUserAndChallenges(user.uid);
+                }
+                
                 Navigator.push(
                   context, 
                   MaterialPageRoute(
