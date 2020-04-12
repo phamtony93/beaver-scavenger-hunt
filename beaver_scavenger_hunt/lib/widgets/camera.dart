@@ -42,31 +42,45 @@ class _CameraState extends State<Camera> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+          //   Container( 
+          //     child:  IconButton(icon: Icon(Icons.camera_alt),
+          //   color: Colors.white,),
+          //     width:40,
+          //     height:40,
+          // decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.orange ),
+          //   ),
           Text('PHOTO'),
-          IconButton(icon: Icon(Icons.camera_alt, color: Colors.orange),
-            //splashColor: Colors.blue,
-            //hoverColor: Colors.blue,
-            //focusColor: Colors.blue,
-            //highlightColor: Colors.blue,
-            tooltip: 'Take Photo',
-            iconSize: 30.0,
-            onPressed: () async {
-              try {
-                await _initializeControllerFuture;
-                final path = p.join((await getApplicationDocumentsDirectory()).path,'${DateTime.now()}.jpg',);
+          Container(
+            width: 60,
+            height: 60,
+            margin: EdgeInsets.only(left:10, right: 10),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.orange),
+            child: IconButton(icon: Icon(Icons.camera_alt),
+              // splashColor: Colors.purple,
+              hoverColor: Colors.green,
+              // focusColor: Colors.blue,
+              highlightColor: Colors.grey,
+              color: Colors.white,
+              tooltip: 'Take Photo',
+              iconSize: 30.0,
+              onPressed: () async {
+                try {
+                  await _initializeControllerFuture;
+                  final path = p.join((await getApplicationDocumentsDirectory()).path,'${DateTime.now()}.jpg',);
 
-                await _controller.takePicture(path);
-                print(path);
-                if (path != null ) {
-                  GallerySaver.saveImage(path, albumName: 'Beavers').then((bool success) {
-                    print('success');
-                  });
+                  await _controller.takePicture(path);
+                  print(path);
+                  if (path != null ) {
+                    GallerySaver.saveImage(path, albumName: 'Beavers').then((bool success) {
+                      print('success');
+                    });
+                  }
+                }
+                catch (e) {
+                  print(e);
                 }
               }
-              catch (e) {
-                print(e);
-              }
-            }
+            ),
           ),
           Container(
             width: 2,
@@ -75,19 +89,28 @@ class _CameraState extends State<Camera> {
             margin: EdgeInsets.only(right: 12.0, left: 8.0),
           ),
           Text('VIDEO'),
-          IconButton(icon: Icon(Icons.videocam, color: Colors.orange),
-            iconSize: 30.0,
-            color: Colors.orange,
-            tooltip: 'Take Video',
-            onPressed: null
-          ),
+           Container(
+            width: 60,
+            height: 60,
+            margin: EdgeInsets.only(left:10, right: 10),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.orange),
+            child: IconButton(icon: Icon(Icons.videocam),
+              // splashColor: Colors.purple,
+              hoverColor: Colors.green,
+              // focusColor: Colors.blue,
+              highlightColor: Colors.grey,
+              color: Colors.white,
+              tooltip: 'Take Video',
+              onPressed: null
+            ),),
           IconButton(icon: Icon(Icons.stop, color: Colors.orange),
             iconSize: 30.0,
             color: Colors.orange,
             tooltip: 'Stop Video',
             onPressed: null
           ),
-        ],)
+        ],),
+        SizedBox(height:40)
       ]);
   }
 
@@ -98,7 +121,7 @@ class _CameraState extends State<Camera> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return AspectRatio(
-            aspectRatio: 1, //_controller.value.aspectRatio,
+            aspectRatio: 2 / 2, //_controller.value.aspectRatio,
             child: CameraPreview(_controller));
           // return Center(child: Column(
           //   children: [ Text('all the text here'),
