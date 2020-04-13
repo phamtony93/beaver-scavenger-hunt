@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+//import 'package:video_player/video_player.dart';
 import '../main.dart';
 
 class Camera extends StatefulWidget {
@@ -13,7 +14,11 @@ class Camera extends StatefulWidget {
 
 class _CameraState extends State<Camera> {
   CameraController _controller;
+  //VideoPlayerController _videoController;
   Future<void> _initializeControllerFuture;
+  String pathImage;
+  String pathVideo;
+  bool isRecordingVideo = false;
 
   @override
   void initState() {
@@ -42,13 +47,6 @@ class _CameraState extends State<Camera> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-          //   Container( 
-          //     child:  IconButton(icon: Icon(Icons.camera_alt),
-          //   color: Colors.white,),
-          //     width:40,
-          //     height:40,
-          // decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.orange ),
-          //   ),
           Text('PHOTO'),
           Container(
             width: 60,
@@ -63,23 +61,7 @@ class _CameraState extends State<Camera> {
               color: Colors.white,
               tooltip: 'Take Photo',
               iconSize: 30.0,
-              onPressed: () async {
-                try {
-                  await _initializeControllerFuture;
-                  final path = p.join((await getApplicationDocumentsDirectory()).path,'${DateTime.now()}.jpg',);
-
-                  await _controller.takePicture(path);
-                  print(path);
-                  if (path != null ) {
-                    GallerySaver.saveImage(path, albumName: 'Beavers').then((bool success) {
-                      print('success');
-                    });
-                  }
-                }
-                catch (e) {
-                  print(e);
-                }
-              }
+              onPressed: takePhoto
             ),
           ),
           Container(
@@ -94,21 +76,40 @@ class _CameraState extends State<Camera> {
             height: 60,
             margin: EdgeInsets.only(left:10, right: 10),
             decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.orange),
-            child: IconButton(icon: Icon(Icons.videocam),
+            child: IconButton(icon: Icon(isRecordingVideo ? Icons.stop : Icons.videocam),
               // splashColor: Colors.purple,
               hoverColor: Colors.green,
               // focusColor: Colors.blue,
               highlightColor: Colors.grey,
               color: Colors.white,
               tooltip: 'Take Video',
-              onPressed: null
+              onPressed: () {
+                if(!isRecordingVideo) {
+                  takeVideo();
+                }
+                else {
+                  stopVideo();
+                }
+              }
             ),),
-          IconButton(icon: Icon(Icons.stop, color: Colors.orange),
-            iconSize: 30.0,
-            color: Colors.orange,
-            tooltip: 'Stop Video',
-            onPressed: null
-          ),
+          // IconButton(icon: Icon(Icons.stop, color: Colors.orange),
+          //   iconSize: 30.0,
+          //   color: Colors.orange,
+          //   tooltip: 'Stop Video',
+          //   onPressed: () async {
+          //       try {
+          //         await _controller.stopVideoRecording();
+          //         if (pathVideo != null ) {
+          //           GallerySaver.saveVideo(pathVideo, albumName: 'Beavers').then((bool success) {
+          //             print('video success');
+          //           });
+          //         }
+          //       }
+          //       catch (e) {
+          //         print(e);
+          //       }
+          //     }
+          // ),
         ],),
         SizedBox(height:40)
       ]);
@@ -134,6 +135,65 @@ class _CameraState extends State<Camera> {
         }
       }
     );
+  }
+
+  void takePhoto() async {
+    try {
+      await _initializeControllerFuture;
+      pathImage = p.join((await getApplicationDocumentsDirectory()).path,'${DateTime.now()}.jpg',);
+
+      await _controller.takePicture(pathImage);
+      print(pathImage);
+      if (pathImage != null ) {
+        GallerySaver.saveImage(pathImage, albumName: 'Beavers').then((bool success) {
+          print('photo success');
+        });
+      }
+    }
+    catch (e) {
+      print(e);
+    }
+  }
+
+  void takeVideo() async {
+    setState( () {
+      isRecordingVideo = true;
+    });
+
+    try {
+      await _initializeControllerFuture;
+      pathVideo = p.join((await getApplicationDocumentsDirectory()).path,'${DateTime.now()}.mp4',);
+      print('starting video');
+      await _controller.startVideoRecording(pathVideo);
+      print('still going');
+                  // print(path);
+                  // if (path != null ) {
+                  //   GallerySaver.saveVideo(path, albumName: 'Beavers').then((bool success) {
+                  //     print('video success');
+                  //   });
+                  // }
+    }
+    catch (e) {
+      print(e);
+    }
+  }
+
+  void stopVideo() async{
+    setState( () {
+        isRecordingVideo = false;
+    });
+    try {
+      print('try to end video');
+      await _controller.stopVideoRecording();
+      if (pathVideo != null ) {
+        GallerySaver.saveVideo(pathVideo, albumName: 'Beavers').then((bool success) {
+          print('video success');
+        });
+      }
+    }
+    catch (e) {
+      print(e);
+    }
   }
 
 }
