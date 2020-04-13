@@ -3,7 +3,7 @@ import '../models/clue_location_model.dart';
 import 'clue_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:beaver_scavenger_hunt/functions/new_user_challeges.dart';
+import 'package:beaver_scavenger_hunt/functions/upload_new_user_challeges.dart';
 import 'package:beaver_scavenger_hunt/functions/is_new_user.dart';
 import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
 import 'package:beaver_scavenger_hunt/classes/ProviderDetails.dart';
@@ -39,7 +39,7 @@ class _LoginScreen extends State<LoginScreen> {
 
     UserDetails details = UserDetails(
       userDetails.user.providerId,
-      userDetails.user.uid,
+      userDetails.user.uid, //123
       userDetails.user.displayName,
       userDetails.user.photoUrl,
       userDetails.user.email,
@@ -103,7 +103,7 @@ class _LoginScreen extends State<LoginScreen> {
                   'tester1@gmail.com'
                 );
           
-                if (is_new_user(user.uid)) {
+                if (isNewUser(user.uid)) {
                   print("this activated");
                   uploadNewUserAndChallenges(user.uid);
                 }

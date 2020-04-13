@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/challenge_screen.dart';
-// import 'screens/rules_screen.dart';
+// import 'screens/rules_screen.dart';  
 
 class App extends StatelessWidget {
 
   static final routes = {
-    '/': (context) => LoginScreen(),
+    '/': (context) => ChallengeScreen(),
     // 'rules_screen': (context) => RulesScreen(),
 };
 
@@ -21,6 +21,7 @@ class App extends StatelessWidget {
         )
       ),
       routes: routes,
+
     );
   }
 }
