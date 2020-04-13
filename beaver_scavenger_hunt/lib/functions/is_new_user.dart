@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-bool is_new_user(String uid) {
-  var object = Firestore.instance.collection("users").getDocuments().then((data) {
-    print('data is: ');
-    print(data);
-  });
-
-  print(object);
-
-  return false;
+Future<bool> is_new_user(String uid) async {
+  DocumentSnapshot prevUser =  await Firestore.instance.collection("users").document(uid).get();
+  if (prevUser.data != null){
+    print("user:$uid found");
+    return false;
+  }
+  else{
+    print("no previous user found");
+    return true;
+  }
 }
 

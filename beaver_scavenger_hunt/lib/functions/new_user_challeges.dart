@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void uploadNewUserAndChallenges(String uid) {
 
-  Firestore.instance.collection('users').add({
+  Firestore.instance.collection('users').document(uid).setData({
     'userID': uid,
     'challenges': {
       'challengeOne': {

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:beaver_scavenger_hunt/functions/new_user_challeges.dart';
 import 'package:beaver_scavenger_hunt/functions/is_new_user.dart';
+import 'package:beaver_scavenger_hunt/functions/get_prev_user.dart';
 import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
 import 'package:beaver_scavenger_hunt/classes/ProviderDetails.dart';
 // import 'profile_screen.dart';
@@ -94,18 +95,24 @@ class _LoginScreen extends State<LoginScreen> {
             ),
             RaisedButton(
               child: Text('Temp Login'),
-              onPressed: () {
+              onPressed: ()  async {
                 UserDetails user = UserDetails(
                   'providerDetails',
-                  'uid123',
+                  'uid129',
                   'tester1',
                   'photoURL',
                   'tester1@gmail.com'
                 );
           
-                if (is_new_user(user.uid)) {
-                  print("this activated");
+                bool isNewUser = await is_new_user(user.uid);
+                if (isNewUser) {
+                  print("Adding new user");
                   uploadNewUserAndChallenges(user.uid);
+                }
+                else{
+                  //retrieve previousUser info
+                  Map<String, dynamic> prevUser = await get_prev_user(user.uid);
+                  //print("previous user: $prevUser");
                 }
                 
                 Navigator.push(
