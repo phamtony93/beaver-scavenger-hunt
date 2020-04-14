@@ -58,6 +58,7 @@ class _LoginScreen extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Map<String, dynamic> prevUser;
     return Scaffold(
       appBar: AppBar(
         title: Text('Login'),
@@ -110,15 +111,16 @@ class _LoginScreen extends State<LoginScreen> {
                   uploadNewUserAndChallenges(user.uid);
                 }
                 else{
-                  //retrieve previousUser info
-                  Map<String, dynamic> prevUser = await get_prev_user(user.uid);
                   //print("previous user: $prevUser");
                 }
+
+                //retrieve previousUser info
+                prevUser = await get_prev_user(user.uid);
                 
                 Navigator.push(
                   context, 
                   MaterialPageRoute(
-                    builder: (context) => WelcomeScreen(userDetails: user,)
+                    builder: (context) => WelcomeScreen(userDetails: user, userStuff: prevUser,)
                   )
                 );
               },

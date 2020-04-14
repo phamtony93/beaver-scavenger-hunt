@@ -141,6 +141,7 @@ Widget EnterGuessButton(BuildContext context, String label, formKey, List<ClueLo
         onPressed: () async {
           if (formKey.currentState.validate()){
             formKey.currentState.save();
+            //still need to push this change to database
             allLocations[whichLocation].solved = true;
             Navigator.push(context, MaterialPageRoute(builder: (context) => CorrectSolutionScreen(allLocations: allLocations, whichLocation: whichLocation,)));
           }
