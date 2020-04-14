@@ -48,20 +48,10 @@ class WelcomeScreen extends StatelessWidget {
               onPressed: (){
                 print('Begin!');
 
-                //create clueLocation object(s) from map
+                //create clueLocation object(s) from json map
                 List<ClueLocation> allLocations = [];
                 for (int i = 1; i < 11; i++){
-                  
-                  int myNum = allClueLocationsMap[i.toString()]["number"];
-                  double myLat = allClueLocationsMap["${i.toString()}"]["latitude"];
-                  double myLong = allClueLocationsMap["${i.toString()}"]["longitude"];
-                  String myClue = allClueLocationsMap["${i.toString()}"]["clue"];
-                  String mySol = allClueLocationsMap["${i.toString()}"]["solution"];
-                  String myURL = null;
-
-                  ClueLocation loca = ClueLocation(myNum, myLat, myLong, myClue, mySol, myURL);
-                  loca.available = allClueLocationsMap["${i.toString()}"]["available"];
-                  loca.solved = allClueLocationsMap["${i.toString()}"]["solved"];
+                  ClueLocation loca = ClueLocation.fromJson(allClueLocationsMap["$i"]);
                   allLocations.add(loca);
                 }
                 //Go to clue screen, pass allLocations and 0 index as starting location, and user details

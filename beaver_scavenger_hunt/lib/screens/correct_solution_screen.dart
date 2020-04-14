@@ -121,7 +121,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                   //update db
                   Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 2}.available': true});
                   //return to clue screen (next clue available)
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation + 1,)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation + 1, userDetails: widget.userDetails,)));
                 }
               ),
               SizedBox(height: 20),
