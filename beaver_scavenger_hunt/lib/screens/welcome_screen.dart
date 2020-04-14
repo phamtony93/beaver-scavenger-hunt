@@ -7,10 +7,10 @@ import 'rules_screen.dart';
 class WelcomeScreen extends StatelessWidget {
   
   UserDetails userDetails;
-  Map<String, dynamic> allClueLocationsMap;
+  final List<ClueLocation> allLocations;
   Map<String, dynamic> allChallengesMap;
 
-  WelcomeScreen({this.userDetails, this.allClueLocationsMap, this.allChallengesMap});
+  WelcomeScreen({this.userDetails, this.allLocations, this.allChallengesMap});
 
   @override
   Widget build(BuildContext context) {
@@ -46,14 +46,7 @@ class WelcomeScreen extends StatelessWidget {
             RaisedButton(
               child: Text('Begin Hunt'),
               onPressed: (){
-                print('Begin!');
-
-                //create clueLocation object(s) from json map
-                List<ClueLocation> allLocations = [];
-                for (int i = 1; i < 11; i++){
-                  ClueLocation loca = ClueLocation.fromJson(allClueLocationsMap["$i"]);
-                  allLocations.add(loca);
-                }
+                print('Hunt Started!');
                 //Go to clue screen, pass allLocations and 0 index as starting location, and user details
                 Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: allLocations, whichLocation: 0, userDetails: userDetails,)));
 

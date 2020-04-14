@@ -63,71 +63,92 @@ class _LoginScreen extends State<LoginScreen> {
       appBar: AppBar(
         title: Text('Login'),
       ),
-      body: SizedBox.expand(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image(
-              height: 275,
-              width: 275,
-              image: AssetImage('assets/images/osu_logo.png')),
-            Text('Scavenger', style: TextStyle(fontSize: 60)),
-            Text('Hunt', style: TextStyle(fontSize: 60)),
-            SizedBox(
-               height: 75,
-            ),
-            RaisedButton(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
-              child: Padding(
-                padding: EdgeInsets.only(left: 0, top: 10, bottom: 10, right: 0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image(image: AssetImage('assets/images/google_logo.png'), height: 25,),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Text('Login With Google')
-                    )
-                  ]
-                ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image(
+                height: 275,
+                width: 275,
+                image: AssetImage('assets/images/osu_logo.png')),
+              Text('Scavenger', style: TextStyle(fontSize: 60)),
+              Text('Hunt', style: TextStyle(fontSize: 60)),
+              SizedBox(
+                height: 75,
               ),
-              onPressed: () => _signIn(context),
-            ),
-            RaisedButton(
-              child: Text('Temp Login'),
-              onPressed: ()  async {
-                UserDetails user = UserDetails(
-                  'providerDetails',
-                  'uid129',
-                  'tester1',
-                  'photoURL',
-                  'tester1@gmail.com'
-                );
-          
-                bool isNewUser = await is_new_user(user.uid);
-                if (isNewUser) {
-                  print("Adding new user");
-                  uploadNewUserAndChallenges(user.uid);
-                }
-                else{
-                  //print("previous user: $prevUser");
-                }
+              RaisedButton(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+                child: Padding(
+                  padding: EdgeInsets.only(left: 0, top: 10, bottom: 10, right: 0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image(image: AssetImage('assets/images/google_logo.png'), height: 25,),
+                      Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Text('Login With Google')
+                      )
+                    ]
+                  ),
+                ),
+                onPressed: () => _signIn(context),
+              ),
+              RaisedButton(
+                child: Text('Temp Login'),
+                onPressed: ()  async {
+                  UserDetails user = UserDetails(
+                    'providerDetails',
+                    'uid129',
+                    'tester1',
+                    'photoURL',
+                    'tester1@gmail.com'
+                  );
+            
+                  bool isNewUser = await is_new_user(user.uid);
+                  if (isNewUser) {
+                    print("Adding new user");
+                    uploadNewUserAndChallenges(user.uid);
+                  }
 
-                //retrieve previousUser info
-                prevUser = await get_prev_user(user.uid);
-                Map<String, dynamic> allClueLocationsMap = prevUser['clue locations'];
-                Map<String, dynamic> allChallengesMap = prevUser['challenges'];
-                
-                Navigator.push(
-                  context, 
-                  MaterialPageRoute(
-                    builder: (context) => WelcomeScreen(userDetails: user, allClueLocationsMap: allClueLocationsMap, allChallengesMap: allChallengesMap)
-                  )
-                );
-              },
-            )
-          ]
+                  //retrieve previousUser info
+                  prevUser = await get_prev_user(user.uid);
+                  Map<String, dynamic> allClueLocationsMap = prevUser['clue locations'];
+                  Map<String, dynamic> allChallengesMap = prevUser['challenges'];
+
+                  //create clueLocation object(s) from json map
+                  List<ClueLocation> allLocations = [];
+                  int which = 0;
+                  for (int i = 1; i < 11; i++){
+                    ClueLocation loca = ClueLocation.fromJson(allClueLocationsMap["$i"]);
+                    if (loca.available == true && loca.solved == false){
+                      which = i-1;
+                    }
+                    allLocations.add(loca);
+                  }  
+
+                  if(isNewUser){
+                    Navigator.push(
+                      context, 
+                      MaterialPageRoute(
+                        builder: (context) => WelcomeScreen(userDetails: user, allLocations: allLocations, allChallengesMap: allChallengesMap)
+                      )
+                    );
+                  }
+                  else{
+                    Navigator.push(
+                      context, 
+                      MaterialPageRoute(
+                        builder: (context) => ClueScreen(userDetails: user, allLocations: allLocations, whichLocation: which,)
+                      )
+                    );
+                  }
+
+                },
+              )
+            ]
+          )
         )
       )
     );
