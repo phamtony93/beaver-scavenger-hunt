@@ -1,17 +1,20 @@
 
+import '../classes/UserDetails.dart';
 import 'package:flutter/material.dart';
 import '../models/clue_location_model.dart';
 import 'clue_screen.dart';
 import 'package:location/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 
 class CorrectSolutionScreen extends StatefulWidget {
   
+  UserDetails userDetails;
   final List<ClueLocation> allLocations;
   final int whichLocation;
 
-  CorrectSolutionScreen({this.allLocations, this.whichLocation});
+  CorrectSolutionScreen({this.allLocations, this.whichLocation, this.userDetails});
 
   @override
   _CorrectSolutionScreenState createState() => _CorrectSolutionScreenState();
@@ -113,7 +116,11 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                   style: TextStyle(color: Colors.white,),
                 ),
                 onPressed: (){
+                  //update object
                   widget.allLocations[widget.whichLocation + 1].available = true;
+                  //update db
+                  Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 2}.available': true});
+                  //return to clue screen (next clue available)
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation + 1,)));
                 }
               ),

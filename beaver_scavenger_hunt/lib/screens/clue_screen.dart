@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import '../models/clue_location_model.dart';
 import 'correct_solution_screen.dart';
 import '../screens/rules_screen.dart';
+import '../classes/UserDetails.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ClueScreen extends StatefulWidget {
   
+  UserDetails userDetails;
   final List<ClueLocation> allLocations;
   final int whichLocation;
   
-  ClueScreen({Key key, this.allLocations, this.whichLocation}) : super(key: key);
+  ClueScreen({Key key, this.allLocations, this.whichLocation, this.userDetails}) : super(key: key);
   
   @override
   _ClueScreenState createState() => _ClueScreenState();
@@ -34,12 +37,12 @@ class _ClueScreenState extends State<ClueScreen> {
           return MenuDrawer(context, widget.allLocations, widget.whichLocation);
         }
       ),
-      body: ClueScreenWidget(context, widget.allLocations, formKey, widget.whichLocation, screen_height, screen_width)
+      body: ClueScreenWidget(context, widget.allLocations, formKey, widget.whichLocation, screen_height, screen_width, widget.userDetails)
     );
   }
 }
 
-Widget ClueScreenWidget(BuildContext context, List<ClueLocation> allLocations, formKey, int whichLocation, double screen_height, double screen_width){
+Widget ClueScreenWidget(BuildContext context, List<ClueLocation> allLocations, formKey, int whichLocation, double screen_height, double screen_width, UserDetails userDetails){
   return SingleChildScrollView( 
     child: Column(
       children: <Widget> [ 
@@ -47,7 +50,7 @@ Widget ClueScreenWidget(BuildContext context, List<ClueLocation> allLocations, f
         ClueContainer(context, '${allLocations[whichLocation].clue}', screen_width, screen_height),
         Divider(thickness: 5, indent: screen_height*0.05, endIndent: screen_height*0.05, height: screen_height*0.05,),
         allLocations[whichLocation].solved == false ?
-        GuessForm(context, formKey, allLocations, whichLocation)
+        GuessForm(context, formKey, allLocations, whichLocation, userDetails)
         : Text(
           "This clue has been solved",
           style: TextStyle(fontSize: 30),
@@ -75,7 +78,7 @@ Widget ClueContainer(BuildContext context, String clue, double screen_width, dou
   );
 }
 
-Widget GuessForm(BuildContext context, formKey, List<ClueLocation> allLocations, int whichLocation){
+Widget GuessForm(BuildContext context, formKey, List<ClueLocation> allLocations, int whichLocation, UserDetails userDetails){
   return Padding(
     padding: EdgeInsets.all(10),
     child: Form( 
@@ -91,7 +94,7 @@ Widget GuessForm(BuildContext context, formKey, List<ClueLocation> allLocations,
             textAlign: TextAlign.center
           ),
           Divider(height: 30, thickness: 5, indent: 25, endIndent: 25,),
-          EnterGuessButton(context, "Enter Guess", formKey, allLocations, whichLocation)
+          EnterGuessButton(context, "Enter Guess", formKey, allLocations, whichLocation, userDetails)
         ]
       )
     )
@@ -107,9 +110,6 @@ Widget GuessInputBox(BuildContext context, List<ClueLocation> allLocations, int 
       labelText: 'Location', 
       border: OutlineInputBorder(borderSide: BorderSide(color: Colors.white),),
     ),
-    onSaved: (value) {
-      //
-    },
     validator: (value) {
       if (value.isEmpty) {
         return 'Please enter a guess';
@@ -124,8 +124,7 @@ Widget GuessInputBox(BuildContext context, List<ClueLocation> allLocations, int 
   );
 }
 
-
-Widget EnterGuessButton(BuildContext context, String label, formKey, List<ClueLocation> allLocations, int whichLocation){
+Widget EnterGuessButton(BuildContext context, String label, formKey, List<ClueLocation> allLocations, int whichLocation, UserDetails userDetails){
   return SizedBox(
     height: 80,
     width: 200,
@@ -143,7 +142,8 @@ Widget EnterGuessButton(BuildContext context, String label, formKey, List<ClueLo
             formKey.currentState.save();
             //still need to push this change to database
             allLocations[whichLocation].solved = true;
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CorrectSolutionScreen(allLocations: allLocations, whichLocation: whichLocation,)));
+            Firestore.instance.collection("users").document(userDetails.uid).updateData({'clue locations.${whichLocation + 1}.solved': true});
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CorrectSolutionScreen(allLocations: allLocations, whichLocation: whichLocation, userDetails: userDetails)));
           }
         },
         splashColor: Color.fromRGBO(255,117, 26, 1),

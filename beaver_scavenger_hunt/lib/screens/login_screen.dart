@@ -116,11 +116,13 @@ class _LoginScreen extends State<LoginScreen> {
 
                 //retrieve previousUser info
                 prevUser = await get_prev_user(user.uid);
+                Map<String, dynamic> allClueLocationsMap = prevUser['clue locations'];
+                Map<String, dynamic> allChallengesMap = prevUser['challenges'];
                 
                 Navigator.push(
                   context, 
                   MaterialPageRoute(
-                    builder: (context) => WelcomeScreen(userDetails: user, userStuff: prevUser,)
+                    builder: (context) => WelcomeScreen(userDetails: user, allClueLocationsMap: allClueLocationsMap, allChallengesMap: allChallengesMap)
                   )
                 );
               },

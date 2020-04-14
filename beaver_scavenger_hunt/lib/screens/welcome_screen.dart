@@ -7,9 +7,10 @@ import 'rules_screen.dart';
 class WelcomeScreen extends StatelessWidget {
   
   UserDetails userDetails;
-  Map<String, dynamic> userStuff;
+  Map<String, dynamic> allClueLocationsMap;
+  Map<String, dynamic> allChallengesMap;
 
-  WelcomeScreen({this.userDetails, this.userStuff});
+  WelcomeScreen({this.userDetails, this.allClueLocationsMap, this.allChallengesMap});
 
   @override
   Widget build(BuildContext context) {
@@ -47,24 +48,24 @@ class WelcomeScreen extends StatelessWidget {
               onPressed: (){
                 print('Begin!');
 
+                //create clueLocation object(s) from map
                 List<ClueLocation> allLocations = [];
                 for (int i = 1; i < 11; i++){
-                  print(userStuff["clue locations"][i.toString()]["number"]);
-                  int myNum = userStuff["clue locations"][i.toString()]["number"];
-                  double myLat = userStuff["clue locations"]["${i.toString()}"]["latitude"];
-                  double myLong = userStuff["clue locations"]["${i.toString()}"]["longitude"];
-                  String myClue = userStuff["clue locations"]["${i.toString()}"]["clue"];
-                  String mySol = userStuff["clue locations"]["${i.toString()}"]["solution"];
+                  
+                  int myNum = allClueLocationsMap[i.toString()]["number"];
+                  double myLat = allClueLocationsMap["${i.toString()}"]["latitude"];
+                  double myLong = allClueLocationsMap["${i.toString()}"]["longitude"];
+                  String myClue = allClueLocationsMap["${i.toString()}"]["clue"];
+                  String mySol = allClueLocationsMap["${i.toString()}"]["solution"];
                   String myURL = null;
 
                   ClueLocation loca = ClueLocation(myNum, myLat, myLong, myClue, mySol, myURL);
-                  loca.available = userStuff["clue locations"]["${i.toString()}"]["available"];
-                  loca.solved = userStuff["clue locations"]["${i.toString()}"]["solved"];
+                  loca.available = allClueLocationsMap["${i.toString()}"]["available"];
+                  loca.solved = allClueLocationsMap["${i.toString()}"]["solved"];
                   allLocations.add(loca);
                 }
-
-                
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: allLocations, whichLocation: 0,)));
+                //Go to clue screen, pass allLocations and 0 index as starting location, and user details
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: allLocations, whichLocation: 0, userDetails: userDetails,)));
 
               }
             ),
