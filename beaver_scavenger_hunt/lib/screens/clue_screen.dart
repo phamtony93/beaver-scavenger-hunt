@@ -48,6 +48,12 @@ Widget ClueScreenWidget(BuildContext context, List<ClueLocation> allLocations, f
       children: <Widget> [ 
         SizedBox(height:screen_height*0.0225),
         ClueContainer(context, '${allLocations[whichLocation].clue}', screen_width, screen_height),
+        allLocations[whichLocation].solved == false ? 
+        SizedBox(height: 0) :
+        Text(
+          "${allLocations[whichLocation].solution}",
+          style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1), fontWeight: FontWeight.bold),
+        ),
         Divider(thickness: 5, indent: screen_height*0.05, endIndent: screen_height*0.05, height: screen_height*0.05,),
         allLocations[whichLocation].solved == false ?
         GuessForm(context, formKey, allLocations, whichLocation, userDetails)
@@ -67,11 +73,14 @@ Widget ClueContainer(BuildContext context, String clue, double screen_width, dou
       height: screen_height*0.3,
       width: screen_width*0.95,
       child: Container(
-        child: FittedBox(
-          child: Text(
-            "$clue", 
-            textAlign: TextAlign.center,
-          )
+        child: Center(child: 
+          Wrap(children: <Widget> [
+            Text(
+              "$clue", 
+              style: TextStyle(fontSize: 30),
+              textAlign: TextAlign.center,
+            )
+          ])
         )
       )
     )

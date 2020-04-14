@@ -60,14 +60,12 @@ class _LoginScreen extends State<LoginScreen> {
   Widget build(BuildContext context) {
     Map<String, dynamic> prevUser;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(height: 60),
               Image(
                 height: 275,
                 width: 275,

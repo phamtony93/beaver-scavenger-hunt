@@ -79,7 +79,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                 ),
               Text(
                 "${widget.allLocations[widget.whichLocation].solution}",
-                style: TextStyle(fontSize: 40),
+                style: TextStyle(fontSize: 40, color: Color.fromRGBO(255,117, 26, 1)),
                 textAlign: TextAlign.center,
               ),
               Text(

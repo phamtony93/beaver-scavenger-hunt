@@ -1,0 +1,157 @@
+{
+    "clue locations": 
+    {
+        "1": {
+            "number": 1,
+            "latitude": 0.0,
+            "longitude": 0.0,
+            "clue" : "I revolutionized the sport of Track and Field. Where can you find me on campus?",
+            "solution": "Dixon Rec Center",
+            "photoURL": null,
+            "solved": false, 
+            "available": true
+        },
+        "2": {
+            "number": 2,
+            "latitude": 0.0,
+            "longitude": 0.0,
+            "clue" : "Combined, we can seat 55,278 people. Find the giant ball in front of one of us.",
+            "solution": "Reser Stadium",
+            "photoURL": null,
+            "solved": false, 
+            "available": false
+        },
+        "3": {
+            "number": 3,
+            "latitude": 0.0,
+            "longitude": 0.0,
+            "clue" : "Stand in the right spot, and you could watch three different sports at once. You may want to race over there.",
+            "solution": "Paul Lorenz Field",
+            "photoURL": null,
+            "solved": false, 
+            "available": false
+        },
+        "4": {
+            "number": 4,
+            "latitude": 0.0,
+            "longitude": 0.0,
+            "clue" : "We study the sea here, and the creatures within. But be careful. This building is more complex than our college.",
+            "solution": "Oceanography Complex",
+            "photoURL": null,
+            "solved": false, 
+            "available": false
+        },
+        "5": {
+            "number": 5,
+            "latitude": 0.0,
+            "longitude": 0.0,
+            "clue" : "Up for a challenge? You may need to wear a harness and a helmet to take this course.",
+            "solution": "Ropes/Challenge Course",
+            "photoURL": null,
+            "solved": false, 
+            "available": false
+        },
+        "6": {
+            "number": 6,
+            "latitude": 0.0,
+            "longitude": 0.0,
+            "clue" : "I am several fields, nestled deep in the forest. You may even see a scrum or two.",
+            "solution": "Peavy Fields",
+            "photoURL": null,
+            "solved": false, 
+            "available": false
+        },
+        "7": {
+            "number": 7,
+            "latitude": 0.0,
+            "longitude": 0.0,
+            "clue" : "Want to build an app like this? Head to our center of study, and we can teach you how.",
+            "solution": "Kelley Engineering Center",
+            "photoURL": null,
+            "solved": false, 
+            "available": false
+        },
+        "8": {
+            "number": 8,
+            "latitude": 0.0,
+            "longitude": 0.0,
+            "clue" : "Pick up a meal in my hall, and have a picnic on my field, which you might have seen upon entering the campus.",
+            "solution": "McNary Field",
+            "photoURL": null,
+            "solved": false, 
+            "available": false
+        },
+        "9": {
+            "number": 9,
+            "latitude": 0.0,
+            "longitude": 0.0,
+            "clue" : "In 2006 and 2007, we were back-to-back college world champs. Can you find where we play our home games?",
+            "solution": "Goss Stadium",
+            "photoURL": null,
+            "solved": false, 
+            "available": false
+        },
+        "10": {
+            "number": 10,
+            "latitude": 0.0,
+            "longitude": 0.0,
+            "clue" : "Built to honor students who made the ultimate sacrifice from 1914-1918, this building is now considered a central hub at OSU.",
+            "solution": "Memorial Union",
+            "photoURL": null,
+            "solved": false, 
+            "available": false
+        }
+    },
+    "challenges": {
+        "1": {
+            "Completed": false,
+            "Description": "Read a Book! Photograph the team reading a book in the library",
+            "photoUrl": null
+        },
+        "2": {
+            "Completed": false,
+            "Description": "Instagram Pic! Take an artsy insta-pic under the Irsih Bend Covered Bridge. Post the pic on social media as well.",
+            "photoUrl": null
+        },
+        "3": {
+            "Completed": false,
+            "Description": "Campus Brochure! Photograph a human pyramid of the team in fron of OSU's iconic Weatherford Hall.",
+            "photoUrl": null
+        },
+        "4": {
+            "Completed": false,
+            "Description": "Obstacle Course! Complete the whole USMC obstacle training course. Get video evidence.",
+            "photoUrl": null
+        },
+        "5": {
+            "Completed": false,
+            "Description": "Travel Abroad! Learn a non english greeting from a student at the International Living Learning Center. take a video saying the word.",
+            "photoUrl": null
+        },
+        "6": {
+            "Completed": false,
+            "Description": "Go Greek! Find the most frequent greek letter on Greek row. Take a picture of the letter.",
+            "photoUrl": null
+        },
+        "7": {
+            "Completed": false,
+            "Description": "Night Life! Photograph the team with an employee at Clodfelters.",
+            "photoUrl": null
+        },
+        "8": {
+            "Completed": false,
+            "Description": "School Spirit! Photograph the team trying something on from the Beaver Store.",
+            "photoUrl": null
+        },
+        "9": {
+            "Completed": false,
+            "Description": "Make a Friend! Video a secret handshake with a stranger.",
+            "photoUrl": null
+        },
+        "10": {
+            "Completed": false,
+            "Description": "Stay Safe! Pick-up a free contraceptive from Student Health Services. Make sure to capture the moment.",
+            "photoUrl": null
+        }
+    }        
+}
