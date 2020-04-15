@@ -1,9 +1,11 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-//import 'package:video_player/video_player.dart';
+import '../functions/media_upload.dart';
+import '../models/media.dart';
 import '../main.dart';
 
 class Camera extends StatefulWidget {
@@ -14,16 +16,17 @@ class Camera extends StatefulWidget {
 
 class _CameraState extends State<Camera> {
   CameraController _controller;
-  //VideoPlayerController _videoController;
   Future<void> _initializeControllerFuture;
   String pathImage;
   String pathVideo;
   bool isRecordingVideo = false;
+  Media photo = Media();
+  Media video = Media();
 
   @override
   void initState() {
     super.initState();
-    _controller = CameraController(camera, ResolutionPreset.high);
+    _controller = CameraController(camera, ResolutionPreset.medium);
     _initializeControllerFuture = _controller.initialize();
   }
 
@@ -39,7 +42,7 @@ class _CameraState extends State<Camera> {
         SizedBox(height:20),
         Text('Should the clue text be sent in here??'),
         Expanded(child: 
-          Padding(padding: EdgeInsets.all(20),
+          Padding(padding: EdgeInsets.all(15),
           child: Align(
             alignment: Alignment.topCenter,
             child: preview()))
@@ -54,14 +57,17 @@ class _CameraState extends State<Camera> {
             margin: EdgeInsets.only(left:10, right: 10),
             decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.orange),
             child: IconButton(icon: Icon(Icons.camera_alt),
-              // splashColor: Colors.purple,
+              splashColor: Colors.purple,
               hoverColor: Colors.green,
-              // focusColor: Colors.blue,
+              focusColor: Colors.blue,
               highlightColor: Colors.grey,
               color: Colors.white,
               tooltip: 'Take Photo',
               iconSize: 30.0,
-              onPressed: takePhoto
+              onPressed: () async {
+                await takePhoto();
+                photo.setURL(await uploadMedia(pathImage) );
+              }
             ),
           ),
           Container(
@@ -92,24 +98,6 @@ class _CameraState extends State<Camera> {
                 }
               }
             ),),
-          // IconButton(icon: Icon(Icons.stop, color: Colors.orange),
-          //   iconSize: 30.0,
-          //   color: Colors.orange,
-          //   tooltip: 'Stop Video',
-          //   onPressed: () async {
-          //       try {
-          //         await _controller.stopVideoRecording();
-          //         if (pathVideo != null ) {
-          //           GallerySaver.saveVideo(pathVideo, albumName: 'Beavers').then((bool success) {
-          //             print('video success');
-          //           });
-          //         }
-          //       }
-          //       catch (e) {
-          //         print(e);
-          //       }
-          //     }
-          // ),
         ],),
         SizedBox(height:40)
       ]);
@@ -124,11 +112,6 @@ class _CameraState extends State<Camera> {
           return AspectRatio(
             aspectRatio: 2 / 2, //_controller.value.aspectRatio,
             child: CameraPreview(_controller));
-          // return Center(child: Column(
-          //   children: [ Text('all the text here'),
-          //     CameraPreview(_controller),
-          //   ]
-          // ));
         }
         else {
           return Center(child: CircularProgressIndicator());
@@ -137,25 +120,47 @@ class _CameraState extends State<Camera> {
     );
   }
 
-  void takePhoto() async {
+  Future<void> takePhoto() async {
+    if(!_controller.value.isInitialized) {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(content: Text('Camera Error')
+        )
+      );
+      return null;
+    }
+
     try {
       await _initializeControllerFuture;
       pathImage = p.join((await getApplicationDocumentsDirectory()).path,'${DateTime.now()}.jpg',);
-
+      SystemSound.play(SystemSoundType.click);
       await _controller.takePicture(pathImage);
       print(pathImage);
       if (pathImage != null ) {
         GallerySaver.saveImage(pathImage, albumName: 'Beavers').then((bool success) {
           print('photo success');
+          Scaffold.of(context).showSnackBar(
+            SnackBar(content: Text('Photo Saved')
+            )
+          );
         });
       }
     }
     catch (e) {
       print(e);
     }
+
+    setState(() {});
   }
 
   void takeVideo() async {
+    if(!_controller.value.isInitialized) {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(content: Text('Camera Error')
+        )
+      );
+      return null;
+    }
+
     setState( () {
       isRecordingVideo = true;
     });
@@ -165,13 +170,10 @@ class _CameraState extends State<Camera> {
       pathVideo = p.join((await getApplicationDocumentsDirectory()).path,'${DateTime.now()}.mp4',);
       print('starting video');
       await _controller.startVideoRecording(pathVideo);
-      print('still going');
-                  // print(path);
-                  // if (path != null ) {
-                  //   GallerySaver.saveVideo(path, albumName: 'Beavers').then((bool success) {
-                  //     print('video success');
-                  //   });
-                  // }
+      Scaffold.of(context).showSnackBar(
+        SnackBar(content: Text('Recording')
+        )
+      );
     }
     catch (e) {
       print(e);
@@ -188,6 +190,10 @@ class _CameraState extends State<Camera> {
       if (pathVideo != null ) {
         GallerySaver.saveVideo(pathVideo, albumName: 'Beavers').then((bool success) {
           print('video success');
+          Scaffold.of(context).showSnackBar(
+            SnackBar(content: Text('Video Saved')
+            )
+          );
         });
       }
     }
