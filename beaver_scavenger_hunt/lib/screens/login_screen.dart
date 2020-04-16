@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/clue_location_model.dart';
+import 'camera_screen.dart';
 import 'clue_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -144,7 +145,13 @@ class _LoginScreen extends State<LoginScreen> {
                   }
 
                 },
-              )
+              ),
+              RaisedButton(
+                child: Text('Temp Camera Testing'),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraScreen() ));
+                }
+              ),
             ]
           )
         )
