@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import '../functions/media_upload.dart';
+//import '../functions/media_upload.dart';
 import '../models/media.dart';
 import '../main.dart';
 
@@ -66,7 +66,7 @@ class _CameraState extends State<Camera> {
               iconSize: 30.0,
               onPressed: () async {
                 await takePhoto();
-                photo.setURL(await uploadMedia(pathImage) );
+                //photo.setURL(await uploadMedia(pathImage) ); implement after merge
               }
             ),
           ),
