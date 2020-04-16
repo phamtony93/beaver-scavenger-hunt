@@ -6,6 +6,7 @@ import 'clue_screen.dart';
 import 'package:location/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'welcome_screen.dart';
 import 'dart:math';
 
 class CorrectSolutionScreen extends StatefulWidget {
@@ -53,6 +54,8 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var screen_width = MediaQuery.of(context).size.width;
+    var screen_height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -79,7 +82,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                 ),
               Text(
                 "${widget.allLocations[widget.whichLocation].solution}",
-                style: TextStyle(fontSize: 40, color: Color.fromRGBO(255,117, 26, 1)),
+                style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1)),
                 textAlign: TextAlign.center,
               ),
               Text(
@@ -89,7 +92,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
               ),
               SizedBox(height: 20),
               SizedBox(
-                height: 300, width: 400,
+                height: screen_height*0.45, width: screen_width*0.9,
                 child: Container(
                   color: Colors.grey,
                   child: Center(
@@ -116,12 +119,19 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                   style: TextStyle(color: Colors.white,),
                 ),
                 onPressed: (){
-                  //update object
-                  widget.allLocations[widget.whichLocation + 1].available = true;
-                  //update db
-                  Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 2}.available': true});
-                  //return to clue screen (next clue available)
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation + 1, userDetails: widget.userDetails,)));
+                  if (widget.whichLocation < 9){
+                    //update object
+                    widget.allLocations[widget.whichLocation + 1].available = true;
+                    //update db
+                    Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 2}.available': true});
+                    //return to clue screen (next clue available)
+                  
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation + 1, userDetails: widget.userDetails,)));
+                  }
+                  else{
+                    //Change to hunt complete screen
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
+                  }
                 }
               ),
               SizedBox(height: 20),

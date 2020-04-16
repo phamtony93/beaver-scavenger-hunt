@@ -16,7 +16,7 @@
             "latitude": 0.0,
             "longitude": 0.0,
             "clue" : "Combined, we can seat 55,278 people. Find the giant ball in front of one of us.",
-            "solution": "Reser Stadium",
+            "solution": "Reser Stadium/Gill Coliseum",
             "photoURL": null,
             "solved": false, 
             "available": false
@@ -46,7 +46,7 @@
             "latitude": 0.0,
             "longitude": 0.0,
             "clue" : "Up for a challenge? You may need to wear a harness and a helmet to take this course.",
-            "solution": "Ropes/Challenge Course",
+            "solution": "A.L.I. Challenge Course",
             "photoURL": null,
             "solved": false, 
             "available": false
@@ -86,7 +86,7 @@
             "latitude": 0.0,
             "longitude": 0.0,
             "clue" : "In 2006 and 2007, we were back-to-back college world champs. Can you find where we play our home games?",
-            "solution": "Goss Stadium",
+            "solution": "Goss Stadium at Coleman Field",
             "photoURL": null,
             "solved": false, 
             "available": false
@@ -96,7 +96,7 @@
             "latitude": 0.0,
             "longitude": 0.0,
             "clue" : "Built to honor students who made the ultimate sacrifice from 1914-1918, this building is now considered a central hub at OSU.",
-            "solution": "Memorial Union",
+            "solution": "The Memorial Union (MU)",
             "photoURL": null,
             "solved": false, 
             "available": false
