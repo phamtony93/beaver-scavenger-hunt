@@ -1,3 +1,4 @@
+import 'package:beaver_scavenger_hunt/screens/challenge_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
 import 'rules_screen.dart';
@@ -39,7 +40,12 @@ class WelcomeScreen extends StatelessWidget {
             ),
             RaisedButton(
               child: Text('Begin Hunt'),
-              onPressed: () => print('Begin!'),
+              onPressed: () {
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (context) => ChallengeScreen())
+                );
+              },
             ),
           ]
         )
