@@ -7,7 +7,7 @@ import 'screens/challenge_screen.dart';
 class App extends StatelessWidget {
 
   static final routes = {
-    '/': (context) => WelcomeScreen(),
+    '/': (context) => LoginScreen(),
     // 'rules_screen': (context) => RulesScreen(),
 };
 
