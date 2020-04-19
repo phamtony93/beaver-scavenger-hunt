@@ -4,7 +4,8 @@ import 'package:gallery_saver/gallery_saver.dart';
 import 'package:video_player/video_player.dart';
 import '../functions/upload_media.dart';
 import '../models/media.dart';
-
+import '../screens/login_screen.dart';
+import '../screens/video_uploading.dart';
 
 class CameraReview extends StatefulWidget {
   final path;
@@ -25,15 +26,19 @@ class _CameraReviewState extends State<CameraReview> {
 
   @override
   void initState() {
-    _videoController = VideoPlayerController.file(File(widget.path));
-    _initializeVideoPlayerFuture = _videoController.initialize();
-    _videoController.setLooping(true);
+    if(!widget.isImage) {
+      _videoController = VideoPlayerController.file(File(widget.path));
+      _initializeVideoPlayerFuture = _videoController.initialize();
+      _videoController.setLooping(true);
+    }
     super.initState();
   }
 
   @override
   void dispose() {
-    _videoController.dispose();
+    if(!widget.isImage) {
+      _videoController.dispose();
+    }
     super.dispose();
   }
 
@@ -46,6 +51,8 @@ class _CameraReviewState extends State<CameraReview> {
         SizedBox(height:20),
         Text('Review your photo/video. Go back to retake.'),
         media(widget.isImage),
+        videoRow(widget.isImage),
+        SizedBox(height:20),
         Container(
             width: 60,
             height: 60,
@@ -65,9 +72,10 @@ class _CameraReviewState extends State<CameraReview> {
                 }
                 else {
                   saveVideo();
-                  uploadVideo();
-                }
+                  //uploadVideo();
+                  Navigator.of(context).push(MaterialPageRoute(builder:  (context) => VideoUploading(path: widget.path, fileName: widget.fileName) ));
               }
+            }
           ),),
           SizedBox(height:20),
     ]);
@@ -80,10 +88,18 @@ class _CameraReviewState extends State<CameraReview> {
           child: Align(
             alignment: Alignment.topCenter,
             child: Image.file(File(widget.path), fit: BoxFit.contain, alignment: Alignment.topCenter,)
-          )));
+          ))
+      );
     }
     else {
-      return previewVideo();
+      return Expanded(child: 
+          Padding(padding: EdgeInsets.all(15),
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: previewVideo()
+
+          ))
+      );
     }
   }
 
@@ -92,21 +108,49 @@ class _CameraReviewState extends State<CameraReview> {
       future: _initializeVideoPlayerFuture,
       builder: (context, snapshot) {
         if(snapshot.connectionState == ConnectionState.done) {
-          return Expanded(child: 
-          Padding(padding: EdgeInsets.all(15),
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: AspectRatio(aspectRatio: _videoController.value.aspectRatio,
-              child: VideoPlayer(_videoController),
-            )
-          ),
-          ));
+          return AspectRatio(
+            aspectRatio: _videoController.value.size != null ? _videoController.value.aspectRatio : 2 / 2,
+            child: VideoPlayer(_videoController),
+          );
         }
         else {
           return Center(child: CircularProgressIndicator());
         }
       },
     );
+  }
+
+  Widget videoRow(isImage) {
+    if(!isImage) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(_videoController.value.isPlaying ? 'PAUSE' : 'PLAY'),
+          IconButton(icon: Icon(_videoController.value.isPlaying ? Icons.pause : Icons.play_circle_filled),
+            // splashColor: Colors.purple,
+            hoverColor: Colors.green,
+            // focusColor: Colors.blue,
+            highlightColor: Colors.grey,
+            color: Colors.orange,
+            iconSize: 30.0,
+            tooltip: 'Play/Stop Video',
+            onPressed: () {
+              setState (() {
+                if(_videoController.value.isPlaying) {
+                  _videoController.pause();
+                }
+                else {
+                  _videoController.play();
+                }
+              });
+            }
+          ),
+        ],
+      );
+    }
+    else {
+      return SizedBox(height:0);
+    }
   }
 
   void savePhoto() {
@@ -126,26 +170,50 @@ class _CameraReviewState extends State<CameraReview> {
       Scaffold.of(context).showSnackBar(
         SnackBar(content: Text('Photo Uploaded'))
       );
+      Navigator.of(context).push(MaterialPageRoute(builder:  (context) => LoginScreen() ));
     });
   }
 
   void saveVideo() {
     GallerySaver.saveVideo(widget.path, albumName: 'Beavers').then((bool success) {
       print('Video saved to phone');
-      Scaffold.of(context).showSnackBar(
-        SnackBar(content: Text('Video Saved to Phone'))
-      );
+      // Scaffold.of(context).showSnackBar(
+      //   SnackBar(content: Text('Video Saved to Phone'))
+      // );
     });
   }
 
-  void uploadVideo() async {
-    //video.setURL(await uploadMedia(widget.path, widget.fileName) ); 
-    uploadMedia(widget.path, widget.fileName).then((String url) {
-      video.setURL(url);
-      print(video.getURL());
-      Scaffold.of(context).showSnackBar(
-        SnackBar(content: Text('Video Uploaded'))
-      );
-    });
-  }
+  // void uploadVideo() async {
+  //   Scaffold.of(context).showSnackBar(
+  //       SnackBar(content: Text('Video Uploading, Please Wait ...'))
+  //     );
+  //   uploadMedia(widget.path, widget.fileName).then((String url) {
+  //     video.setURL(url);
+  //     print(video.getURL());
+  //     Scaffold.of(context).showSnackBar(
+  //       SnackBar(content: Text('Video Uploaded'))
+  //     );
+  //    Navigator.of(context).push(MaterialPageRoute(builder:  (context) => LoginScreen() ));
+  //   });
+  // }
+
+
+
+  // Widget waitForUpload() {
+  //   //_uploadVideoFuture
+  //   return FutureBuilder(
+  //     future: _uploadVideoFuture,
+  //     builder: (context, snapshot) {
+  //       if(snapshot.connectionState == ConnectionState.done) {
+  //         print('and in here');
+  //         return Center(child: Text('all done'));
+  //       }
+  //       else {
+  //         return Center(child: CircularProgressIndicator());
+  //       }
+  //     },
+  //   );
+  // }
+
+
 }
