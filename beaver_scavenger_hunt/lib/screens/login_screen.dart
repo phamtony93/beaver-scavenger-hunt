@@ -39,7 +39,7 @@ class _LoginScreen extends State<LoginScreen> {
     List<ProviderDetails> providerData = List<ProviderDetails>();
     providerData.add(providerInfo);
 
-    UserDetails details = UserDetails(
+    UserDetails user = UserDetails(
       userDetails.user.providerId,
       userDetails.user.uid,
       userDetails.user.displayName,
@@ -48,10 +48,51 @@ class _LoginScreen extends State<LoginScreen> {
       // providerData
     );
 
-    Navigator.pushReplacement(context,
-    MaterialPageRoute(
-      builder: (context) => WelcomeScreen(userDetails: details),
-    ));
+    Map<String, dynamic> prevUser;
+
+    bool isNewUser = await is_new_user(user.uid);
+    if (isNewUser) {
+      print("Adding new user");
+      uploadNewUserAndChallenges(user.uid);
+    }
+
+    //retrieve previousUser info
+    prevUser = await get_prev_user(user.uid);
+    Map<String, dynamic> allClueLocationsMap = prevUser['clue locations'];
+    Map<String, dynamic> allChallengesMap = prevUser['challenges'];
+
+    //create clueLocation object(s) from json map
+    List<ClueLocation> allLocations = [];
+    int which = 0;
+    for (int i = 1; i < 11; i++){
+      ClueLocation loca = ClueLocation.fromJson(allClueLocationsMap["$i"]);
+      if (loca.available == true && loca.solved == false){
+        which = i-1;
+      }
+      allLocations.add(loca);
+    }  
+
+    if(isNewUser){
+      Navigator.push(
+        context, 
+        MaterialPageRoute(
+          builder: (context) => WelcomeScreen(userDetails: user, allLocations: allLocations, allChallengesMap: allChallengesMap)
+        )
+      );
+    }
+    else{
+      Navigator.push(
+        context, 
+        MaterialPageRoute(
+          builder: (context) => ClueScreen(userDetails: user, allLocations: allLocations, whichLocation: which,)
+        )
+      );
+    }    
+
+    // Navigator.pushReplacement(context,
+    // MaterialPageRoute(
+    //   builder: (context) => WelcomeScreen(userDetails: details),
+    // ));
 
     return userDetails;
  
