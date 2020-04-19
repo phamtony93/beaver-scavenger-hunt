@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gallery_saver/gallery_saver.dart';
+import 'package:video_player/video_player.dart';
 import '../functions/upload_media.dart';
 import '../models/media.dart';
+
 
 class CameraReview extends StatefulWidget {
   final path;
@@ -18,6 +20,23 @@ class CameraReview extends StatefulWidget {
 class _CameraReviewState extends State<CameraReview> {
   Media photo = Media();
   Media video = Media();
+  VideoPlayerController _videoController;
+  Future<void> _initializeVideoPlayerFuture;
+
+  @override
+  void initState() {
+    _videoController = VideoPlayerController.file(File(widget.path));
+    _initializeVideoPlayerFuture = _videoController.initialize();
+    _videoController.setLooping(true);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _videoController.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +62,6 @@ class _CameraReviewState extends State<CameraReview> {
                 if(widget.isImage){
                   savePhoto();
                   uploadPhoto();
-                  //print(photo.getURL);
                 }
                 else {
                   saveVideo();
@@ -65,8 +83,30 @@ class _CameraReviewState extends State<CameraReview> {
           )));
     }
     else {
-      return Text('it is a video');
+      return previewVideo();
     }
+  }
+
+  Widget previewVideo() {
+    return FutureBuilder(
+      future: _initializeVideoPlayerFuture,
+      builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.done) {
+          return Expanded(child: 
+          Padding(padding: EdgeInsets.all(15),
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: AspectRatio(aspectRatio: _videoController.value.aspectRatio,
+              child: VideoPlayer(_videoController),
+            )
+          ),
+          ));
+        }
+        else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
   }
 
   void savePhoto() {
@@ -99,6 +139,13 @@ class _CameraReviewState extends State<CameraReview> {
   }
 
   void uploadVideo() async {
-    video.setURL(await uploadMedia(widget.path, widget.fileName) ); 
+    //video.setURL(await uploadMedia(widget.path, widget.fileName) ); 
+    uploadMedia(widget.path, widget.fileName).then((String url) {
+      video.setURL(url);
+      print(video.getURL());
+      Scaffold.of(context).showSnackBar(
+        SnackBar(content: Text('Video Uploaded'))
+      );
+    });
   }
 }

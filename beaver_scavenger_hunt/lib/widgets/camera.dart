@@ -106,7 +106,7 @@ class _CameraState extends State<Camera> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return AspectRatio(
-            aspectRatio: 2 / 2, //_controller.value.aspectRatio,
+            aspectRatio: _controller.value.aspectRatio,
             child: CameraPreview(_controller));
         }
         else {
@@ -134,13 +134,6 @@ class _CameraState extends State<Camera> {
       print(pathImage);
       if (pathImage != null ) {
          Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraReviewScreen(path: pathImage, isImage: true, fileName: fileName) ));
-        // GallerySaver.saveImage(pathImage, albumName: 'Beavers').then((bool success) {
-        //   print('photo success');
-        //   Scaffold.of(context).showSnackBar(
-        //     SnackBar(content: Text('Photo Saved')
-        //     )
-        //   );
-        // });
       }
     }
     catch (e) {
@@ -186,15 +179,9 @@ class _CameraState extends State<Camera> {
     try {
       print('try to end video');
       await _controller.stopVideoRecording();
+      print('video stopped');
       if (pathVideo != null ) {
         Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraReviewScreen(path: pathVideo, isImage: false, fileName: fileName) ));
-        // GallerySaver.saveVideo(pathVideo, albumName: 'Beavers').then((bool success) {
-        //   print('video success');
-        //   Scaffold.of(context).showSnackBar(
-        //     SnackBar(content: Text('Video Saved')
-        //     )
-        //   );
-        // });
       }
     }
     catch (e) {
