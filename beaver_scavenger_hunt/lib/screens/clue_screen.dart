@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/clue_location_model.dart';
 import 'correct_solution_screen.dart';
+import '../screens/challenge_screen.dart';
 import '../screens/rules_screen.dart';
 import '../classes/UserDetails.dart';
 import '../functions/make_random_dropdown_list.dart';
@@ -88,7 +89,7 @@ class _ClueScreenState extends State<ClueScreen> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        // backgroundColor: Colors.black,
         title: RichText(
           text: TextSpan(
             style: TextStyle(
@@ -403,7 +404,7 @@ MenuRulesWidget(BuildContext context){
     ),
     onTap: () {
       //navigate to rules
-      Navigator.push(context, MaterialPageRoute(builder: (context) => RulesScreen()));
+      Navigator.popAndPushNamed(context, '/rules_screen');
     },
   );
 }
@@ -425,7 +426,7 @@ MenuChallengesWidget(BuildContext context){
         )
     ),
     onTap: () {
-      //navigate to challenges
+      Navigator.popAndPushNamed(context, '/challenge_screen');
     },
   );
 }

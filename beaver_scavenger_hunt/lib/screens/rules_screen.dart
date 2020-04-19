@@ -5,7 +5,17 @@ class RulesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hunt Rules'),
+        title: RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(text: 'R', style: TextStyle(fontSize: 30)),
+              TextSpan(text: 'ules', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
+              // TextSpan(text: 's', style: TextStyle(fontSize: 30)),
+
+            ],
+          ),
+        ),
+        centerTitle: true,
       ),
       body: SafeArea(
         child: ListView(

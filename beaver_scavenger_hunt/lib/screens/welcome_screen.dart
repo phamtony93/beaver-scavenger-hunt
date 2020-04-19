@@ -1,3 +1,4 @@
+import 'package:beaver_scavenger_hunt/screens/challenge_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
 import 'clue_screen.dart';
