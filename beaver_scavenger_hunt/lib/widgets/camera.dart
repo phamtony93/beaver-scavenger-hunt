@@ -23,7 +23,7 @@ class _CameraState extends State<Camera> {
   @override
   void initState() {
     super.initState();
-    _controller = CameraController(camera, ResolutionPreset.ultraHigh);
+    _controller = CameraController(camera, ResolutionPreset.veryHigh);
     _initializeControllerFuture = _controller.initialize();
   }
 
@@ -105,9 +105,13 @@ class _CameraState extends State<Camera> {
       future: _initializeControllerFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return AspectRatio(
-            aspectRatio: _controller.value.aspectRatio,
-            child: CameraPreview(_controller));
+          return RotatedBox(
+              quarterTurns: MediaQuery.of(context).orientation == Orientation.landscape ? 3 : 0,
+              child: AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                  child: CameraPreview(_controller)
+              ),
+          );
         }
         else {
           return Center(child: CircularProgressIndicator());

@@ -104,10 +104,12 @@ class _CameraReviewState extends State<CameraReview> {
   }
 
   Widget previewVideo() {
+    print('got here 1');
     return FutureBuilder(
       future: _initializeVideoPlayerFuture,
       builder: (context, snapshot) {
         if(snapshot.connectionState == ConnectionState.done) {
+          print('got here 2');
           return AspectRatio(
             aspectRatio: _videoController.value.size != null ? _videoController.value.aspectRatio : 2 / 2,
             child: VideoPlayer(_videoController),
