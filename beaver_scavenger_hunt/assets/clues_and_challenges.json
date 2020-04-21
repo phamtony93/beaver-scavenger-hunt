@@ -13,8 +13,13 @@
         },
         "2": {
             "number": 2,
+<<<<<<< HEAD
             "latitude": 44.562854,
             "longitude": -123.278977,
+=======
+            "latitude": 44.560287,
+            "longitude": -123.280323,
+>>>>>>> seawellj_branch
             "clue" : "Combined, we can seat 55,278 people. Find the giant ball in front of one of us.",
             "solution": "Reser Stadium/Gill Coliseum",
             "photoURL": null,
@@ -23,8 +28,13 @@
         },
         "3": {
             "number": 3,
+<<<<<<< HEAD
             "latitude": 44.562854,
             "longitude": -123.278977,
+=======
+            "latitude": 44.558717,
+            "longitude": -123.276924,
+>>>>>>> seawellj_branch
             "clue" : "Stand in the right spot, and you could watch three different sports at once. You may want to race over there.",
             "solution": "Paul Lorenz Field",
             "photoURL": null,
@@ -33,8 +43,13 @@
         },
         "4": {
             "number": 4,
+<<<<<<< HEAD
             "latitude": 44.562854,
             "longitude": -123.278977,
+=======
+            "latitude": 44.557598,
+            "longitude": -123.284427,
+>>>>>>> seawellj_branch
             "clue" : "We study the sea here, and the creatures within. But be careful. This building is more complex than our college.",
             "solution": "Oceanography Complex",
             "photoURL": null,
@@ -43,8 +58,13 @@
         },
         "5": {
             "number": 5,
+<<<<<<< HEAD
             "latitude": 44.562854,
             "longitude": -123.278977,
+=======
+            "latitude": 44.564544,
+            "longitude": -123.294244,
+>>>>>>> seawellj_branch
             "clue" : "Up for a challenge? You may need to wear a harness and a helmet to take this course.",
             "solution": "A.L.I. Challenge Course",
             "photoURL": null,
@@ -53,8 +73,13 @@
         },
         "6": {
             "number": 6,
+<<<<<<< HEAD
             "latitude": 44.562854,
             "longitude": -123.278977,
+=======
+            "latitude": 44.565122,
+            "longitude": -123.286532,
+>>>>>>> seawellj_branch
             "clue" : "I am several fields, nestled deep in the forest. You may even see a scrum or two.",
             "solution": "Peavy Fields",
             "photoURL": null,
@@ -63,8 +88,13 @@
         },
         "7": {
             "number": 7,
+<<<<<<< HEAD
             "latitude": 44.562854,
             "longitude": -123.278977,
+=======
+            "latitude": 44.566995,
+            "longitude": -123.278730,
+>>>>>>> seawellj_branch
             "clue" : "Want to build an app like this? Head to our center of study, and we can teach you how.",
             "solution": "Kelley Engineering Center",
             "photoURL": null,
@@ -73,8 +103,13 @@
         },
         "8": {
             "number": 8,
+<<<<<<< HEAD
             "latitude": 44.562854,
             "longitude": -123.278977,
+=======
+            "latitude": 44.565783,
+            "longitude": -123.272355,
+>>>>>>> seawellj_branch
             "clue" : "Pick up a meal in my hall, and have a picnic on my field, which you might have seen upon entering the campus.",
             "solution": "McNary Field",
             "photoURL": null,
@@ -83,8 +118,13 @@
         },
         "9": {
             "number": 9,
+<<<<<<< HEAD
             "latitude": 44.562854,
             "longitude": -123.278977,
+=======
+            "latitude": 44.563256,
+            "longitude": -123.277790,
+>>>>>>> seawellj_branch
             "clue" : "In 2006 and 2007, we were back-to-back college world champs. Can you find where we play our home games?",
             "solution": "Goss Stadium at Coleman Field",
             "photoURL": null,
@@ -93,8 +133,13 @@
         },
         "10": {
             "number": 10,
+<<<<<<< HEAD
             "latitude": 44.562854,
             "longitude": -123.278977,
+=======
+            "latitude": 44.565692,
+            "longitude": -123.278935,
+>>>>>>> seawellj_branch
             "clue" : "Built to honor students who made the ultimate sacrifice from 1914-1918, this building is now considered a central hub at OSU.",
             "solution": "The Memorial Union (MU)",
             "photoURL": null,
@@ -104,51 +149,61 @@
     },
     "challenges": {
         "1": {
+            "number": 1,
             "Completed": false,
             "Description": "Read a Book! Photograph the team reading a book in the library",
             "photoUrl": null
         },
         "2": {
+            "number": 2,
             "Completed": false,
             "Description": "Instagram Pic! Take an artsy insta-pic under the Irsih Bend Covered Bridge. Post the pic on social media as well.",
             "photoUrl": null
         },
         "3": {
+            "number": 3,
             "Completed": false,
             "Description": "Campus Brochure! Photograph a human pyramid of the team in fron of OSU's iconic Weatherford Hall.",
             "photoUrl": null
         },
         "4": {
+            "number": 4,
             "Completed": false,
             "Description": "Obstacle Course! Complete the whole USMC obstacle training course. Get video evidence.",
             "photoUrl": null
         },
         "5": {
+            "number": 5,
             "Completed": false,
             "Description": "Travel Abroad! Learn a non english greeting from a student at the International Living Learning Center. take a video saying the word.",
             "photoUrl": null
         },
         "6": {
+            "number": 6,
             "Completed": false,
             "Description": "Go Greek! Find the most frequent greek letter on Greek row. Take a picture of the letter.",
             "photoUrl": null
         },
         "7": {
+            "number": 7,
             "Completed": false,
             "Description": "Night Life! Photograph the team with an employee at Clodfelters.",
             "photoUrl": null
         },
         "8": {
+            "number": 8,
             "Completed": false,
             "Description": "School Spirit! Photograph the team trying something on from the Beaver Store.",
             "photoUrl": null
         },
         "9": {
+            "number": 9,
             "Completed": false,
             "Description": "Make a Friend! Video a secret handshake with a stranger.",
             "photoUrl": null
         },
         "10": {
+            "number": 10,
             "Completed": false,
             "Description": "Stay Safe! Pick-up a free contraceptive from Student Health Services. Make sure to capture the moment.",
             "photoUrl": null

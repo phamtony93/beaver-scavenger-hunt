@@ -26,14 +26,35 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
 
   Completer<GoogleMapController> _controller = Completer();
   LocationData locationData;
+  StreamController<LocationData> _locationController = StreamController<LocationData>();
+  Stream<LocationData> get locationStream => _locationController.stream;
+
+  double myDeviceLat;
+  double myDeviceLong;
   double distanceAway;
+<<<<<<< HEAD
   CameraPosition currentPosition;
   double zoomAmount;
   Set<Marker> myMarkers = {};
+=======
+  double screenLat;
+  double screenLong;
+  double zoomAmount;
+  Set<Marker> myMarkers = {};
+
+
+  Location location = Location();
+
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
+  LocationData _locationData;
+>>>>>>> seawellj_branch
   
   void initState(){
     super.initState();
+    updateDeviceLocation();
     retrieveLocation();
+<<<<<<< HEAD
     zoomAmount = 15;
     currentPosition = CameraPosition(
       target: LatLng(44.562854, -123.278977),
@@ -43,22 +64,77 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
     Marker OSU = Marker(
       markerId: MarkerId("${widget.allLocations[widget.whichLocation].solution}"),
       position: LatLng(widget.allLocations[widget.whichLocation].latitude, widget.allLocations[widget.whichLocation].longitude),
+=======
+    screenLat = widget.allLocations[widget.whichLocation].latitude;
+    screenLong = widget.allLocations[widget.whichLocation].longitude;
+    zoomAmount = 15;
+    
+    Marker OSU = Marker(
+      markerId: MarkerId("${widget.allLocations[widget.whichLocation].solution}"),
+      position: LatLng(screenLat, screenLong),
+>>>>>>> seawellj_branch
       infoWindow: InfoWindow(title: "${widget.allLocations[widget.whichLocation].solution}"),
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange)
     );
 
     myMarkers.add(OSU);
+<<<<<<< HEAD
+=======
+  }
+
+  void updateDeviceLocation() async {
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+      return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+      return;
+      }
+    }
+
+    _locationData = await location.getLocation();
+
+    location.onLocationChanged.listen((LocationData currentLocation) {
+      setState(() {
+        myDeviceLat = currentLocation.latitude;
+        myDeviceLong = currentLocation.longitude;
+      });
+      distanceAway = calculateDistance(myDeviceLat, myDeviceLong, widget.allLocations[widget.whichLocation].latitude, widget.allLocations[widget.whichLocation].longitude);
+      if (distanceAway < 50 && widget.allLocations[widget.whichLocation + 1].available == false){
+        if (widget.whichLocation < 9){
+          //update object
+          widget.allLocations[widget.whichLocation + 1].available = true;
+          //update db
+          Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 2}.available': true});
+          //return to clue screen (next clue available)
+        
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation + 1, userDetails: widget.userDetails,)));
+        }
+        else
+         //Change to hunt complete screen
+          Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
+      }
+    }); 
+>>>>>>> seawellj_branch
   }
 
   void retrieveLocation() async {
     var locationService = Location();
     locationData = await locationService.getLocation();
-    //distanceAway = calculateDistance(locationData.latitude, widget.allLocations[widget.whichLocation].latitude);
     setState(() {
-    
+      myDeviceLat = locationData.latitude;
+      myDeviceLong = locationData.longitude;
     });
   }
 
+<<<<<<< HEAD
   Future<void> zoomIn(double newZoomAmount) async {
     GoogleMapController controller = await _controller.future;
     setState(() {
@@ -72,13 +148,47 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
     setState(() {
       controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(44.562854, -123.278977), zoom: newZoomAmount)));
       zoomAmount = newZoomAmount;
+=======
+  Future<void> zoomIn(double newZoomAmount, double newLat, double newLong) async {
+    GoogleMapController controller = await _controller.future;
+    setState(() {
+      controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(newLat, newLong), zoom: newZoomAmount)));
+      zoomAmount = newZoomAmount;
+      screenLat = newLat;
+      screenLong = newLong;
     });
   }
 
-  double calculateDistance(double deviceLocation, double clueLocation) {
-    double distanceAway;
+  Future<void> zoomOut(double newZoomAmount, double newLat, double newLong) async {
+    GoogleMapController controller = await _controller.future;
+    setState(() {
+      controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(newLat, newLong), zoom: newZoomAmount)));
+      zoomAmount = newZoomAmount;
+      screenLat = newLat;
+      screenLong = newLong;
+>>>>>>> seawellj_branch
+    });
+  }
 
-    return distanceAway;
+  void _updatePosition(CameraPosition _position) {
+    setState(() {
+      screenLat = _position.target.latitude;
+      screenLong = _position.target.longitude;
+    });
+  }
+
+  double calculateDistance(double lat1, double long1, double lat2, double long2) {
+    var constR = 6371e3; // metres
+    var one = (lat1 * (pi / 180.0));
+    var two = (lat2 * (pi / 180.0));
+    var three = ((lat2-lat1) * (pi / 180.0));
+    var four = ((long2-long1) * (pi / 180.0));
+
+    var a = sin(three/2) * sin(three/2) + cos(one) * cos(two) * sin(four/2) * sin(four/2);
+    var c = 2 * atan2(sqrt(a), sqrt(1-a));
+    
+    var d = constR * c;
+    return d;
   }
 
   @override
@@ -104,20 +214,29 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                 textAlign: TextAlign.center,
               ),
               Text(
-                "You found the correct location. Head to",
+                "You solved the clue.",
                 style: TextStyle(fontSize: 20),
                 textAlign: TextAlign.center,
                 ),
+              widget.allLocations[widget.whichLocation + 1].available == false ? 
+              Text(
+                "Get within 50 km of",
+                style: TextStyle(fontSize: 20),
+                textAlign: TextAlign.center,
+                ):
+                SizedBox(height: 0),
               Text(
                 "${widget.allLocations[widget.whichLocation].solution}",
                 style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1)),
                 textAlign: TextAlign.center,
               ),
+              widget.allLocations[widget.whichLocation + 1].available == false ?
               Text(
                 "to unlock the next clue.",
                 style: TextStyle(fontSize: 20),
                 textAlign: TextAlign.center,
-              ),
+              ):
+              SizedBox(height: 0),
               SizedBox(height: 20),
               SizedBox(
                 height: screen_height*0.35, width: screen_width*0.9,
@@ -125,28 +244,30 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                   color: Colors.grey,
                   child: Center(
                     child: Stack(children: <Widget> [
+<<<<<<< HEAD
                       _googleMap(context, _controller, myMarkers),
                       _zoomInButton(context, zoomAmount, zoomIn),
                       _zoomOutButton(context, zoomAmount, zoomOut),
+=======
+                      _googleMap(context, _controller, myMarkers, _updatePosition, screenLat, screenLong),
+                      _zoomInButton(context, zoomAmount, zoomIn, screenLat, screenLong),
+                      _zoomOutButton(context, zoomAmount, zoomOut, screenLat, screenLong),
+>>>>>>> seawellj_branch
                     ]), 
                   ),
                 ),
               ),
+              distanceAway == null ? SizedBox(height:0):
+              Text("${distanceAway.toStringAsFixed(distanceAway.truncateToDouble() == distanceAway ? 0 : 2)} km away"),
               Divider(thickness: 5, height: 50, indent: 50, endIndent: 50,),
-              RaisedButton(
+              widget.allLocations[widget.whichLocation + 1].available == true ? RaisedButton(
                 color: Color.fromRGBO(255,117, 26, 1),
                 child: Text(
-                  "Check Location",
+                  "Go To Next Clue",
                   style: TextStyle(color: Colors.white,),
                 ),
                 onPressed: (){
                   if (widget.whichLocation < 9){
-                    //update object
-                    widget.allLocations[widget.whichLocation + 1].available = true;
-                    //update db
-                    Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 2}.available': true});
-                    //return to clue screen (next clue available)
-                  
                     Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation + 1, userDetails: widget.userDetails,)));
                   }
                   else{
@@ -154,7 +275,8 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
                   }
                 }
-              ),
+              ):
+              SizedBox(height: 0),
               SizedBox(height: 20),
             ]
           )
@@ -163,14 +285,22 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
   }
 }
 
+<<<<<<< HEAD
 Widget _googleMap(BuildContext context, _controller, myMarkers){
+=======
+Widget _googleMap(BuildContext context, _controller, myMarkers, void Function(CameraPosition _position) _updatePosition, double screenLat, double screenLong){
+>>>>>>> seawellj_branch
   return Container(
     height: MediaQuery.of(context).size.height,
     width: MediaQuery.of(context).size.width,
     child: GoogleMap(
       mapType: MapType.hybrid,
       initialCameraPosition: CameraPosition(
+<<<<<<< HEAD
         target: LatLng(44.562854, -123.278977),
+=======
+        target: LatLng(screenLat, screenLong),
+>>>>>>> seawellj_branch
         zoom: 15,
       ),
       zoomGesturesEnabled: true,
@@ -179,12 +309,21 @@ Widget _googleMap(BuildContext context, _controller, myMarkers){
       onMapCreated: (GoogleMapController controller) async {
         _controller.complete(controller);
       },
+<<<<<<< HEAD
       markers: myMarkers
+=======
+      markers: myMarkers,
+      onCameraMove: ((_position) => _updatePosition(_position)),
+>>>>>>> seawellj_branch
     ),
   );
 }
 
+<<<<<<< HEAD
 Widget _zoomInButton(BuildContext context, double zoomAmount, void Function(double zoomAmount) zoomIn){
+=======
+Widget _zoomInButton(BuildContext context, double zoomAmount, void Function(double zoomAmount, double screenLat, double screenLong) zoomIn, double screenLat, double screenLong){
+>>>>>>> seawellj_branch
   return Align(
     alignment: Alignment.bottomRight,
     child: RawMaterialButton(
@@ -194,14 +333,22 @@ Widget _zoomInButton(BuildContext context, double zoomAmount, void Function(doub
       padding: const EdgeInsets.all(5.0), 
       onPressed: (){
         zoomAmount++;
+<<<<<<< HEAD
         zoomIn(zoomAmount);
+=======
+        zoomIn(zoomAmount, screenLat, screenLong);
+>>>>>>> seawellj_branch
       },
       child: Icon(Icons.add),
     )
   );
 }
 
+<<<<<<< HEAD
 Widget _zoomOutButton(BuildContext context, double zoomAmount, void Function(double zoomAmount) zoomOut){
+=======
+Widget _zoomOutButton(BuildContext context, double zoomAmount, void Function(double zoomAmount, double screenLat, double screenLong) zoomOut, double screenLat, double screenLong){
+>>>>>>> seawellj_branch
   return Align(
     alignment: Alignment.bottomLeft,
     child: RawMaterialButton(
@@ -211,7 +358,11 @@ Widget _zoomOutButton(BuildContext context, double zoomAmount, void Function(dou
       padding: const EdgeInsets.all(5.0), 
       onPressed: (){
         zoomAmount--;
+<<<<<<< HEAD
         zoomOut(zoomAmount);
+=======
+        zoomOut(zoomAmount, screenLat, screenLong);
+>>>>>>> seawellj_branch
       },
       child: Icon(Icons.remove),
     )
