@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'welcome_screen.dart';
 import 'dart:math';
+import 'dart:async';
 
 class CorrectSolutionScreen extends StatefulWidget {
   
@@ -23,13 +24,30 @@ class CorrectSolutionScreen extends StatefulWidget {
 
 class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
 
-  GoogleMapController _controller;
+  Completer<GoogleMapController> _controller = Completer();
   LocationData locationData;
   double distanceAway;
+  CameraPosition currentPosition;
+  double zoomAmount;
+  Set<Marker> myMarkers = {};
   
   void initState(){
     super.initState();
     retrieveLocation();
+    zoomAmount = 15;
+    currentPosition = CameraPosition(
+      target: LatLng(44.562854, -123.278977),
+      zoom: 15,
+    );
+    
+    Marker OSU = Marker(
+      markerId: MarkerId("${widget.allLocations[widget.whichLocation].solution}"),
+      position: LatLng(widget.allLocations[widget.whichLocation].latitude, widget.allLocations[widget.whichLocation].longitude),
+      infoWindow: InfoWindow(title: "${widget.allLocations[widget.whichLocation].solution}"),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange)
+    );
+
+    myMarkers.add(OSU);
   }
 
   void retrieveLocation() async {
@@ -41,10 +59,21 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
     });
   }
 
-  static final CameraPosition _kOSU = CameraPosition(
-    target: LatLng(44.562854, -123.278977),
-    zoom: 15,
-  );
+  Future<void> zoomIn(double newZoomAmount) async {
+    GoogleMapController controller = await _controller.future;
+    setState(() {
+      controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(44.562854, -123.278977), zoom: newZoomAmount)));
+      zoomAmount = newZoomAmount;
+    });
+  }
+
+  Future<void> zoomOut(double newZoomAmount) async {
+    GoogleMapController controller = await _controller.future;
+    setState(() {
+      controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(44.562854, -123.278977), zoom: newZoomAmount)));
+      zoomAmount = newZoomAmount;
+    });
+  }
 
   double calculateDistance(double deviceLocation, double clueLocation) {
     double distanceAway;
@@ -59,7 +88,6 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        leading: Container(),
         title: Text(
             "Correct!",
             style: TextStyle(color: Color.fromRGBO(255,117, 26, 1)),
@@ -92,22 +120,15 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
               ),
               SizedBox(height: 20),
               SizedBox(
-                height: screen_height*0.45, width: screen_width*0.9,
+                height: screen_height*0.35, width: screen_width*0.9,
                 child: Container(
                   color: Colors.grey,
                   child: Center(
-                    child: 
-                    
-                    GoogleMap(
-                      mapType: MapType.hybrid,
-                      initialCameraPosition: _kOSU,
-                      zoomGesturesEnabled: true,
-                      myLocationButtonEnabled: true,
-                      myLocationEnabled: true,
-                      onMapCreated: (GoogleMapController controller) {
-                        _controller = controller;
-                      },
-                    ),
+                    child: Stack(children: <Widget> [
+                      _googleMap(context, _controller, myMarkers),
+                      _zoomInButton(context, zoomAmount, zoomIn),
+                      _zoomOutButton(context, zoomAmount, zoomOut),
+                    ]), 
                   ),
                 ),
               ),
@@ -141,3 +162,59 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
     );
   }
 }
+
+Widget _googleMap(BuildContext context, _controller, myMarkers){
+  return Container(
+    height: MediaQuery.of(context).size.height,
+    width: MediaQuery.of(context).size.width,
+    child: GoogleMap(
+      mapType: MapType.hybrid,
+      initialCameraPosition: CameraPosition(
+        target: LatLng(44.562854, -123.278977),
+        zoom: 15,
+      ),
+      zoomGesturesEnabled: true,
+      myLocationButtonEnabled: true,
+      myLocationEnabled: true,
+      onMapCreated: (GoogleMapController controller) async {
+        _controller.complete(controller);
+      },
+      markers: myMarkers
+    ),
+  );
+}
+
+Widget _zoomInButton(BuildContext context, double zoomAmount, void Function(double zoomAmount) zoomIn){
+  return Align(
+    alignment: Alignment.bottomRight,
+    child: RawMaterialButton(
+      shape: CircleBorder(),
+      elevation: 2.0,
+      fillColor: Colors.orange,
+      padding: const EdgeInsets.all(5.0), 
+      onPressed: (){
+        zoomAmount++;
+        zoomIn(zoomAmount);
+      },
+      child: Icon(Icons.add),
+    )
+  );
+}
+
+Widget _zoomOutButton(BuildContext context, double zoomAmount, void Function(double zoomAmount) zoomOut){
+  return Align(
+    alignment: Alignment.bottomLeft,
+    child: RawMaterialButton(
+      shape: CircleBorder(),
+      elevation: 2.0,
+      fillColor: Colors.orange,
+      padding: const EdgeInsets.all(5.0), 
+      onPressed: (){
+        zoomAmount--;
+        zoomOut(zoomAmount);
+      },
+      child: Icon(Icons.remove),
+    )
+  );
+}
+
