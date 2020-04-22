@@ -115,62 +115,62 @@
     "challenges": {
         "1": {
             "number": 1,
-            "Completed": false,
-            "Description": "Read a Book! Photograph the team reading a book in the library",
+            "completed": false,
+            "description": "Read a Book! Photograph the team reading a book in the library",
             "photoUrl": null
         },
         "2": {
             "number": 2,
-            "Completed": false,
-            "Description": "Instagram Pic! Take an artsy insta-pic under the Irsih Bend Covered Bridge. Post the pic on social media as well.",
+            "completed": false,
+            "description": "Instagram Pic! Take an artsy insta-pic under the Irish-Bend Covered Bridge.",
             "photoUrl": null
         },
         "3": {
             "number": 3,
-            "Completed": false,
-            "Description": "Campus Brochure! Photograph a human pyramid of the team in fron of OSU's iconic Weatherford Hall.",
+            "completed": false,
+            "description": "Campus Brochure! Photograph a human pyramid of the team in front of OSU's iconic Weatherford Hall.",
             "photoUrl": null
         },
         "4": {
             "number": 4,
-            "Completed": false,
-            "Description": "Obstacle Course! Complete the whole USMC obstacle training course. Get video evidence.",
+            "completed": false,
+            "description": "Obstacle Course! Complete the whole USMC obstacle training course. Get video evidence.",
             "photoUrl": null
         },
         "5": {
             "number": 5,
-            "Completed": false,
-            "Description": "Travel Abroad! Learn a non english greeting from a student at the International Living Learning Center. take a video saying the word.",
+            "completed": false,
+            "description": "Travel Abroad! Learn a non-English greeting from a student at the International Living Learning Center. Take a video saying the word.",
             "photoUrl": null
         },
         "6": {
             "number": 6,
-            "Completed": false,
-            "Description": "Go Greek! Find the most frequent greek letter on Greek row. Take a picture of the letter.",
+            "completed": false,
+            "description": "Go Greek! Find the most frequent greek letter on Greek row. Take a picture of the letter.",
             "photoUrl": null
         },
         "7": {
             "number": 7,
-            "Completed": false,
-            "Description": "Night Life! Photograph the team with an employee at Clodfelters.",
+            "completed": false,
+            "description": "Night Life! Photograph the team with an employee at Clodfelters.",
             "photoUrl": null
         },
         "8": {
             "number": 8,
-            "Completed": false,
-            "Description": "School Spirit! Photograph the team trying something on from the Beaver Store.",
+            "completed": false,
+            "description": "School Spirit! Photograph the team trying something on from the Beaver Store.",
             "photoUrl": null
         },
         "9": {
             "number": 9,
-            "Completed": false,
-            "Description": "Make a Friend! Video a secret handshake with a stranger.",
+            "completed": false,
+            "description": "Make a Friend! Video a secret handshake with a stranger.",
             "photoUrl": null
         },
         "10": {
             "number": 10,
-            "Completed": false,
-            "Description": "Stay Safe! Pick-up a free contraceptive from Student Health Services. Make sure to capture the moment.",
+            "completed": false,
+            "description": "Stay Safe! Pick-up a free contraceptive from Student Health Services. Make sure to capture the moment.",
             "photoUrl": null
         }
     }        

@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/challenge_model.dart';
 
 class ChallengeScreen extends StatefulWidget {
+  
+  //final List<Challenge> allChallenges;
+
+  //ChallengeScreen({Key key, this.allChallenges}) : super(key: key);
+  
   @override
   _ChallengeScreen createState() => _ChallengeScreen();
 }
@@ -54,7 +60,9 @@ class _ChallengeScreen extends State<ChallengeScreen> {
           if (!snapshot.hasData || snapshot.data.data["challenges"].length == 0 || snapshot.data.data["challenges"].length == null) {
             return CircularProgressIndicator();
           } else {
-          return ListView.builder(
+          return 
+          //ListOfChallenges(context, isChallengeCompleted, widget.allChallenges, cameraIconOrPhoto);
+          ListView.builder(
             itemCount: snapshot.data.data["challenges"].length,
               itemBuilder: (context, index) {
                 var document = snapshot.data.data["challenges"][(index+1).toString()];
@@ -71,3 +79,18 @@ class _ChallengeScreen extends State<ChallengeScreen> {
     );
   }
 }
+/*
+Widget ListOfChallenges(BuildContext context, Widget Function(bool isCompleted) isChallengeCompleted, List<Challenge> allChallenges, Widget Function(bool isCompleted, String photoUrl) cameraIconOrPhoto){
+  return ListView.builder(
+    itemCount: allChallenges.length,
+      itemBuilder: (context, index) {
+        print(allChallenges[index].toJson());
+        return ListTile(
+          leading: isChallengeCompleted(allChallenges[index].completed),
+          title: Text(allChallenges[index].description),
+          trailing: cameraIconOrPhoto(allChallenges[index].completed, allChallenges[index].photoURL),
+        );
+      },
+    );
+}
+*/

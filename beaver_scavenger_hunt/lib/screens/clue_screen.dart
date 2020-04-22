@@ -7,6 +7,7 @@ import '../functions/remove_dropdown_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_formfield/dropdown_formfield.dart';
 import '../models/challenge_model.dart';
+import '../screens/challenge_screen.dart';
 
 class ClueScreen extends StatefulWidget {
   
@@ -439,6 +440,7 @@ MenuChallengesWidget(BuildContext context, List<Challenge> allChallenges){
     ),
     onTap: () {
       Navigator.popAndPushNamed(context, '/challenge_screen');
+      //Navigator.push(context, MaterialPageRoute(builder: (context) => ChallengeScreen(allChallenges: allChallenges)));
     },
   );
 }
