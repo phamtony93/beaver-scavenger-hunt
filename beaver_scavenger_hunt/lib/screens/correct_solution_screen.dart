@@ -183,7 +183,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                 ),
               widget.allLocations[widget.whichLocation + 1].available == false ? 
               Text(
-                "Get within 50 km of",
+                "Get within 50 m of",
                 style: TextStyle(fontSize: 20),
                 textAlign: TextAlign.center,
                 ):
@@ -215,7 +215,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                 ),
               ),
               distanceAway == null ? SizedBox(height:0):
-              Text("${distanceAway.toStringAsFixed(distanceAway.truncateToDouble() == distanceAway ? 0 : 2)} km away"),
+              Text("${distanceAway.toStringAsFixed(distanceAway.truncateToDouble() == distanceAway ? 0 : 2)} meters away"),
               Divider(thickness: 5, height: 50, indent: 50, endIndent: 50,),
               widget.allLocations[widget.whichLocation + 1].available == true ? RaisedButton(
                 color: Color.fromRGBO(255,117, 26, 1),
