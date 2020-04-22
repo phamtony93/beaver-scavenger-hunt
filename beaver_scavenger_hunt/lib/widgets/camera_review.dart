@@ -97,19 +97,23 @@ class _CameraReviewState extends State<CameraReview> {
           child: Align(
             alignment: Alignment.topCenter,
             child: previewVideo()
-
           ))
       );
     }
   }
 
   Widget previewVideo() {
-    print('got here 1');
+    if(_videoController.value.initialized) {
+      print('true');
+    }
+    else {
+      print('false');
+    }
+
     return FutureBuilder(
       future: _initializeVideoPlayerFuture,
       builder: (context, snapshot) {
         if(snapshot.connectionState == ConnectionState.done) {
-          print('got here 2');
           return AspectRatio(
             aspectRatio: _videoController.value.size != null ? _videoController.value.aspectRatio : 2 / 2,
             child: VideoPlayer(_videoController),

@@ -1,6 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+//import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import '../main.dart';
@@ -23,7 +23,7 @@ class _CameraState extends State<Camera> {
   @override
   void initState() {
     super.initState();
-    _controller = CameraController(camera, ResolutionPreset.veryHigh);
+    _controller = CameraController(camera, ResolutionPreset.medium);
     _initializeControllerFuture = _controller.initialize();
   }
 
@@ -133,7 +133,7 @@ class _CameraState extends State<Camera> {
       await _initializeControllerFuture;
       fileName = '${DateTime.now()}.jpg';
       pathImage = p.join((await getApplicationDocumentsDirectory()).path, fileName);
-      SystemSound.play(SystemSoundType.click);
+      //SystemSound.play(SystemSoundType.click);
       await _controller.takePicture(pathImage);
       print(pathImage);
       if (pathImage != null ) {
