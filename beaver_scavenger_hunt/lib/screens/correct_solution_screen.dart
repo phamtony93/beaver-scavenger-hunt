@@ -183,7 +183,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                 ),
               widget.allLocations[widget.whichLocation + 1].available == false ? 
               Text(
-                "Get within 50 m of",
+                "Get within 50 meters of",
                 style: TextStyle(fontSize: 20),
                 textAlign: TextAlign.center,
                 ):
