@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/clue_location_model.dart';
 import 'correct_solution_screen.dart';
 import '../screens/challenge_screen.dart';
+import '../screens/profile_screen.dart';
 import '../screens/rules_screen.dart';
 import '../classes/UserDetails.dart';
 import '../functions/make_random_dropdown_list.dart';
@@ -116,6 +117,12 @@ class _ClueScreenState extends State<ClueScreen> {
             );
           },
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.account_circle),
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen(userDetails: widget.userDetails, whichLocation: widget.whichLocation))),
+          )
+        ]
       ),
       drawer: Builder(
         builder: (BuildContext cntx) {

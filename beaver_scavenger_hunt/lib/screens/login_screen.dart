@@ -70,7 +70,7 @@ class _LoginScreen extends State<LoginScreen> {
         which = i-1;
       }
       allLocations.add(loca);
-    }  
+    } 
 
     if(isNewUser){
       Navigator.push(
@@ -81,6 +81,13 @@ class _LoginScreen extends State<LoginScreen> {
       );
     }
     else{
+      print('1');
+      print(allClueLocationsMap);
+      print('2');
+      print(allChallengesMap);
+      print('3');
+      print(allLocations);
+      
       Navigator.push(
         context, 
         MaterialPageRoute(
