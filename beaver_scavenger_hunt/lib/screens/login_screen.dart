@@ -9,7 +9,7 @@ import 'package:beaver_scavenger_hunt/functions/is_new_user.dart';
 import 'package:beaver_scavenger_hunt/functions/get_prev_user.dart';
 import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
 import 'package:beaver_scavenger_hunt/classes/ProviderDetails.dart';
-// import 'profile_screen.dart';
+import '../models/challenge_model.dart';
 import 'welcome_screen.dart';
 
 class LoginScreen extends StatefulWidget{
@@ -70,13 +70,20 @@ class _LoginScreen extends State<LoginScreen> {
         which = i-1;
       }
       allLocations.add(loca);
+    }
+
+    //create challenge object(s) from json map
+    List<Challenge> allChallenges = [];
+    for (int i = 1; i < 11; i++){
+      Challenge chall = Challenge.fromJson(allChallengesMap["$i"]);
+      allChallenges.add(chall);
     }  
 
     if(isNewUser){
       Navigator.push(
         context, 
         MaterialPageRoute(
-          builder: (context) => WelcomeScreen(userDetails: user, allLocations: allLocations, allChallengesMap: allChallengesMap)
+          builder: (context) => WelcomeScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges)
         )
       );
     }
@@ -84,16 +91,10 @@ class _LoginScreen extends State<LoginScreen> {
       Navigator.push(
         context, 
         MaterialPageRoute(
-          builder: (context) => ClueScreen(userDetails: user, allLocations: allLocations, whichLocation: which,)
+          builder: (context) => ClueScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges, whichLocation: which,)
         )
       );
-    }    
-
-    // Navigator.pushReplacement(context,
-    // MaterialPageRoute(
-    //   builder: (context) => WelcomeScreen(userDetails: details),
-    // ));
-
+    }
     return userDetails;
  
   }
@@ -166,13 +167,20 @@ class _LoginScreen extends State<LoginScreen> {
                       which = i-1;
                     }
                     allLocations.add(loca);
+                  }
+
+                  //create challenge object(s) from json map
+                  List<Challenge> allChallenges = [];
+                  for (int i = 1; i < 11; i++){
+                    Challenge chall = Challenge.fromJson(allChallengesMap["$i"]);
+                    allChallenges.add(chall);
                   }  
 
                   if(isNewUser){
                     Navigator.push(
                       context, 
                       MaterialPageRoute(
-                        builder: (context) => WelcomeScreen(userDetails: user, allLocations: allLocations, allChallengesMap: allChallengesMap)
+                        builder: (context) => WelcomeScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges)
                       )
                     );
                   }
@@ -180,7 +188,7 @@ class _LoginScreen extends State<LoginScreen> {
                     Navigator.push(
                       context, 
                       MaterialPageRoute(
-                        builder: (context) => ClueScreen(userDetails: user, allLocations: allLocations, whichLocation: which,)
+                        builder: (context) => ClueScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges, whichLocation: which,)
                       )
                     );
                   }

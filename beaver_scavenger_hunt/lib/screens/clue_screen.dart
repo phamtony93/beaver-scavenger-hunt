@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import '../models/clue_location_model.dart';
 import 'correct_solution_screen.dart';
-import '../screens/challenge_screen.dart';
-import '../screens/rules_screen.dart';
 import '../classes/UserDetails.dart';
 import '../functions/make_random_dropdown_list.dart';
 import '../functions/remove_dropdown_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_formfield/dropdown_formfield.dart';
+import '../models/challenge_model.dart';
 
 class ClueScreen extends StatefulWidget {
   
   UserDetails userDetails;
   final List<ClueLocation> allLocations;
+  final List<Challenge> allChallenges;
   final int whichLocation;
   
-  ClueScreen({Key key, this.allLocations, this.whichLocation, this.userDetails}) : super(key: key);
+  ClueScreen({Key key, this.allLocations, this.allChallenges, this.whichLocation, this.userDetails}) : super(key: key);
   
   @override
   _ClueScreenState createState() => _ClueScreenState();
@@ -24,7 +24,6 @@ class ClueScreen extends StatefulWidget {
 class _ClueScreenState extends State<ClueScreen> {
 
   final formKey = GlobalKey<FormState>();
-  //String dropdownValue = "Select a location";
   String _myLocation;
   String _myLocationResult;
   bool _incorrect;
@@ -52,12 +51,14 @@ class _ClueScreenState extends State<ClueScreen> {
 
   }
 
+  //SET MY STATE FUNCTION
   void setMyState(String value){
     setState(() {
       _myLocation = value;
     });
   }
 
+  //SAVE FORM FUNCTION
   void _saveForm() {
     var form = formKey.currentState;
     if (_myLocation == ""){
@@ -77,8 +78,11 @@ class _ClueScreenState extends State<ClueScreen> {
       form.save();
       widget.allLocations[widget.whichLocation].solved = true;
       removeDropdownItem(_myLocation, dropdownDataList);
-      Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 1}.solved': true});
-      Navigator.push(context, MaterialPageRoute(builder: (context) => CorrectSolutionScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation, userDetails: widget.userDetails)));
+      if (widget.whichLocation < 10){
+        Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 1}.solved': true});
+      Navigator.push(context, MaterialPageRoute(builder: (context) => CorrectSolutionScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation, allChallenges: widget.allChallenges, userDetails: widget.userDetails)));
+      }
+      
     }
   }
 
@@ -119,7 +123,7 @@ class _ClueScreenState extends State<ClueScreen> {
       ),
       drawer: Builder(
         builder: (BuildContext cntx) {
-          return MenuDrawer(context, widget.allLocations, widget.whichLocation, widget.userDetails);
+          return MenuDrawer(context, widget.allLocations, widget.whichLocation, widget.allChallenges, widget.userDetails);
         }
       ),
       body: SingleChildScrollView(
@@ -333,7 +337,7 @@ Widget EnterGuessButton(BuildContext context, String label, formKey, List<ClueLo
 }
 */
 
-Widget MenuDrawer(BuildContext context, List<ClueLocation> allLocations, int which, UserDetails userDetails){
+Widget MenuDrawer(BuildContext context, List<ClueLocation> allLocations, int which, List<Challenge> allChallenges, UserDetails userDetails){
   return GestureDetector(
     onTap: (){
       Navigator.pop(context);
@@ -349,17 +353,17 @@ Widget MenuDrawer(BuildContext context, List<ClueLocation> allLocations, int whi
                 SizedBox(height: 25),
                 MyDrawerHeader(context),
                 MenuRulesWidget(context),
-                MenuChallengesWidget(context),
-                MenuClueWidget(context, allLocations, 0, scaffoldContext, which, userDetails),
-                MenuClueWidget(context, allLocations, 1, scaffoldContext, which, userDetails),
-                MenuClueWidget(context, allLocations, 2, scaffoldContext, which, userDetails),
-                MenuClueWidget(context, allLocations, 3, scaffoldContext, which, userDetails),
-                MenuClueWidget(context, allLocations, 4, scaffoldContext, which, userDetails),
-                MenuClueWidget(context, allLocations, 5, scaffoldContext, which, userDetails),
-                MenuClueWidget(context, allLocations, 6, scaffoldContext, which, userDetails),
-                MenuClueWidget(context, allLocations, 7, scaffoldContext, which, userDetails),
-                MenuClueWidget(context, allLocations, 8, scaffoldContext, which, userDetails),
-                MenuClueWidget(context, allLocations, 9, scaffoldContext, which, userDetails),
+                MenuChallengesWidget(context, allChallenges),
+                MenuClueWidget(context, allLocations, 0, allChallenges, scaffoldContext, which, userDetails),
+                MenuClueWidget(context, allLocations, 1, allChallenges, scaffoldContext, which, userDetails),
+                MenuClueWidget(context, allLocations, 2, allChallenges, scaffoldContext, which, userDetails),
+                MenuClueWidget(context, allLocations, 3, allChallenges, scaffoldContext, which, userDetails),
+                MenuClueWidget(context, allLocations, 4, allChallenges, scaffoldContext, which, userDetails),
+                MenuClueWidget(context, allLocations, 5, allChallenges, scaffoldContext, which, userDetails),
+                MenuClueWidget(context, allLocations, 6, allChallenges, scaffoldContext, which, userDetails),
+                MenuClueWidget(context, allLocations, 7, allChallenges, scaffoldContext, which, userDetails),
+                MenuClueWidget(context, allLocations, 8, allChallenges, scaffoldContext, which, userDetails),
+                MenuClueWidget(context, allLocations, 9, allChallenges, scaffoldContext, which, userDetails),
               ],
             )
           );
@@ -417,7 +421,7 @@ MenuRulesWidget(BuildContext context){
   );
 }
         
-MenuChallengesWidget(BuildContext context){
+MenuChallengesWidget(BuildContext context, List<Challenge> allChallenges){
   return ListTile(
     leading: Icon(Icons.directions_run, color: Colors.black),
     title: ClipRRect(
@@ -439,7 +443,7 @@ MenuChallengesWidget(BuildContext context){
   );
 }
 
-Widget MenuClueWidget(BuildContext context, List<ClueLocation> allLocations, int which, BuildContext scaffoldContext, int current, UserDetails userDetails){
+Widget MenuClueWidget(BuildContext context, List<ClueLocation> allLocations, int which, List<Challenge> allChallenges, BuildContext scaffoldContext, int current, UserDetails userDetails){
   return ListTile(
     leading: Icon(allLocations[which].solved == true ? Icons.check: Icons.lightbulb_outline, color: allLocations[which].available == true ? Colors.black: Colors.grey),
     title: ClipRRect(
@@ -463,7 +467,7 @@ Widget MenuClueWidget(BuildContext context, List<ClueLocation> allLocations, int
         }
         else{
           Navigator.pop(context);
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: allLocations, whichLocation: which, userDetails: userDetails,)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: allLocations, whichLocation: which, allChallenges: allChallenges, userDetails: userDetails,)));
         }
       }
       else{

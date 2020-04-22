@@ -7,7 +7,7 @@ class ClueLocation{
   String clue;
   String solution;
   String photoURL;
-
+  bool found = false;
   bool solved = false;
   bool available = false;
 
@@ -20,6 +20,7 @@ class ClueLocation{
         longitude = json['longitude'],
         clue = json['clue'],
         solution = json['solution'],
+        found = json['found'],
         photoURL = json['photoURL'],
         solved = json['solved'],
         available = json['available'];
@@ -31,6 +32,7 @@ class ClueLocation{
     'longitude': this.longitude,
     'clue': this.clue,
     'solution': this.solution,
+    'found': this.found,
     'photoURL': this.photoURL,
     'solved': this.solved,
     'available': this.available

@@ -2,6 +2,7 @@
 import '../classes/UserDetails.dart';
 import 'package:flutter/material.dart';
 import '../models/clue_location_model.dart';
+import '../models/challenge_model.dart';
 import 'clue_screen.dart';
 import 'package:location/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -14,9 +15,10 @@ class CorrectSolutionScreen extends StatefulWidget {
   
   UserDetails userDetails;
   final List<ClueLocation> allLocations;
+  final List<Challenge> allChallenges;
   final int whichLocation;
 
-  CorrectSolutionScreen({this.allLocations, this.whichLocation, this.userDetails});
+  CorrectSolutionScreen({this.allLocations, this.whichLocation, this.allChallenges, this.userDetails});
 
   @override
   _CorrectSolutionScreenState createState() => _CorrectSolutionScreenState();
@@ -28,7 +30,11 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
   LocationData locationData;
   StreamController<LocationData> _locationController = StreamController<LocationData>();
   Stream<LocationData> get locationStream => _locationController.stream;
-
+  Location location = Location();
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
+  LocationData _locationData;
+  
   double myDeviceLat;
   double myDeviceLong;
   double distanceAway;
@@ -36,13 +42,6 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
   double screenLong;
   double zoomAmount;
   Set<Marker> myMarkers = {};
-
-
-  Location location = Location();
-
-  bool _serviceEnabled;
-  PermissionStatus _permissionGranted;
-  LocationData _locationData;
   
   void initState(){
     super.initState();
@@ -52,6 +51,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
     screenLong = widget.allLocations[widget.whichLocation].longitude;
     zoomAmount = 15;
     
+    //make marker for clue location
     Marker OSU = Marker(
       markerId: MarkerId("${widget.allLocations[widget.whichLocation].solution}"),
       position: LatLng(screenLat, screenLong),
@@ -59,6 +59,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange)
     );
 
+    //add location marker to map
     myMarkers.add(OSU);
   }
 
@@ -86,20 +87,30 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
         myDeviceLat = currentLocation.latitude;
         myDeviceLong = currentLocation.longitude;
       });
+      //Calculate device's distance from location
       distanceAway = calculateDistance(myDeviceLat, myDeviceLong, widget.allLocations[widget.whichLocation].latitude, widget.allLocations[widget.whichLocation].longitude);
-      if (distanceAway < 50 && widget.allLocations[widget.whichLocation + 1].available == false){
-        if (widget.whichLocation < 9){
+      
+      //When user gets within 50 meters
+      if (distanceAway < 50 && widget.allLocations[widget.whichLocation].found == false){
+        //mark clueLocation as found
+        widget.allLocations[widget.whichLocation].found = true;
+        
+        //for first 9 clues
+        if (widget.whichLocation < widget.allLocations.length - 1){
+          
           //update object
           widget.allLocations[widget.whichLocation + 1].available = true;
           //update db
+          Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 1}.found': true});
           Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 2}.available': true});
+          
           //return to clue screen (next clue available)
-        
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation + 1, userDetails: widget.userDetails,)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation + 1, allChallenges: widget.allChallenges, userDetails: widget.userDetails)));
         }
+        //for last (10th clue)
         else
          //Change to hunt complete screen
-          Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomeScreen(userDetails: widget.userDetails, allLocations: widget.allLocations, allChallenges: widget.allChallenges)));
       }
     }); 
   }
@@ -181,7 +192,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                 style: TextStyle(fontSize: 20),
                 textAlign: TextAlign.center,
                 ),
-              widget.allLocations[widget.whichLocation + 1].available == false ? 
+              widget.allLocations[widget.whichLocation].found == false ? 
               Text(
                 "Get within 50 meters of",
                 style: TextStyle(fontSize: 20),
@@ -193,7 +204,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                 style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1)),
                 textAlign: TextAlign.center,
               ),
-              widget.allLocations[widget.whichLocation + 1].available == false ?
+              widget.allLocations[widget.whichLocation].found == false ?
               Text(
                 "to unlock the next clue.",
                 style: TextStyle(fontSize: 20),
@@ -217,7 +228,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
               distanceAway == null ? SizedBox(height:0):
               Text("${distanceAway.toStringAsFixed(distanceAway.truncateToDouble() == distanceAway ? 0 : 2)} meters away"),
               Divider(thickness: 5, height: 50, indent: 50, endIndent: 50,),
-              widget.allLocations[widget.whichLocation + 1].available == true ? RaisedButton(
+              widget.allLocations[widget.whichLocation].found == true ? RaisedButton(
                 color: Color.fromRGBO(255,117, 26, 1),
                 child: Text(
                   "Go To Next Clue",
@@ -226,10 +237,6 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                 onPressed: (){
                   if (widget.whichLocation < 9){
                     Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation + 1, userDetails: widget.userDetails,)));
-                  }
-                  else{
-                    //Change to hunt complete screen
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
                   }
                 }
               ):
