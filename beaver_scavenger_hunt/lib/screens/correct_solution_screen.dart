@@ -32,11 +32,6 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
   double myDeviceLat;
   double myDeviceLong;
   double distanceAway;
-<<<<<<< HEAD
-  CameraPosition currentPosition;
-  double zoomAmount;
-  Set<Marker> myMarkers = {};
-=======
   double screenLat;
   double screenLong;
   double zoomAmount;
@@ -48,23 +43,11 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
   bool _serviceEnabled;
   PermissionStatus _permissionGranted;
   LocationData _locationData;
->>>>>>> seawellj_branch
   
   void initState(){
     super.initState();
     updateDeviceLocation();
     retrieveLocation();
-<<<<<<< HEAD
-    zoomAmount = 15;
-    currentPosition = CameraPosition(
-      target: LatLng(44.562854, -123.278977),
-      zoom: 15,
-    );
-    
-    Marker OSU = Marker(
-      markerId: MarkerId("${widget.allLocations[widget.whichLocation].solution}"),
-      position: LatLng(widget.allLocations[widget.whichLocation].latitude, widget.allLocations[widget.whichLocation].longitude),
-=======
     screenLat = widget.allLocations[widget.whichLocation].latitude;
     screenLong = widget.allLocations[widget.whichLocation].longitude;
     zoomAmount = 15;
@@ -72,14 +55,11 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
     Marker OSU = Marker(
       markerId: MarkerId("${widget.allLocations[widget.whichLocation].solution}"),
       position: LatLng(screenLat, screenLong),
->>>>>>> seawellj_branch
       infoWindow: InfoWindow(title: "${widget.allLocations[widget.whichLocation].solution}"),
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange)
     );
 
     myMarkers.add(OSU);
-<<<<<<< HEAD
-=======
   }
 
   void updateDeviceLocation() async {
@@ -122,7 +102,6 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
           Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
       }
     }); 
->>>>>>> seawellj_branch
   }
 
   void retrieveLocation() async {
@@ -134,21 +113,6 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
     });
   }
 
-<<<<<<< HEAD
-  Future<void> zoomIn(double newZoomAmount) async {
-    GoogleMapController controller = await _controller.future;
-    setState(() {
-      controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(44.562854, -123.278977), zoom: newZoomAmount)));
-      zoomAmount = newZoomAmount;
-    });
-  }
-
-  Future<void> zoomOut(double newZoomAmount) async {
-    GoogleMapController controller = await _controller.future;
-    setState(() {
-      controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(44.562854, -123.278977), zoom: newZoomAmount)));
-      zoomAmount = newZoomAmount;
-=======
   Future<void> zoomIn(double newZoomAmount, double newLat, double newLong) async {
     GoogleMapController controller = await _controller.future;
     setState(() {
@@ -166,7 +130,6 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
       zoomAmount = newZoomAmount;
       screenLat = newLat;
       screenLong = newLong;
->>>>>>> seawellj_branch
     });
   }
 
@@ -244,15 +207,9 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                   color: Colors.grey,
                   child: Center(
                     child: Stack(children: <Widget> [
-<<<<<<< HEAD
-                      _googleMap(context, _controller, myMarkers),
-                      _zoomInButton(context, zoomAmount, zoomIn),
-                      _zoomOutButton(context, zoomAmount, zoomOut),
-=======
                       _googleMap(context, _controller, myMarkers, _updatePosition, screenLat, screenLong),
                       _zoomInButton(context, zoomAmount, zoomIn, screenLat, screenLong),
                       _zoomOutButton(context, zoomAmount, zoomOut, screenLat, screenLong),
->>>>>>> seawellj_branch
                     ]), 
                   ),
                 ),
@@ -285,22 +242,14 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
   }
 }
 
-<<<<<<< HEAD
-Widget _googleMap(BuildContext context, _controller, myMarkers){
-=======
 Widget _googleMap(BuildContext context, _controller, myMarkers, void Function(CameraPosition _position) _updatePosition, double screenLat, double screenLong){
->>>>>>> seawellj_branch
   return Container(
     height: MediaQuery.of(context).size.height,
     width: MediaQuery.of(context).size.width,
     child: GoogleMap(
       mapType: MapType.hybrid,
       initialCameraPosition: CameraPosition(
-<<<<<<< HEAD
-        target: LatLng(44.562854, -123.278977),
-=======
         target: LatLng(screenLat, screenLong),
->>>>>>> seawellj_branch
         zoom: 15,
       ),
       zoomGesturesEnabled: true,
@@ -309,21 +258,13 @@ Widget _googleMap(BuildContext context, _controller, myMarkers, void Function(Ca
       onMapCreated: (GoogleMapController controller) async {
         _controller.complete(controller);
       },
-<<<<<<< HEAD
-      markers: myMarkers
-=======
       markers: myMarkers,
       onCameraMove: ((_position) => _updatePosition(_position)),
->>>>>>> seawellj_branch
     ),
   );
 }
 
-<<<<<<< HEAD
-Widget _zoomInButton(BuildContext context, double zoomAmount, void Function(double zoomAmount) zoomIn){
-=======
 Widget _zoomInButton(BuildContext context, double zoomAmount, void Function(double zoomAmount, double screenLat, double screenLong) zoomIn, double screenLat, double screenLong){
->>>>>>> seawellj_branch
   return Align(
     alignment: Alignment.bottomRight,
     child: RawMaterialButton(
@@ -333,22 +274,14 @@ Widget _zoomInButton(BuildContext context, double zoomAmount, void Function(doub
       padding: const EdgeInsets.all(5.0), 
       onPressed: (){
         zoomAmount++;
-<<<<<<< HEAD
-        zoomIn(zoomAmount);
-=======
         zoomIn(zoomAmount, screenLat, screenLong);
->>>>>>> seawellj_branch
       },
       child: Icon(Icons.add),
     )
   );
 }
 
-<<<<<<< HEAD
-Widget _zoomOutButton(BuildContext context, double zoomAmount, void Function(double zoomAmount) zoomOut){
-=======
 Widget _zoomOutButton(BuildContext context, double zoomAmount, void Function(double zoomAmount, double screenLat, double screenLong) zoomOut, double screenLat, double screenLong){
->>>>>>> seawellj_branch
   return Align(
     alignment: Alignment.bottomLeft,
     child: RawMaterialButton(
@@ -358,11 +291,7 @@ Widget _zoomOutButton(BuildContext context, double zoomAmount, void Function(dou
       padding: const EdgeInsets.all(5.0), 
       onPressed: (){
         zoomAmount--;
-<<<<<<< HEAD
-        zoomOut(zoomAmount);
-=======
         zoomOut(zoomAmount, screenLat, screenLong);
->>>>>>> seawellj_branch
       },
       child: Icon(Icons.remove),
     )
