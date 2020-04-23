@@ -191,7 +191,7 @@ class _CameraState extends State<Camera> {
       await _controller.stopVideoRecording();
       print('video stopped');
       if (pathVideo != null ) {
-        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraReviewScreen(path: pathVideo, isImage: false, fileName: fileName) ));
+        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraReviewScreen(path: pathVideo, isImage: false, fileName: fileName, userid: widget.userid, challengeNum: widget.challengeNum) ));
       }
     }
     catch (e) {

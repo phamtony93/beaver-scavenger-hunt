@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 //import '../widgets/camera.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../functions/upload_media.dart';
 import '../models/media.dart';
 import '../screens/login_screen.dart';
 
 class VideoUploading extends StatefulWidget {
-  final path;
-  final fileName;
+  final String path;
+  final String fileName;
+  final int challengeNum;
+  final String userid;
 
-  VideoUploading({Key key, this.path, this.fileName}) : super(key: key);
+  VideoUploading({Key key, this.path, this.fileName, this.userid, this.challengeNum}) : super(key: key);
 
   @override
   _VideoUploadingState createState() => _VideoUploadingState();
@@ -57,11 +60,18 @@ class _VideoUploadingState extends State<VideoUploading> {
   uploadVideo()  {
     uploadMedia(widget.path, widget.fileName).then((String url) {
       video.setURL(url);
+      addURLtoFirebase();
       print(video.getURL());
       // Scaffold.of(context).showSnackBar(
       //   SnackBar(content: Text('Video Uploaded'))
       // );
      Navigator.of(context).push(MaterialPageRoute(builder:  (context) => LoginScreen() ));
+    });
+  }
+
+  void addURLtoFirebase() {
+    Firestore.instance.collection('users').document(widget.userid).updateData({
+      'challenges.${widget.challengeNum}.photoUrl': video.getURL(), 
     });
   }
 

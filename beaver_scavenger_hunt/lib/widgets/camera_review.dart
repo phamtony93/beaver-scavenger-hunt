@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:video_player/video_player.dart';
@@ -75,7 +76,8 @@ class _CameraReviewState extends State<CameraReview> {
                 else {
                   saveVideo();
                   //uploadVideo();
-                  Navigator.of(context).push(MaterialPageRoute(builder:  (context) => VideoUploading(path: widget.path, fileName: widget.fileName) ));
+                  Navigator.of(context).push(MaterialPageRoute(builder:  (context) => VideoUploading(
+                    path: widget.path, fileName: widget.fileName, userid: widget.userid, challengeNum: widget.challengeNum) ));
               }
             }
           ),),
@@ -175,10 +177,17 @@ class _CameraReviewState extends State<CameraReview> {
     uploadMedia(widget.path, widget.fileName).then((String url) {
       photo.setURL(url);
       print(photo.getURL());
+      addURLtoFirebase();
       Scaffold.of(context).showSnackBar(
         SnackBar(content: Text('Photo Uploaded'))
       );
       Navigator.of(context).push(MaterialPageRoute(builder:  (context) => LoginScreen() ));
+    });
+  }
+
+  void addURLtoFirebase() {
+    Firestore.instance.collection('users').document(widget.userid).updateData({
+      'challenges.${widget.challengeNum}.photoUrl': photo.getURL(), 
     });
   }
 

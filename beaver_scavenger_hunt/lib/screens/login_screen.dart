@@ -149,7 +149,12 @@ class _LoginScreen extends State<LoginScreen> {
               RaisedButton(
                 child: Text('Temp Camera Testing'),
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraScreen() ));
+                  Navigator.push(
+                      context, 
+                      MaterialPageRoute(
+                        builder: (context) => CameraScreen(userid: 'uid123', challengeNum: 2)
+                      )
+                    );
                 }
               ),
             ]
