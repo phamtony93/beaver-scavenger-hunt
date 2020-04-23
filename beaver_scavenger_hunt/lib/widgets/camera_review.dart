@@ -8,11 +8,13 @@ import '../screens/login_screen.dart';
 import '../screens/video_uploading.dart';
 
 class CameraReview extends StatefulWidget {
-  final path;
-  final isImage;
-  final fileName;
+  final String path;
+  final bool isImage;
+  final String fileName;
+  final int challengeNum;
+  final String userid;
 
-  CameraReview({Key key, this.path, this.isImage, this.fileName}) : super(key: key);
+  CameraReview({Key key, this.path, this.isImage, this.fileName, this.userid, this.challengeNum}) : super(key: key);
 
   @override
   _CameraReviewState createState() => _CameraReviewState();

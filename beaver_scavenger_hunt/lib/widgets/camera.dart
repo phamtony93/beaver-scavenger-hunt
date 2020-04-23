@@ -7,6 +7,10 @@ import '../main.dart';
 import '../screens/camera_review_screen.dart';
 
 class Camera extends StatefulWidget {
+  final int challengeNum;
+  final String userid;
+
+  Camera({Key key, this.userid, this.challengeNum}) : super(key: key);
 
   @override
   _CameraState createState() => _CameraState();
@@ -137,7 +141,9 @@ class _CameraState extends State<Camera> {
       await _controller.takePicture(pathImage);
       print(pathImage);
       if (pathImage != null ) {
-         Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraReviewScreen(path: pathImage, isImage: true, fileName: fileName) ));
+         Navigator.of(context).push(
+           MaterialPageRoute(builder:  (context) => CameraReviewScreen(
+             path: pathImage, isImage: true, fileName: fileName, userid: widget.userid, challengeNum: widget.challengeNum) ));
       }
     }
     catch (e) {
