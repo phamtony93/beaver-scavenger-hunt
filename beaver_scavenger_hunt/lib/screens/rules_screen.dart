@@ -8,9 +8,8 @@ class RulesScreen extends StatelessWidget {
         title: RichText(
           text: TextSpan(
             children: [
-              TextSpan(text: 'R', style: TextStyle(fontSize: 30)),
+              TextSpan(text: 'R', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
               TextSpan(text: 'ules', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
-              // TextSpan(text: 's', style: TextStyle(fontSize: 30)),
 
             ],
           ),

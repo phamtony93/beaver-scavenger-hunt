@@ -6,6 +6,7 @@ import '../functions/make_random_dropdown_list.dart';
 import '../functions/remove_dropdown_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_formfield/dropdown_formfield.dart';
+import '../screens/profile_screen.dart';
 import '../models/challenge_model.dart';
 import '../screens/challenge_screen.dart';
 
@@ -121,6 +122,20 @@ class _ClueScreenState extends State<ClueScreen> {
             );
           },
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.account_circle),
+            onPressed: () => Navigator.push(
+              context, 
+              MaterialPageRoute(builder: (context) => ProfileScreen(
+                userDetails: widget.userDetails, 
+                allChallenges: widget.allChallenges, 
+                allLocations: widget.allLocations,
+                )
+              )
+            ),
+          )
+        ],
       ),
       drawer: Builder(
         builder: (BuildContext cntx) {
