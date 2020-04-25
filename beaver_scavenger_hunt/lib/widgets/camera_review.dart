@@ -6,8 +6,9 @@ import 'package:gallery_saver/gallery_saver.dart';
 import 'package:video_player/video_player.dart';
 import '../functions/upload_media.dart';
 import '../models/media.dart';
-import '../screens/login_screen.dart';
+import '../screens/challenge_screen.dart';
 import '../screens/video_uploading.dart';
+import '../models/challenge_model.dart';
 
 class CameraReview extends StatefulWidget {
   final String path;
@@ -15,8 +16,9 @@ class CameraReview extends StatefulWidget {
   final String fileName;
   final int challengeNum;
   final UserDetails userDetails;
+  final List<Challenge> allChallenges;
 
-  CameraReview({Key key, this.path, this.isImage, this.fileName, this.userDetails, this.challengeNum}) : super(key: key);
+  CameraReview({Key key, this.path, this.isImage, this.fileName, this.userDetails, this.challengeNum, this.allChallenges}) : super(key: key);
 
   @override
   _CameraReviewState createState() => _CameraReviewState();
@@ -78,7 +80,7 @@ class _CameraReviewState extends State<CameraReview> {
                   saveVideo();
                   //uploadVideo();
                   Navigator.of(context).push(MaterialPageRoute(builder:  (context) => VideoUploading(
-                    path: widget.path, fileName: widget.fileName, userDetails: widget.userDetails, challengeNum: widget.challengeNum) ));
+                    path: widget.path, fileName: widget.fileName, userDetails: widget.userDetails, challengeNum: widget.challengeNum, allChallenges: widget.allChallenges) ));
               }
             }
           ),),
@@ -179,18 +181,29 @@ class _CameraReviewState extends State<CameraReview> {
       photo.setURL(url);
       print(photo.getURL());
       addURLtoFirebase();
+      updateList();
       Scaffold.of(context).showSnackBar(
         SnackBar(content: Text('Photo Uploaded'))
       );
-      Navigator.of(context).push(MaterialPageRoute(builder:  (context) => LoginScreen() ));
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.of(context).push(MaterialPageRoute(builder:  (context) => ChallengeScreen(allChallenges: widget.allChallenges, userDetails: widget.userDetails) ));
     });
   }
 
   void addURLtoFirebase() {
     Firestore.instance.collection('users').document(widget.userDetails.uid).updateData({
-      'challenges.${widget.challengeNum}.photoUrl': photo.getURL(), 
-      'challenges.${widget.challengeNum}.completed' : true,
+      'challenges.${widget.challengeNum+1}.photoUrl': photo.getURL(), 
+      'challenges.${widget.challengeNum+1}.completed' : true,
     });
+  }
+
+  void updateList() {
+    widget.allChallenges[widget.challengeNum].completed = true;
+    widget.allChallenges[widget.challengeNum].photoURL = photo.getURL();
+    widget.allChallenges[widget.challengeNum].solved = true;
+    widget.allChallenges[widget.challengeNum].available = false;
   }
 
   void saveVideo() {
@@ -201,38 +214,5 @@ class _CameraReviewState extends State<CameraReview> {
       // );
     });
   }
-
-  // void uploadVideo() async {
-  //   Scaffold.of(context).showSnackBar(
-  //       SnackBar(content: Text('Video Uploading, Please Wait ...'))
-  //     );
-  //   uploadMedia(widget.path, widget.fileName).then((String url) {
-  //     video.setURL(url);
-  //     print(video.getURL());
-  //     Scaffold.of(context).showSnackBar(
-  //       SnackBar(content: Text('Video Uploaded'))
-  //     );
-  //    Navigator.of(context).push(MaterialPageRoute(builder:  (context) => LoginScreen() ));
-  //   });
-  // }
-
-
-
-  // Widget waitForUpload() {
-  //   //_uploadVideoFuture
-  //   return FutureBuilder(
-  //     future: _uploadVideoFuture,
-  //     builder: (context, snapshot) {
-  //       if(snapshot.connectionState == ConnectionState.done) {
-  //         print('and in here');
-  //         return Center(child: Text('all done'));
-  //       }
-  //       else {
-  //         return Center(child: CircularProgressIndicator());
-  //       }
-  //     },
-  //   );
-  // }
-
 
 }

@@ -4,15 +4,17 @@ import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../functions/upload_media.dart';
 import '../models/media.dart';
-import '../screens/login_screen.dart';
+import '../screens/challenge_screen.dart';
+import '../models/challenge_model.dart';
 
 class VideoUploading extends StatefulWidget {
   final String path;
   final String fileName;
   final int challengeNum;
   final UserDetails userDetails;
+  final List<Challenge> allChallenges;
 
-  VideoUploading({Key key, this.path, this.fileName, this.userDetails, this.challengeNum}) : super(key: key);
+  VideoUploading({Key key, this.path, this.fileName, this.userDetails, this.challengeNum, this.allChallenges}) : super(key: key);
 
   @override
   _VideoUploadingState createState() => _VideoUploadingState();
@@ -62,19 +64,31 @@ class _VideoUploadingState extends State<VideoUploading> {
     uploadMedia(widget.path, widget.fileName).then((String url) {
       video.setURL(url);
       addURLtoFirebase();
+      updateList();
       print(video.getURL());
       // Scaffold.of(context).showSnackBar(
       //   SnackBar(content: Text('Video Uploaded'))
       // );
-     Navigator.of(context).push(MaterialPageRoute(builder:  (context) => LoginScreen() ));
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.of(context).push(MaterialPageRoute(builder:  (context) => ChallengeScreen(allChallenges: widget.allChallenges, userDetails: widget.userDetails) ));
     });
   }
 
   void addURLtoFirebase() {
     Firestore.instance.collection('users').document(widget.userDetails.uid).updateData({
-      'challenges.${widget.challengeNum}.photoUrl': video.getURL(), 
-      'challenges.${widget.challengeNum}.completed' : true,
+      'challenges.${widget.challengeNum+1}.photoUrl': video.getURL(), 
+      'challenges.${widget.challengeNum+1}.completed' : true,
     });
+  }
+
+  void updateList() {
+    widget.allChallenges[widget.challengeNum].completed = true;
+    widget.allChallenges[widget.challengeNum].photoURL = video.getURL();
+    widget.allChallenges[widget.challengeNum].solved = true;
+    widget.allChallenges[widget.challengeNum].available = false;
   }
 
   

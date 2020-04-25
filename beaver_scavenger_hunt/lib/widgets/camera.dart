@@ -6,12 +6,14 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import '../main.dart';
 import '../screens/camera_review_screen.dart';
+import '../models/challenge_model.dart';
 
 class Camera extends StatefulWidget {
   final UserDetails userDetails;
   final int challengeNum;
+  final List<Challenge> allChallenges;
 
-  Camera({Key key, this.userDetails, this.challengeNum}) : super(key: key);
+  Camera({Key key, this.userDetails, this.challengeNum, this.allChallenges}) : super(key: key);
 
   @override
   _CameraState createState() => _CameraState();
@@ -42,7 +44,8 @@ class _CameraState extends State<Camera> {
   Widget build (BuildContext context) {
     return Column( children: <Widget>[
         SizedBox(height:20),
-        Text('Should the clue text be sent in here??'),
+        Padding(padding: EdgeInsets.only(left:15, right:15),
+        child: Text(widget.allChallenges[widget.challengeNum].description),),
         Expanded(child: 
           Padding(padding: EdgeInsets.all(15),
           child: Align(
@@ -143,7 +146,7 @@ class _CameraState extends State<Camera> {
       if (pathImage != null ) {
          Navigator.of(context).push(
            MaterialPageRoute(builder:  (context) => CameraReviewScreen(
-             path: pathImage, isImage: true, fileName: fileName, userDetails: widget.userDetails, challengeNum: widget.challengeNum) ));
+             path: pathImage, isImage: true, fileName: fileName, userDetails: widget.userDetails, challengeNum: widget.challengeNum, allChallenges: widget.allChallenges,) ));
       }
     }
     catch (e) {
@@ -191,7 +194,8 @@ class _CameraState extends State<Camera> {
       await _controller.stopVideoRecording();
       print('video stopped');
       if (pathVideo != null ) {
-        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraReviewScreen(path: pathVideo, isImage: false, fileName: fileName, userDetails: widget.userDetails, challengeNum: widget.challengeNum) ));
+        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraReviewScreen(
+          path: pathVideo, isImage: false, fileName: fileName, userDetails: widget.userDetails, challengeNum: widget.challengeNum, allChallenges: widget.allChallenges,) ));
       }
     }
     catch (e) {
