@@ -28,7 +28,7 @@ class _CameraState extends State<Camera> {
   @override
   void initState() {
     super.initState();
-    _controller = CameraController(camera, ResolutionPreset.medium);
+    _controller = CameraController(camera, ResolutionPreset.high);
     _initializeControllerFuture = _controller.initialize();
   }
 
@@ -138,7 +138,6 @@ class _CameraState extends State<Camera> {
       await _initializeControllerFuture;
       fileName = '${DateTime.now()}.jpg';
       pathImage = p.join((await getApplicationDocumentsDirectory()).path, fileName);
-      //SystemSound.play(SystemSoundType.click);
       await _controller.takePicture(pathImage);
       print(pathImage);
       if (pathImage != null ) {
