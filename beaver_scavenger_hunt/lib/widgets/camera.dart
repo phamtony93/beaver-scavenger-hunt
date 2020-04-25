@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
@@ -7,10 +8,10 @@ import '../main.dart';
 import '../screens/camera_review_screen.dart';
 
 class Camera extends StatefulWidget {
+  final UserDetails userDetails;
   final int challengeNum;
-  final String userid;
 
-  Camera({Key key, this.userid, this.challengeNum}) : super(key: key);
+  Camera({Key key, this.userDetails, this.challengeNum}) : super(key: key);
 
   @override
   _CameraState createState() => _CameraState();
@@ -143,7 +144,7 @@ class _CameraState extends State<Camera> {
       if (pathImage != null ) {
          Navigator.of(context).push(
            MaterialPageRoute(builder:  (context) => CameraReviewScreen(
-             path: pathImage, isImage: true, fileName: fileName, userid: widget.userid, challengeNum: widget.challengeNum) ));
+             path: pathImage, isImage: true, fileName: fileName, userDetails: widget.userDetails, challengeNum: widget.challengeNum) ));
       }
     }
     catch (e) {
@@ -191,7 +192,7 @@ class _CameraState extends State<Camera> {
       await _controller.stopVideoRecording();
       print('video stopped');
       if (pathVideo != null ) {
-        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraReviewScreen(path: pathVideo, isImage: false, fileName: fileName, userid: widget.userid, challengeNum: widget.challengeNum) ));
+        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraReviewScreen(path: pathVideo, isImage: false, fileName: fileName, userDetails: widget.userDetails, challengeNum: widget.challengeNum) ));
       }
     }
     catch (e) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
 import '../widgets/camera_review.dart';
 
 class CameraReviewScreen extends StatelessWidget {
@@ -6,9 +7,9 @@ class CameraReviewScreen extends StatelessWidget {
    final bool isImage;
    final String fileName;
    final int challengeNum;
-   final String userid;
+   final UserDetails userDetails;
 
-  CameraReviewScreen({Key key, this.path, this.isImage, this.fileName, this.userid, this.challengeNum}) : super(key: key);
+  CameraReviewScreen({Key key, this.path, this.isImage, this.fileName, this.userDetails, this.challengeNum}) : super(key: key);
 
   @override
   Widget build (BuildContext context) {
@@ -17,7 +18,7 @@ class CameraReviewScreen extends StatelessWidget {
           title: Text('Review Photo/Video'),
           centerTitle: true,
       ),
-      body: CameraReview(path: path, isImage: isImage, fileName: fileName, userid: userid, challengeNum: challengeNum),
+      body: CameraReview(path: path, isImage: isImage, fileName: fileName, userDetails: userDetails, challengeNum: challengeNum),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 //import '../widgets/camera.dart';
+import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../functions/upload_media.dart';
 import '../models/media.dart';
@@ -9,9 +10,9 @@ class VideoUploading extends StatefulWidget {
   final String path;
   final String fileName;
   final int challengeNum;
-  final String userid;
+  final UserDetails userDetails;
 
-  VideoUploading({Key key, this.path, this.fileName, this.userid, this.challengeNum}) : super(key: key);
+  VideoUploading({Key key, this.path, this.fileName, this.userDetails, this.challengeNum}) : super(key: key);
 
   @override
   _VideoUploadingState createState() => _VideoUploadingState();
@@ -70,8 +71,9 @@ class _VideoUploadingState extends State<VideoUploading> {
   }
 
   void addURLtoFirebase() {
-    Firestore.instance.collection('users').document(widget.userid).updateData({
+    Firestore.instance.collection('users').document(widget.userDetails.uid).updateData({
       'challenges.${widget.challengeNum}.photoUrl': video.getURL(), 
+      'challenges.${widget.challengeNum}.completed' : true,
     });
   }
 

@@ -56,7 +56,7 @@ class WelcomeScreen extends StatelessWidget {
             RaisedButton(
                 child: Text('Temp Camera Testing'),
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraScreen(userid: 'uid123', challengeNum: 2) ));
+                  Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraScreen(userDetails: userDetails, challengeNum: 2) ));
                 }
               ),
           ]

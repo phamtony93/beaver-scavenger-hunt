@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery_saver/gallery_saver.dart';
@@ -13,9 +14,9 @@ class CameraReview extends StatefulWidget {
   final bool isImage;
   final String fileName;
   final int challengeNum;
-  final String userid;
+  final UserDetails userDetails;
 
-  CameraReview({Key key, this.path, this.isImage, this.fileName, this.userid, this.challengeNum}) : super(key: key);
+  CameraReview({Key key, this.path, this.isImage, this.fileName, this.userDetails, this.challengeNum}) : super(key: key);
 
   @override
   _CameraReviewState createState() => _CameraReviewState();
@@ -77,7 +78,7 @@ class _CameraReviewState extends State<CameraReview> {
                   saveVideo();
                   //uploadVideo();
                   Navigator.of(context).push(MaterialPageRoute(builder:  (context) => VideoUploading(
-                    path: widget.path, fileName: widget.fileName, userid: widget.userid, challengeNum: widget.challengeNum) ));
+                    path: widget.path, fileName: widget.fileName, userDetails: widget.userDetails, challengeNum: widget.challengeNum) ));
               }
             }
           ),),
@@ -186,8 +187,9 @@ class _CameraReviewState extends State<CameraReview> {
   }
 
   void addURLtoFirebase() {
-    Firestore.instance.collection('users').document(widget.userid).updateData({
+    Firestore.instance.collection('users').document(widget.userDetails.uid).updateData({
       'challenges.${widget.challengeNum}.photoUrl': photo.getURL(), 
+      'challenges.${widget.challengeNum}.completed' : true,
     });
   }
 

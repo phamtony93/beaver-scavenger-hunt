@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
 import '../widgets/camera.dart';
 
 class CameraScreen extends StatelessWidget {
-  final String userid;
+  final UserDetails userDetails;
   final int challengeNum;
 
-  CameraScreen({Key key, this.userid, this.challengeNum}) : super(key: key);
+  CameraScreen({Key key, this.userDetails, this.challengeNum}) : super(key: key);
 
   @override
   Widget build (BuildContext context) {
@@ -14,7 +15,7 @@ class CameraScreen extends StatelessWidget {
           title: Text('Take a Photo/Video'),
           centerTitle: true,
       ),
-      body: Camera(userid: userid, challengeNum: challengeNum),
+      body: Camera(userDetails: userDetails, challengeNum: challengeNum),
     );
   }
 }
