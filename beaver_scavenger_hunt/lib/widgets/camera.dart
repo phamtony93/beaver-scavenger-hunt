@@ -1,14 +1,17 @@
 import 'package:camera/camera.dart';
+import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:gallery_saver/gallery_saver.dart';
+//import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-//import '../functions/media_upload.dart';
-import '../models/media.dart';
 import '../main.dart';
+import '../screens/camera_review_screen.dart';
 
 class Camera extends StatefulWidget {
+  final UserDetails userDetails;
+  final int challengeNum;
+
+  Camera({Key key, this.userDetails, this.challengeNum}) : super(key: key);
 
   @override
   _CameraState createState() => _CameraState();
@@ -17,16 +20,15 @@ class Camera extends StatefulWidget {
 class _CameraState extends State<Camera> {
   CameraController _controller;
   Future<void> _initializeControllerFuture;
+  String fileName;
   String pathImage;
   String pathVideo;
   bool isRecordingVideo = false;
-  Media photo = Media();
-  Media video = Media();
 
   @override
   void initState() {
     super.initState();
-    _controller = CameraController(camera, ResolutionPreset.medium);
+    _controller = CameraController(camera, ResolutionPreset.high);
     _initializeControllerFuture = _controller.initialize();
   }
 
@@ -66,7 +68,6 @@ class _CameraState extends State<Camera> {
               iconSize: 30.0,
               onPressed: () async {
                 await takePhoto();
-                //photo.setURL(await uploadMedia(pathImage) ); implement after merge
               }
             ),
           ),
@@ -109,9 +110,13 @@ class _CameraState extends State<Camera> {
       future: _initializeControllerFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return AspectRatio(
-            aspectRatio: 2 / 2, //_controller.value.aspectRatio,
-            child: CameraPreview(_controller));
+          return RotatedBox(
+              quarterTurns: MediaQuery.of(context).orientation == Orientation.landscape ? 3 : 0,
+              child: AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                  child: CameraPreview(_controller)
+              ),
+          );
         }
         else {
           return Center(child: CircularProgressIndicator());
@@ -131,18 +136,14 @@ class _CameraState extends State<Camera> {
 
     try {
       await _initializeControllerFuture;
-      pathImage = p.join((await getApplicationDocumentsDirectory()).path,'${DateTime.now()}.jpg',);
-      SystemSound.play(SystemSoundType.click);
+      fileName = '${DateTime.now()}.jpg';
+      pathImage = p.join((await getApplicationDocumentsDirectory()).path, fileName);
       await _controller.takePicture(pathImage);
       print(pathImage);
       if (pathImage != null ) {
-        GallerySaver.saveImage(pathImage, albumName: 'Beavers').then((bool success) {
-          print('photo success');
-          Scaffold.of(context).showSnackBar(
-            SnackBar(content: Text('Photo Saved')
-            )
-          );
-        });
+         Navigator.of(context).push(
+           MaterialPageRoute(builder:  (context) => CameraReviewScreen(
+             path: pathImage, isImage: true, fileName: fileName, userDetails: widget.userDetails, challengeNum: widget.challengeNum) ));
       }
     }
     catch (e) {
@@ -167,7 +168,8 @@ class _CameraState extends State<Camera> {
 
     try {
       await _initializeControllerFuture;
-      pathVideo = p.join((await getApplicationDocumentsDirectory()).path,'${DateTime.now()}.mp4',);
+      fileName = '${DateTime.now()}.mp4';
+      pathVideo = p.join((await getApplicationDocumentsDirectory()).path, fileName);
       print('starting video');
       await _controller.startVideoRecording(pathVideo);
       Scaffold.of(context).showSnackBar(
@@ -187,14 +189,9 @@ class _CameraState extends State<Camera> {
     try {
       print('try to end video');
       await _controller.stopVideoRecording();
+      print('video stopped');
       if (pathVideo != null ) {
-        GallerySaver.saveVideo(pathVideo, albumName: 'Beavers').then((bool success) {
-          print('video success');
-          Scaffold.of(context).showSnackBar(
-            SnackBar(content: Text('Video Saved')
-            )
-          );
-        });
+        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraReviewScreen(path: pathVideo, isImage: false, fileName: fileName, userDetails: widget.userDetails, challengeNum: widget.challengeNum) ));
       }
     }
     catch (e) {
