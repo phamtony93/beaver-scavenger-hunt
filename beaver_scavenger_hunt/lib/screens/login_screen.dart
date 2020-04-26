@@ -11,6 +11,7 @@ import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
 import 'package:beaver_scavenger_hunt/classes/ProviderDetails.dart';
 import '../models/challenge_model.dart';
 import 'welcome_screen.dart';
+import 'timer_screen.dart';
 
 class LoginScreen extends StatefulWidget{
   @override
@@ -194,6 +195,12 @@ class _LoginScreen extends State<LoginScreen> {
                   }
 
                 },
+              ),
+              RaisedButton(
+                child: Text('Temp Timer Testing'),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder:  (context) => TimerScreen() ));
+                }
               ),
             ]
           )
