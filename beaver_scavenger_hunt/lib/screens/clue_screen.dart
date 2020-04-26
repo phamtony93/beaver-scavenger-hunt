@@ -369,7 +369,7 @@ Widget MenuDrawer(BuildContext context, List<ClueLocation> allLocations, int whi
                 SizedBox(height: 25),
                 MyDrawerHeader(context),
                 MenuRulesWidget(context),
-                MenuChallengesWidget(context, allChallenges),
+                MenuChallengesWidget(context, allChallenges, userDetails),
                 MenuClueWidget(context, allLocations, 0, allChallenges, scaffoldContext, which, userDetails),
                 MenuClueWidget(context, allLocations, 1, allChallenges, scaffoldContext, which, userDetails),
                 MenuClueWidget(context, allLocations, 2, allChallenges, scaffoldContext, which, userDetails),
@@ -437,7 +437,7 @@ MenuRulesWidget(BuildContext context){
   );
 }
         
-MenuChallengesWidget(BuildContext context, List<Challenge> allChallenges){
+MenuChallengesWidget(BuildContext context, List<Challenge> allChallenges, UserDetails userDetails){
   return ListTile(
     leading: Icon(Icons.directions_run, color: Colors.black),
     title: ClipRRect(
@@ -454,8 +454,7 @@ MenuChallengesWidget(BuildContext context, List<Challenge> allChallenges){
         )
     ),
     onTap: () {
-      Navigator.popAndPushNamed(context, '/challenge_screen');
-      //Navigator.push(context, MaterialPageRoute(builder: (context) => ChallengeScreen(allChallenges: allChallenges)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ChallengeScreen(allChallenges: allChallenges, userDetails: userDetails)));
     },
   );
 }

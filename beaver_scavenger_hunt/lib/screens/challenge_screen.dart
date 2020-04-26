@@ -1,12 +1,15 @@
+import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/challenge_model.dart';
+import 'camera_screen.dart';
 
 class ChallengeScreen extends StatefulWidget {
   
-  //final List<Challenge> allChallenges;
+  final List<Challenge> allChallenges;
+  final UserDetails userDetails;
 
-  //ChallengeScreen({Key key, this.allChallenges}) : super(key: key);
+  ChallengeScreen({Key key, this.allChallenges, this.userDetails}) : super(key: key);
   
   @override
   _ChallengeScreen createState() => _ChallengeScreen();
@@ -28,13 +31,20 @@ class _ChallengeScreen extends State<ChallengeScreen> {
     }
   }
 
-  Widget cameraIconOrPhoto(bool isCompleted, String photoUrl) {
+  Widget cameraIconOrPhoto(bool isCompleted, String photoUrl, int index) {
     if (isCompleted && (photoUrl != null)) {
       return Image.network(photoUrl);
     } else {
-      return Icon(
-        Icons.photo_camera,
-        size: 35,
+      // return Icon(
+      //   Icons.photo_camera,
+      //   size: 35,
+      // );
+      return IconButton(icon: Icon(Icons.photo_camera, size: 35),
+          color: Colors.orange,
+              tooltip: 'Take Photo/Video',
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraScreen(userDetails: widget.userDetails, challengeNum: index, allChallenges: widget.allChallenges) ));
+              }
       );
     }
   }
@@ -55,7 +65,7 @@ class _ChallengeScreen extends State<ChallengeScreen> {
         centerTitle: true,
       ),
       body: StreamBuilder(
-        stream: Firestore.instance.collection("users").document("uid123").snapshots(),
+        stream: Firestore.instance.collection("users").document(widget.userDetails.uid).snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData || snapshot.data.data["challenges"].length == 0 || snapshot.data.data["challenges"].length == null) {
             return CircularProgressIndicator();
@@ -67,9 +77,9 @@ class _ChallengeScreen extends State<ChallengeScreen> {
               itemBuilder: (context, index) {
                 var document = snapshot.data.data["challenges"][(index+1).toString()];
                 return ListTile(
-                  leading: isChallengeCompleted(document["Completed"]),
-                  title: Text(document["Description"]),
-                  trailing: cameraIconOrPhoto(document["Completed"], document["photoUrl"]),
+                  leading: isChallengeCompleted(document["completed"]),
+                  title: Text(document["description"]),
+                  trailing: cameraIconOrPhoto(document["completed"], document["photoUrl"], index),
                 );
               },
             );
