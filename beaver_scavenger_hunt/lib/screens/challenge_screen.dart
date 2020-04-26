@@ -33,19 +33,36 @@ class _ChallengeScreen extends State<ChallengeScreen> {
 
   Widget cameraIconOrPhoto(bool isCompleted, String photoUrl, int index) {
     if (isCompleted && (photoUrl != null)) {
-      return Image.network(photoUrl);
+      // if it's a video don't show preview
+      if (index == 3 || index == 4 || index == 8) {
+        return Icon(Icons.check, size: 35, color: Colors.grey);
+      }
+      else {
+        return Image.network(photoUrl);
+      }
     } else {
       // return Icon(
       //   Icons.photo_camera,
       //   size: 35,
       // );
-      return IconButton(icon: Icon(Icons.photo_camera, size: 35),
+      if (index == 3 || index == 4 || index == 8) { 
+        return IconButton(icon: Icon(Icons.videocam, size: 35),
           color: Colors.orange,
-              tooltip: 'Take Photo/Video',
+              tooltip: 'Take Video',
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraScreen(userDetails: widget.userDetails, challengeNum: index, allChallenges: widget.allChallenges) ));
               }
       );
+      }
+      else {
+        return IconButton(icon: Icon(Icons.photo_camera, size: 35),
+          color: Colors.orange,
+              tooltip: 'Take Photo',
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraScreen(userDetails: widget.userDetails, challengeNum: index, allChallenges: widget.allChallenges) ));
+              }
+      );
+      }
     }
   }
   @override
