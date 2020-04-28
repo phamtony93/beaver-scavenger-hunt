@@ -9,6 +9,7 @@ import 'package:beaver_scavenger_hunt/functions/is_new_user.dart';
 import 'package:beaver_scavenger_hunt/functions/get_prev_user.dart';
 import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
 import 'package:beaver_scavenger_hunt/classes/ProviderDetails.dart';
+import '../screens/adminTeamsList_screen.dart';
 import '../models/challenge_model.dart';
 import 'welcome_screen.dart';
 
@@ -201,6 +202,12 @@ class _LoginScreen extends State<LoginScreen> {
                   Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraScreen() ));
                 }
               ),
+              RaisedButton(
+                child: Text("Admin Login"),
+                onPressed: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminTeamsListScreen() ));
+                }
+              )
             ]
           )
         )

@@ -7,5 +7,6 @@ void uploadNewUserAndChallenges(String uid) async {
 
   String json = await rootBundle.loadString("assets/clues_and_challenges.json");
   Map jsonMap = jsonDecode(json);
+  jsonMap["uid"] = '$uid';
   Firestore.instance.collection('users').document(uid).setData(jsonMap);
 }
