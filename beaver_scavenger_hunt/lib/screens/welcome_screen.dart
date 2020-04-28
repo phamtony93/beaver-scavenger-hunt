@@ -5,6 +5,7 @@ import 'clue_screen.dart';
 import '../models/clue_location_model.dart';
 import '../models/challenge_model.dart';
 import 'rules_screen.dart';
+import 'camera_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   
@@ -54,6 +55,12 @@ class WelcomeScreen extends StatelessWidget {
 
               }
             ),
+            RaisedButton(
+                child: Text('Temp Camera Testing'),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraScreen(userDetails: userDetails, challengeNum: 2) ));
+                }
+              ),
           ]
         )
       )

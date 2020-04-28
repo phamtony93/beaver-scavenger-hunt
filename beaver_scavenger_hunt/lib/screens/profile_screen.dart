@@ -38,6 +38,18 @@ class ProfileScreen extends StatelessWidget {
     Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 
+  int getPrelimPoints() {
+    int cluePoints = 10;
+    int challengePoints = 5;
+    int timerDeduction = -1;
+
+    int cluePointsEarned = cluePoints * completedCluesCount();
+    int challengePointsEarned = challengePoints * completedChallengesCount();
+    int timerPointsDeducted = 2 * timerDeduction;
+
+    return (cluePointsEarned + challengePointsEarned + timerPointsDeducted);
+  }
+
   @override
   Widget build(BuildContext context) {
     // final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -74,6 +86,8 @@ class ProfileScreen extends StatelessWidget {
               Text("Challenges Completed: ${completedCluesCount()}", style: TextStyle(fontSize: 24),),
               SizedBox(height: 15.0),
               Text("Current Time: xx", style: TextStyle(fontSize: 24),),
+              SizedBox(height: 15.0),
+              Text("Prelimnary Points Eearned: ${getPrelimPoints()}", style: TextStyle(fontSize: 24),),
               SizedBox(height: 25.0),
               RaisedButton(
                 child: Text('Sign Out'),
