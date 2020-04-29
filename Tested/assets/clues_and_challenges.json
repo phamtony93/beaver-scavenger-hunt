@@ -1,0 +1,197 @@
+{
+    "clue locations": 
+    {
+        "1": {
+            "number": 1,
+            "latitude": 44.562854,
+            "longitude": -123.278977,
+            "clue" : "I revolutionized the sport of Track and Field. Where can you find me on campus?",
+            "solution": "Dixon Rec Center",
+            "photoURL": null,
+            "found": false,
+            "solved": false, 
+            "available": true
+        },
+        "2": {
+            "number": 2,
+            "latitude": 44.560287,
+            "longitude": -123.280323,
+            "clue" : "Combined, we can seat 55,278 people. Find the giant ball in front of one of us.",
+            "solution": "Reser Stadium/Gill Coliseum",
+            "photoURL": null,
+            "found": false,
+            "solved": false, 
+            "available": false
+        },
+        "3": {
+            "number": 3,
+            "latitude": 44.558717,
+            "longitude": -123.276924,
+            "clue" : "Stand in the right spot, and you could watch three different sports at once. You may want to race over there.",
+            "solution": "Paul Lorenz Field",
+            "photoURL": null,
+            "found": false,
+            "solved": false, 
+            "available": false
+        },
+        "4": {
+            "number": 4,
+            "latitude": 44.557598,
+            "longitude": -123.284427,
+            "clue" : "We study the sea here, and the creatures within. But be careful. This building is more complex than our college.",
+            "solution": "Oceanography Complex",
+            "photoURL": null,
+            "found": false,
+            "solved": false, 
+            "available": false
+        },
+        "5": {
+            "number": 5,
+            "latitude": 44.564544,
+            "longitude": -123.294244,
+            "clue" : "Up for a challenge? You may need to wear a harness and a helmet to take this course.",
+            "solution": "A.L.I. Challenge Course",
+            "photoURL": null,
+            "found": false,
+            "solved": false, 
+            "available": false
+        },
+        "6": {
+            "number": 6,
+            "latitude": 44.565122,
+            "longitude": -123.286532,
+            "clue" : "I am several fields, nestled deep in the forest. You may even see a scrum or two.",
+            "solution": "Peavy Fields",
+            "photoURL": null,
+            "found": false,
+            "solved": false, 
+            "available": false
+        },
+        "7": {
+            "number": 7,
+            "latitude": 44.566995,
+            "longitude": -123.278730,
+            "clue" : "Want to build an app like this? Head to our center of study, and we can teach you how.",
+            "solution": "Kelley Engineering Center",
+            "photoURL": null,
+            "found": false,
+            "solved": false, 
+            "available": false
+        },
+        "8": {
+            "number": 8,
+            "latitude": 44.565783,
+            "longitude": -123.272355,
+            "clue" : "Pick up a meal in my hall, and have a picnic on my field, which you might have seen upon entering the campus.",
+            "solution": "McNary Field",
+            "photoURL": null,
+            "found": false,
+            "solved": false, 
+            "available": false
+        },
+        "9": {
+            "number": 9,
+            "latitude": 44.563256,
+            "longitude": -123.277790,
+            "clue" : "In 2006 and 2007, we were back-to-back college world champs. Can you find where we play our home games?",
+            "solution": "Goss Stadium at Coleman Field",
+            "photoURL": null,
+            "found": false,
+            "solved": false, 
+            "available": false
+        },
+        "10": {
+            "number": 10,
+            "latitude": 44.565692,
+            "longitude": -123.278935,
+            "clue" : "Built to honor students who made the ultimate sacrifice from 1914-1918, this building is now considered a central hub at OSU.",
+            "solution": "The Memorial Union (MU)",
+            "photoURL": null,
+            "found": false,
+            "solved": false, 
+            "available": false
+        }
+    },
+    "challenges": {
+        "1": {
+            "number": 1,
+            "completed": false,
+            "description": "Read a Book! Photograph the team reading a book in the library",
+            "photoUrl": null,
+            "confirmed": false,
+            "checked": false
+        },
+        "2": {
+            "number": 2,
+            "completed": false,
+            "description": "Instagram Pic! Take an artsy insta-pic under the Irish-Bend Covered Bridge.",
+            "photoUrl": null,
+            "confirmed": false,
+            "checked": false
+        },
+        "3": {
+            "number": 3,
+            "completed": false,
+            "description": "Campus Brochure! Photograph a human pyramid of the team in front of OSU's iconic Weatherford Hall.",
+            "photoUrl": null,
+            "confirmed": false,
+            "checked": false
+        },
+        "4": {
+            "number": 4,
+            "completed": false,
+            "description": "Obstacle Course! Complete the whole USMC obstacle training course. Get video evidence.",
+            "photoUrl": null,
+            "confirmed": false,
+            "checked": false
+        },
+        "5": {
+            "number": 5,
+            "completed": false,
+            "description": "Travel Abroad! Learn a non-English greeting from a student at the International Living Learning Center. Take a video saying the word.",
+            "photoUrl": null,
+            "confirmed": false,
+            "checked": false
+        },
+        "6": {
+            "number": 6,
+            "completed": false,
+            "description": "Go Greek! Find the most frequent greek letter on Greek row. Take a picture of the letter.",
+            "photoUrl": null,
+            "confirmed": false,
+            "checked": false
+        },
+        "7": {
+            "number": 7,
+            "completed": false,
+            "description": "Night Life! Photograph the team with an employee at Clodfelters.",
+            "photoUrl": null,
+            "confirmed": false,
+            "checked": false
+        },
+        "8": {
+            "number": 8,
+            "completed": false,
+            "description": "School Spirit! Photograph the team trying something on from the Beaver Store.",
+            "photoUrl": null,
+            "confirmed": false,
+            "checked": false
+        },
+        "9": {
+            "number": 9,
+            "completed": false,
+            "description": "Make a Friend! Video a secret handshake with a stranger.",
+            "photoUrl": null,
+            "confirmed": false,
+            "checked": false
+        },
+        "10": {
+            "number": 10,
+            "completed": false,
+            "description": "Stay Safe! Pick-up a free contraceptive from Student Health Services. Make sure to capture the moment.",
+            "photoUrl": null,
+            "confirmed": false,
+            "checked": false
+        }
+    }        
+}
