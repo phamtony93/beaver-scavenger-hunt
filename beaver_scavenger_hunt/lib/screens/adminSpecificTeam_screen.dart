@@ -3,6 +3,7 @@ import '../models/challenge_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../screens/adminTeamsList_screen.dart';
 import 'package:swipedetector/swipedetector.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AdminSpecificTeamScreen extends StatelessWidget {
 
@@ -34,9 +35,8 @@ class AdminSpecificTeamScreen extends StatelessWidget {
                 child: SizedBox(
                   height: 300, width: 300,
                   child: Container(
-                    color: Colors.orange,
                     child: Center(
-                      child: Text("${completedChallenges[whichChallenge].photoURL}"),
+                      child: Image.network(completedChallenges[whichChallenge].photoUrl),
                     )
                   )
                 ),

@@ -201,7 +201,7 @@ class _CameraReviewState extends State<CameraReview> {
 
   void updateList() {
     widget.allChallenges[widget.challengeNum].completed = true;
-    widget.allChallenges[widget.challengeNum].photoURL = photo.getURL();
+    widget.allChallenges[widget.challengeNum].photoUrl = photo.getURL();
     widget.allChallenges[widget.challengeNum].solved = true;
     widget.allChallenges[widget.challengeNum].available = false;
   }

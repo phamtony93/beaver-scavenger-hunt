@@ -3,7 +3,7 @@ class Challenge{
   int number;
   bool completed;
   String description;
-  String photoURL;
+  String photoUrl;
 
   bool solved = false;
   bool available = false;
@@ -11,13 +11,13 @@ class Challenge{
   bool checked = false;
 
 
-  Challenge(this.number, this.completed, this.description, this.photoURL);
+  Challenge(this.number, this.completed, this.description, this.photoUrl);
 
   Challenge.fromJson(Map<String, dynamic> json)
       : number = json['number'],
         completed = json['completed'],
         description = json['description'],
-        photoURL = json['photoURL'],
+        photoUrl = json['photoUrl'],
         confirmed = json['confirmed'],
         checked = json['checked'];
   
@@ -26,7 +26,7 @@ class Challenge{
     'number': this.number,
     'completed': this.completed, 
     'description': this.description,
-    'photoURL': this.photoURL,
+    'photoUrl': this.photoUrl,
     'confirmed': this.confirmed,
     'checked': this.checked
   };
