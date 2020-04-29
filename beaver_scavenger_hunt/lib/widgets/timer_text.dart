@@ -3,8 +3,9 @@ import 'dart:async';
 
 class TimerText extends StatefulWidget {
   final Stopwatch stopWatch;
+  final bool onScreen;
 
-   TimerText({Key key, this.stopWatch}) : super(key: key);
+   TimerText({Key key, this.stopWatch, this.onScreen}) : super(key: key);
 
 
   @override
@@ -26,7 +27,7 @@ class _TimerTextState extends State<TimerText> {
   }
 
   void runningTimer(Timer timer) {
-    if(widget.stopWatch.isRunning){
+    if(widget.stopWatch.isRunning && widget.onScreen == true){
       //startTimer();
       setState((){});
     }

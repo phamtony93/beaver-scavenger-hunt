@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 //import 'dart:async';
 import '../widgets/timer_text.dart';
+import 'timer_screen2.dart';
 
 class TimerScreen extends StatefulWidget {
   @override
@@ -8,7 +9,7 @@ class TimerScreen extends StatefulWidget {
 }
 
 class _TimerScreenState extends State<TimerScreen> {
-  //bool timerRunning = false;
+  bool onScreen = true;
   //String timerDisplay = '01:10:23';
   var stopWatch = Stopwatch();
 
@@ -42,7 +43,7 @@ class _TimerScreenState extends State<TimerScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text('This screen is for testing the timer'),
-          TimerText(stopWatch: stopWatch),
+          TimerText(stopWatch: stopWatch, onScreen: onScreen),
           RaisedButton(child: Text('this code will go on the begin hunt btn'),
           onPressed:() {
             startStopWatch();
@@ -50,6 +51,22 @@ class _TimerScreenState extends State<TimerScreen> {
           RaisedButton(child: Text('stop'),
           onPressed:() {
             stopStopWatch();
+          }),
+          RaisedButton(child: Text('stop numbers changing'),
+          onPressed:() {
+            setState( () {
+              onScreen = false;
+            });
+          }),
+          RaisedButton(child: Text('start number changing'),
+          onPressed:() {
+            setState( () {
+              onScreen = true;
+            });
+          }),
+          RaisedButton(child: Text('next screen'),
+          onPressed:() {
+            Navigator.of(context).push(MaterialPageRoute(builder:  (context) => TimerScreen2(stopWatch: stopWatch) ));
           }),
           //TimerText(stopwatch: stopWatch),
         ]
