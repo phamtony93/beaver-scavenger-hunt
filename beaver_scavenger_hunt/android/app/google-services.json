@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "1050117315679-dqmuev8e886n6s698nrq0dtntnncofb1.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.beaver_scavenger_hunt_1bkg",
-            "certificate_hash": "ecca7c4a2787e668157e0c4ed7ecef59740eb8fc"
-          }
-        },
-        {
           "client_id": "1050117315679-2psnaks2u9ic5ffec65ifptq7ag0kpnk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
