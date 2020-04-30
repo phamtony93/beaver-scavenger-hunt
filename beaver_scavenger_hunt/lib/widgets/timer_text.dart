@@ -19,9 +19,9 @@ class _TimerTextState extends State<TimerText> {
   Widget build(BuildContext context) {
     return Text((widget.stopWatch.elapsed.inHours).toString().padLeft(2, '0') + 
         ':' + (widget.stopWatch.elapsed.inMinutes%60).toString().padLeft(2, '0') + 
-        ':' + (widget.stopWatch.elapsed.inSeconds%60).toString().padLeft(2, '0'));
+        ':' + (widget.stopWatch.elapsed.inSeconds%60).toString().padLeft(2, '0'),
+        style: TextStyle(fontSize: 24));
   }
-
   _TimerTextState() {
     timer = Timer.periodic(Duration(seconds:1), runningTimer);
   }
@@ -31,13 +31,6 @@ class _TimerTextState extends State<TimerText> {
       //startTimer();
       setState((){});
     }
-    //setState( () {
-      // so i will need to get the current time, subtract the time started, add to elapsed time
-      // when begin hunt is pressed, a field is entered in the database with current time
-    //   timerDisplay = (widget.stopWatch.elapsed.inHours + 2).toString().padLeft(2, '0') + 
-    //     ':' + (widget.stopWatch.elapsed.inMinutes%60).toString().padLeft(2, '0') + 
-    //     ':' + (widget.stopWatch.elapsed.inSeconds%60).toString().padLeft(2, '0');
-    // });
   }
 
 }
