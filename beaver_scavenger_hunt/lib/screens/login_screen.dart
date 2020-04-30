@@ -11,6 +11,7 @@ import 'package:beaver_scavenger_hunt/functions/get_prev_user.dart';
 import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
 import 'package:beaver_scavenger_hunt/classes/ProviderDetails.dart';
 import '../screens/adminTeamsList_screen.dart';
+import 'package:beaver_scavenger_hunt/screens/create_game_screen.dart';
 import '../models/challenge_model.dart';
 import 'welcome_screen.dart';
 import '../functions/get_begin_time.dart';
@@ -203,7 +204,7 @@ class _LoginScreen extends State<LoginScreen> {
               RaisedButton(
                 child: Text("Admin Login"),
                 onPressed: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminTeamsListScreen() ));
+                  Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CreateGameScreen() ));
                 }
               )
             ]
