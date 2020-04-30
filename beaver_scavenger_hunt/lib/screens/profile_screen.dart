@@ -117,7 +117,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(height: 15.0),
                 Text("Challenges Completed: ${completedCluesCount()}", style: TextStyle(fontSize: 24),),
                 SizedBox(height: 15.0),
-                TimerText(stopWatch: stopWatch, onScreen: onScreen, difference: getTime()),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text("Time Elapsed: ", style: TextStyle(fontSize: 24),),
+                    TimerText(stopWatch: stopWatch, onScreen: onScreen, difference: getTime()),
+                  ],
+                ),
                 //Text("Current Time: xx", style: TextStyle(fontSize: 24),),
                 SizedBox(height: 15.0),
                 Text("Prelimnary Points Eearned: ${getPrelimPoints()}", style: TextStyle(fontSize: 24),),

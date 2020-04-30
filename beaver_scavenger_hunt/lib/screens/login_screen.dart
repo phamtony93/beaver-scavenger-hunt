@@ -190,10 +190,12 @@ class _LoginScreen extends State<LoginScreen> {
                     );
                   }
                   else{
+                    Timestamp begin = await getBeginTime(user.uid);
+                    DateTime beginTime = DateTime.parse(begin.toDate().toString());
                     Navigator.push(
                       context, 
                       MaterialPageRoute(
-                        builder: (context) => ClueScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges, whichLocation: which, beginTime: DateTime.now())
+                        builder: (context) => ClueScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges, whichLocation: which, beginTime: beginTime)
                       )
                     );
                   }
