@@ -11,7 +11,9 @@ class ProfileScreen extends StatefulWidget {
   final UserDetails userDetails;
   final List<Challenge> allChallenges;
   final List<ClueLocation> allLocations;
-  ProfileScreen({Key key, this.userDetails, this.allChallenges, this.allLocations}) : super(key: key);
+  final beginTime;
+
+  ProfileScreen({Key key, this.userDetails, this.allChallenges, this.allLocations, this.beginTime}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -115,7 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(height: 15.0),
                 Text("Challenges Completed: ${completedCluesCount()}", style: TextStyle(fontSize: 24),),
                 SizedBox(height: 15.0),
-                TimerText(stopWatch: stopWatch, onScreen: onScreen),
+                TimerText(stopWatch: stopWatch, onScreen: onScreen, difference: getTime()),
                 //Text("Current Time: xx", style: TextStyle(fontSize: 24),),
                 SizedBox(height: 15.0),
                 Text("Prelimnary Points Eearned: ${getPrelimPoints()}", style: TextStyle(fontSize: 24),),
@@ -141,6 +143,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
     //Navigator.pop(context);
     return Future<bool>.value(true);
+  }
+
+  Duration getTime()  {
+    DateTime formattedBeginTime;
+    Duration difference;
+    final currTime = DateTime.now();
+    print(currTime);
+    print(widget.beginTime);
+    if (widget.beginTime is! DateTime) {
+      formattedBeginTime = DateTime.parse(widget.beginTime.toDate().toString());
+      print(formattedBeginTime);
+      difference = currTime.difference(formattedBeginTime);
+    }
+    else {
+      difference = currTime.difference(widget.beginTime);
+    }
+    print(difference);
+    print(difference.inHours);
+    print(difference.inMinutes%60);
+    print(difference.inSeconds.remainder(60));
+    return difference;
   }
 
 }

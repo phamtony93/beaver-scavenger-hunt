@@ -17,8 +17,9 @@ class CorrectSolutionScreen extends StatefulWidget {
   final List<ClueLocation> allLocations;
   final List<Challenge> allChallenges;
   final int whichLocation;
+  final beginTime;
 
-  CorrectSolutionScreen({this.allLocations, this.whichLocation, this.allChallenges, this.userDetails});
+  CorrectSolutionScreen({this.allLocations, this.whichLocation, this.allChallenges, this.userDetails, this.beginTime});
 
   @override
   _CorrectSolutionScreenState createState() => _CorrectSolutionScreenState();
@@ -105,12 +106,12 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
           Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 2}.available': true});
           
           //return to clue screen (next clue available)
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation + 1, allChallenges: widget.allChallenges, userDetails: widget.userDetails)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation + 1, allChallenges: widget.allChallenges, userDetails: widget.userDetails, beginTime: widget.beginTime)));
         }
         //for last (10th clue)
         else
          //Change to hunt complete screen
-          Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomeScreen(userDetails: widget.userDetails, allLocations: widget.allLocations, allChallenges: widget.allChallenges)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomeScreen(userDetails: widget.userDetails, allLocations: widget.allLocations, allChallenges: widget.allChallenges,)));
       }
     }); 
   }
@@ -236,7 +237,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                 ),
                 onPressed: (){
                   if (widget.whichLocation < 9){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation + 1, userDetails: widget.userDetails,)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation + 1, userDetails: widget.userDetails, beginTime: widget.beginTime)));
                   }
                 }
               ):

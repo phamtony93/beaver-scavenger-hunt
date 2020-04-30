@@ -16,8 +16,9 @@ class ClueScreen extends StatefulWidget {
   final List<ClueLocation> allLocations;
   final List<Challenge> allChallenges;
   final int whichLocation;
+  final beginTime;
   
-  ClueScreen({Key key, this.allLocations, this.allChallenges, this.whichLocation, this.userDetails}) : super(key: key);
+  ClueScreen({Key key, this.allLocations, this.allChallenges, this.whichLocation, this.userDetails, this.beginTime}) : super(key: key);
   
   @override
   _ClueScreenState createState() => _ClueScreenState();
@@ -82,7 +83,7 @@ class _ClueScreenState extends State<ClueScreen> {
       removeDropdownItem(_myLocation, dropdownDataList);
       if (widget.whichLocation < 10){
         Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 1}.solved': true});
-      Navigator.push(context, MaterialPageRoute(builder: (context) => CorrectSolutionScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation, allChallenges: widget.allChallenges, userDetails: widget.userDetails)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => CorrectSolutionScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation, allChallenges: widget.allChallenges, userDetails: widget.userDetails, beginTime: widget.beginTime)));
       }
       
     }
@@ -131,6 +132,7 @@ class _ClueScreenState extends State<ClueScreen> {
                 userDetails: widget.userDetails, 
                 allChallenges: widget.allChallenges, 
                 allLocations: widget.allLocations,
+                beginTime: widget.beginTime,
                 )
               )
             ),
