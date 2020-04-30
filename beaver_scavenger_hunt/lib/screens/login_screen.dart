@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../models/clue_location_model.dart';
 import 'camera_screen.dart';
@@ -12,6 +13,7 @@ import 'package:beaver_scavenger_hunt/classes/ProviderDetails.dart';
 import '../screens/adminTeamsList_screen.dart';
 import '../models/challenge_model.dart';
 import 'welcome_screen.dart';
+import '../functions/get_begin_time.dart';
 
 class LoginScreen extends StatefulWidget{
   @override
@@ -89,10 +91,12 @@ class _LoginScreen extends State<LoginScreen> {
       );
     }
     else{
+      Timestamp begin = await getBeginTime(user.uid);
+      DateTime beginTime = DateTime.parse(begin.toDate().toString());
       Navigator.push(
         context, 
         MaterialPageRoute(
-          builder: (context) => ClueScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges, whichLocation: which,)
+          builder: (context) => ClueScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges, whichLocation: which, beginTime: beginTime)
         )
       );
     }
@@ -181,7 +185,7 @@ class _LoginScreen extends State<LoginScreen> {
                     Navigator.push(
                       context, 
                       MaterialPageRoute(
-                        builder: (context) => WelcomeScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges)
+                        builder: (context) => WelcomeScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges,)
                       )
                     );
                   }
@@ -189,7 +193,7 @@ class _LoginScreen extends State<LoginScreen> {
                     Navigator.push(
                       context, 
                       MaterialPageRoute(
-                        builder: (context) => ClueScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges, whichLocation: which,)
+                        builder: (context) => ClueScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges, whichLocation: which, beginTime: DateTime.now())
                       )
                     );
                   }
