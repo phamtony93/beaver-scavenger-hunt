@@ -6,6 +6,7 @@ import 'clue_screen.dart';
 import '../models/clue_location_model.dart';
 import '../models/challenge_model.dart';
 import 'rules_screen.dart';
+import '../functions/add_begin_time.dart';
 //import 'camera_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -50,9 +51,9 @@ class WelcomeScreen extends StatelessWidget {
                 }
               ),
               RaisedButton(
-                child: Text('Begin Hunt'),
+                child: Text('Start Timer & Begin Hunt'),
                 onPressed: (){
-                  addTime();
+                  addBeginTime(beginTime, userDetails);
                   print('Hunt Started!');
                   //Go to clue screen, pass allLocations and 0 index as starting location, and user details
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: allLocations, whichLocation: 0, allChallenges: allChallenges, userDetails: userDetails,beginTime: beginTime)));
@@ -64,12 +65,5 @@ class WelcomeScreen extends StatelessWidget {
         )
       )
     );
-  }
-
-  void addTime() {
-    beginTime = DateTime.now();
-    Firestore.instance.collection('users').document(userDetails.uid).updateData({
-      'beginTime': beginTime, 
-    });
   }
 }
