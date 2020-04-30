@@ -201,12 +201,6 @@ class _LoginScreen extends State<LoginScreen> {
                 },
               ),
               RaisedButton(
-                child: Text('Temp Camera Testing'),
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraScreen() ));
-                }
-              ),
-              RaisedButton(
                 child: Text("Admin Login"),
                 onPressed: (){
                   Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminTeamsListScreen() ));
