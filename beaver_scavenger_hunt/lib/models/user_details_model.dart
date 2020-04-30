@@ -1,4 +1,4 @@
-import 'ProviderDetails.dart';
+import '../models/provider_details_model.dart';
 
 class UserDetails {
   final String providerDetails;

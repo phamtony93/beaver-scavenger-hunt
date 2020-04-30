@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-//import '../widgets/camera.dart';
-import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
+import '../models/user_details_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../functions/upload_media.dart';
-import '../models/media.dart';
+import '../models/media_model.dart';
 import '../screens/challenge_screen.dart';
 import '../models/challenge_model.dart';
 

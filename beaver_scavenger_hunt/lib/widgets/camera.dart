@@ -1,5 +1,5 @@
 import 'package:camera/camera.dart';
-import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
+import '../models/user_details_model.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/clue_location_model.dart';
 import 'correct_solution_screen.dart';
-import '../classes/UserDetails.dart';
+import '../models/user_details_model.dart';
 import '../functions/make_random_dropdown_list.dart';
 import '../functions/remove_dropdown_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

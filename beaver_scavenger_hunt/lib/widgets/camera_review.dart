@@ -1,13 +1,13 @@
 import 'dart:io';
-import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
+import '../models/user_details_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:video_player/video_player.dart';
 import '../functions/upload_media.dart';
-import '../models/media.dart';
+import '../models/media_model.dart';
 import '../screens/challenge_screen.dart';
-import '../screens/video_uploading.dart';
+import '../screens/video_uploading_screen.dart';
 import '../models/challenge_model.dart';
 
 class CameraReview extends StatefulWidget {

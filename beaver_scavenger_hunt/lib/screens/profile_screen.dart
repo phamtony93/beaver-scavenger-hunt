@@ -1,7 +1,7 @@
-import 'package:beaver_scavenger_hunt/screens/login_screen.dart';
+import '../screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
+import '../models/user_details_model.dart';
 import '../models/challenge_model.dart';
 import '../models/clue_location_model.dart';
 import '../widgets/timer_text.dart';

@@ -1,4 +1,4 @@
-import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
+import 'package:beaver_scavenger_hunt/models/user_details_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 void addEndTime(UserDetails userDetails) {

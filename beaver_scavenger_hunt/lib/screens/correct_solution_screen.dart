@@ -1,5 +1,5 @@
 
-import '../classes/UserDetails.dart';
+import '../models/user_details_model.dart';
 import 'package:flutter/material.dart';
 import '../models/clue_location_model.dart';
 import '../models/challenge_model.dart';

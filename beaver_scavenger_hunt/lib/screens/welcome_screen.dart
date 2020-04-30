@@ -1,13 +1,10 @@
-import 'package:beaver_scavenger_hunt/screens/challenge_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
+import '../models/user_details_model.dart';
 import 'clue_screen.dart';
 import '../models/clue_location_model.dart';
 import '../models/challenge_model.dart';
 import 'rules_screen.dart';
 import '../functions/add_begin_time.dart';
-//import 'camera_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   
