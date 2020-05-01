@@ -126,7 +126,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 //Text("Current Time: xx", style: TextStyle(fontSize: 24),),
                 SizedBox(height: 15.0),
-                Text("Prelimnary Points Eearned: ${getPrelimPoints()}", style: TextStyle(fontSize: 24),),
+                Text("Preliminary Points Earned: ${getPrelimPoints()}", style: TextStyle(fontSize: 24),),
                 SizedBox(height: 25.0),
                 RaisedButton(
                   child: Text('Sign Out'),
