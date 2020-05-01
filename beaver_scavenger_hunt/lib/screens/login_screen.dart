@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import '../models/clue_location_model.dart';
 import 'camera_screen.dart';
 import 'clue_screen.dart';
+import 'join_game_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:beaver_scavenger_hunt/functions/upload_new_user_challeges.dart';
 import 'package:beaver_scavenger_hunt/functions/is_new_user.dart';
 import 'package:beaver_scavenger_hunt/functions/get_prev_user.dart';
-import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
+import 'package:beaver_scavenger_hunt/models/UserDetails.dart';
 import 'package:beaver_scavenger_hunt/classes/ProviderDetails.dart';
 import '../screens/adminTeamsList_screen.dart';
 import 'package:beaver_scavenger_hunt/screens/create_game_screen.dart';
@@ -28,7 +29,7 @@ class _LoginScreen extends State<LoginScreen> {
   String email;
   String photoUrl;
 
-  Future<AuthResult> _signIn(BuildContext context) async {
+  Future<AuthResult> _signInAsPlayer(BuildContext context) async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
     final AuthCredential credential = GoogleAuthProvider.getCredential(
@@ -87,7 +88,7 @@ class _LoginScreen extends State<LoginScreen> {
       Navigator.push(
         context, 
         MaterialPageRoute(
-          builder: (context) => WelcomeScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges)
+          builder: (context) => JoinGameScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges)
         )
       );
     }
@@ -102,7 +103,27 @@ class _LoginScreen extends State<LoginScreen> {
       );
     }
     return userDetails;
- 
+  }
+
+  Widget googleSignInButton(context) {
+    return RaisedButton(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+      child: Padding(
+        padding: EdgeInsets.only(left: 0, top: 10, bottom: 10, right: 0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image(image: AssetImage('assets/images/google_logo.png'), height: 25,),
+            Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Text('Login As Player')
+            )
+          ]
+        ),
+      ),
+      onPressed: () => _signInAsPlayer(context),
+    );
   }
 
   @override
@@ -124,24 +145,7 @@ class _LoginScreen extends State<LoginScreen> {
               SizedBox(
                 height: 75,
               ),
-              RaisedButton(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
-                child: Padding(
-                  padding: EdgeInsets.only(left: 0, top: 10, bottom: 10, right: 0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image(image: AssetImage('assets/images/google_logo.png'), height: 25,),
-                      Padding(
-                        padding: EdgeInsets.only(left: 10),
-                        child: Text('Login With Google')
-                      )
-                    ]
-                  ),
-                ),
-                onPressed: () => _signIn(context),
-              ),
+              googleSignInButton(context),
               RaisedButton(
                 child: Text('Temp Login'),
                 onPressed: ()  async {
@@ -186,7 +190,7 @@ class _LoginScreen extends State<LoginScreen> {
                     Navigator.push(
                       context, 
                       MaterialPageRoute(
-                        builder: (context) => WelcomeScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges,)
+                        builder: (context) => JoinGameScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges,)
                       )
                     );
                   }
@@ -202,10 +206,14 @@ class _LoginScreen extends State<LoginScreen> {
                 },
               ),
               RaisedButton(
-                child: Text("Admin Login"),
+                child: Text("Login as Admin"),
                 onPressed: (){
                   Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CreateGameScreen() ));
                 }
+              ),
+              RaisedButton(
+                child: Text('Join Game'),
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => JoinGameScreen())),
               )
             ]
           )

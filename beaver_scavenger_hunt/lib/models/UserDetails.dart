@@ -1,5 +1,3 @@
-import 'ProviderDetails.dart';
-
 class UserDetails {
   final String providerDetails;
   final String uid;

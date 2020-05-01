@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 //import '../widgets/camera.dart';
-import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
+import 'package:beaver_scavenger_hunt/models/UserDetails.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../functions/upload_media.dart';
 import '../models/media.dart';
