@@ -4,8 +4,29 @@ import '../screens/adminSpecificTeam_screen.dart';
 import '../screens/login_screen.dart';
 import '../models/challenge_model.dart';
 
-class AdminTeamsListScreen extends StatelessWidget {
+class AdminTeamsListScreen extends StatefulWidget {
+  
+  AdminTeamsListScreen({Key key}) : super(key: key);
+  
+  @override
+  _AdminTeamsListScreenState createState() => _AdminTeamsListScreenState();
+}
 
+class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> {
+
+  final String adminID = "test_game_id";
+  List<dynamic> myUsers;
+
+  getUsers() async {
+    var doc = await Firestore.instance.collection("games").document("$adminID").get();
+    myUsers = doc.data["playerIDs"];
+  }
+  
+  @override
+  void initState() {
+    super.initState();
+    getUsers();
+  }
 
   @override
   Widget build (BuildContext context) {
@@ -18,11 +39,12 @@ class AdminTeamsListScreen extends StatelessWidget {
             title: Text('Teams'),
             centerTitle: true,
         ),
-        body: StreamBuilder(
-          stream: Firestore.instance.collection("users").snapshots(),
+        body: myUsers == null ? Center(child: CircularProgressIndicator()) :
+        StreamBuilder(
+          stream: Firestore.instance.collection("users").where("uid", whereIn: myUsers).snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return CircularProgressIndicator();
+              return Center(child: CircularProgressIndicator());
             } else {
               return ListView.builder(
                 itemCount: snapshot.data.documents.length,
@@ -41,7 +63,28 @@ class AdminTeamsListScreen extends StatelessWidget {
                       completed++;
                     }
                   }
+                  
                   var document = snapshot.data.documents[index];
+              /*
+              return ListView.builder(
+                itemCount: snapshot.data.documents.length,
+                itemBuilder: (context, index) {
+                  int checked = 0;
+                  int confirmed = 0;
+                  int completed = 0;
+                  for (int i = 1; i < snapshot.data.documents[index]["challenges"].length + 1; i++){
+                    if (snapshot.data.documents[index]["challenges"]["$i"]["checked"] == true){
+                      checked++;
+                    }
+                    if (snapshot.data.documents[index]["challenges"]["$i"]["confirmed"] == true){
+                      confirmed++;
+                    }
+                    if (snapshot.data.documents[index]["challenges"]["$i"]["completed"] == true){
+                      completed++;
+                    }
+                  }
+                  var document = snapshot.data.documents[index];
+                  */
                   int needToCheck = completed - checked;
                   return ListTile(
                     leading: completed == 0 ? Text("") 
