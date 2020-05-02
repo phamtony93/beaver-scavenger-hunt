@@ -15,10 +15,63 @@
       },
       "oauth_client": [
         {
+          "client_id": "1050117315679-dqmuev8e886n6s698nrq0dtntnncofb1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.beaver_scavenger_hunt_1bkg",
+            "certificate_hash": "ecca7c4a2787e668157e0c4ed7ecef59740eb8fc"
+          }
+        },
+        {
           "client_id": "1050117315679-2psnaks2u9ic5ffec65ifptq7ag0kpnk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.beaver_scavenger_hunt_1bkg",
+            "certificate_hash": "88826ea9c161cb1fcfff1db42c646235f3080116"
+          }
+        },
+        {
+          "client_id": "1050117315679-j6ip64h6aq03grlbvu7d3qlcov9bhbc2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQyhq0tY9QMTcHRPV1fBvhpL-blKHXM-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1050117315679-j6ip64h6aq03grlbvu7d3qlcov9bhbc2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1050117315679:android:a3006f9b27b35f22c3cfea",
+        "android_client_info": {
+          "package_name": "com.oregonstate.beaver_scavenger_hunt_1bkg"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1050117315679-nbtqsq816scpjjh2kavcnmc6av35o0a7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oregonstate.beaver_scavenger_hunt_1bkg",
+            "certificate_hash": "ecca7c4a2787e668157e0c4ed7ecef59740eb8fc"
+          }
+        },
+        {
+          "client_id": "1050117315679-gj40jfd1a1tpg0h2ap90t9nrjplk9qgo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oregonstate.beaver_scavenger_hunt_1bkg",
             "certificate_hash": "88826ea9c161cb1fcfff1db42c646235f3080116"
           }
         },

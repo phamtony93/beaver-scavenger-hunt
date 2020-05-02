@@ -1,4 +1,4 @@
-package com.example.beaver_scavenger_hunt
+package com.oregonstate.beaver_scavenger_hunt
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
