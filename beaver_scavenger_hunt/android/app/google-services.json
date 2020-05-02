@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1050117315679-jlh08402hmtilncpi9odv2ebldrmt6vn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.beaver_scavenger_hunt_1bkg",
+            "certificate_hash": "1abfef20692bc4aa8c623ef1898f8df19cf7b8d7"
+          }
+        },
+        {
           "client_id": "1050117315679-dqmuev8e886n6s698nrq0dtntnncofb1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -59,6 +67,22 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "1050117315679-v6m9sdhfecivvrd5gvp9mbcjkkdtgmk2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oregonstate.beaver_scavenger_hunt_1bkg",
+            "certificate_hash": "1abfef20692bc4aa8c623ef1898f8df19cf7b8d7"
+          }
+        },
+        {
+          "client_id": "1050117315679-pb05rtn6kga4fklsa8k90msn45v1q0hd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oregonstate.beaver_scavenger_hunt_1bkg",
+            "certificate_hash": "e764f6ce6dfe000530553c7f505d0f72943387f6"
+          }
+        },
         {
           "client_id": "1050117315679-nbtqsq816scpjjh2kavcnmc6av35o0a7.apps.googleusercontent.com",
           "client_type": 1,
