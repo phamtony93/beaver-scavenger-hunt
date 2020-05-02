@@ -18,7 +18,14 @@ class ClueScreen extends StatefulWidget {
   final int whichLocation;
   final beginTime;
   
-  ClueScreen({Key key, this.allLocations, this.allChallenges, this.whichLocation, this.userDetails, this.beginTime}) : super(key: key);
+  ClueScreen({
+    Key key, 
+    this.allLocations, 
+    this.allChallenges, 
+    this.whichLocation, 
+    this.userDetails, 
+    this.beginTime
+  }) : super(key: key);
   
   @override
   _ClueScreenState createState() => _ClueScreenState();
@@ -37,7 +44,9 @@ class _ClueScreenState extends State<ClueScreen> {
   void initState() {
     super.initState();
     _myLocation = "";
-    _myLocationResult = "Guess carefully !!\nEach incorrect guess will add 5 minutes\nto your hunt timer";
+    _myLocationResult = 
+      "Guess carefully !!" 
+      + "\nEach incorrect guess will add 5 minutes\nto your hunt timer";
     _incorrect = false;
     _guessNumber = 0;
     
@@ -73,7 +82,9 @@ class _ClueScreenState extends State<ClueScreen> {
       setState(() {
         _incorrect = true;
         _guessNumber ++;
-        _myLocationResult = "Uh oh. Guess number $_guessNumber is incorrect.\n5 minutes have been added to your timer.\n\nTry again.";
+        _myLocationResult = 
+        "Uh oh. Guess number $_guessNumber is incorrect.\n" 
+        + "5 minutes have been added to your timer.\n\nTry again.";
       });
     }
     else if (form.validate()) {
@@ -83,7 +94,19 @@ class _ClueScreenState extends State<ClueScreen> {
       removeDropdownItem(_myLocation, dropdownDataList);
       if (widget.whichLocation < 10){
         Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 1}.solved': true});
-      Navigator.push(context, MaterialPageRoute(builder: (context) => CorrectSolutionScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation, allChallenges: widget.allChallenges, userDetails: widget.userDetails, beginTime: widget.beginTime)));
+        Navigator.push(
+          context, 
+          MaterialPageRoute(
+            builder: (context) => 
+            CorrectSolutionScreen(
+            allLocations: widget.allLocations, 
+            whichLocation: widget.whichLocation, 
+            allChallenges: widget.allChallenges, 
+            userDetails: widget.userDetails, 
+            beginTime: widget.beginTime
+            )
+          )
+        );
       }
       
     }
@@ -104,10 +127,36 @@ class _ClueScreenState extends State<ClueScreen> {
               color: Colors.black,
             ),
             children: <TextSpan>[
-              TextSpan(text: 'C', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
-              TextSpan(text: 'lue ', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
-              TextSpan(text: '${widget.allLocations[widget.whichLocation].number}', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
-              TextSpan(text: '/10 ', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
+              TextSpan(
+                text: 'C', 
+                style: TextStyle(
+                  fontSize: 30, 
+                  color: Colors.white, 
+                  fontWeight: FontWeight.bold
+                )
+              ),
+              TextSpan(
+                text: 'lue ', 
+                style: TextStyle(
+                  fontSize: 30, 
+                  color: Color.fromRGBO(255,117, 26, 1)
+                )
+              ),
+              TextSpan(
+                text: '${widget.allLocations[widget.whichLocation].number}', 
+                style: TextStyle(
+                  fontSize: 30, 
+                  color: Colors.white, 
+                  fontWeight: FontWeight.bold
+                )
+              ),
+              TextSpan(
+                text: '/10 ', 
+                style: TextStyle(
+                  fontSize: 30, 
+                  color: Color.fromRGBO(255,117, 26, 1)
+                )
+              ),
             ],
           ),
         ),
@@ -128,7 +177,9 @@ class _ClueScreenState extends State<ClueScreen> {
             icon: Icon(Icons.account_circle),
             onPressed: () => Navigator.push(
               context, 
-              MaterialPageRoute(builder: (context) => ProfileScreen(
+              MaterialPageRoute(
+                builder: (context) => 
+                ProfileScreen(
                 userDetails: widget.userDetails, 
                 allChallenges: widget.allChallenges, 
                 allLocations: widget.allLocations,
@@ -141,37 +192,85 @@ class _ClueScreenState extends State<ClueScreen> {
       ),
       drawer: Builder(
         builder: (BuildContext cntx) {
-          return MenuDrawer(context, widget.allLocations, widget.whichLocation, widget.allChallenges, widget.userDetails);
+          return MenuDrawer(
+            context, 
+            widget.allLocations, 
+            widget.whichLocation, 
+            widget.allChallenges, 
+            widget.userDetails
+          );
         }
       ),
       body: SingleChildScrollView(
-        child: ClueScreenWidget(context, widget.allLocations, formKey, widget.whichLocation, screen_height, screen_width, widget.userDetails, setMyState, _saveForm, _myLocation, _myLocationResult, _incorrect, dropdownDataList)
+        child: ClueScreenWidget(
+          context, widget.allLocations, 
+          formKey, widget.whichLocation, 
+          screen_height, screen_width, 
+          widget.userDetails, setMyState, 
+          _saveForm, _myLocation, 
+          _myLocationResult, _incorrect, 
+          dropdownDataList
+        )
       )
     );
   }
 }
 
-Widget ClueScreenWidget(BuildContext context, List<ClueLocation> allLocations, formKey, int whichLocation, double screen_height, double screen_width, UserDetails userDetails, void Function(String) setMyState, void Function() _saveForm, String _myLocation, String _myLocationResult, bool _incorrect, dropdownDataList){
+Widget ClueScreenWidget(
+  BuildContext context, 
+  List<ClueLocation> allLocations, formKey, 
+  int whichLocation, 
+  double screen_height, double screen_width, 
+  UserDetails userDetails, 
+  void Function(String) setMyState, void Function() _saveForm, 
+  String _myLocation, String _myLocationResult, 
+  bool _incorrect, dropdownDataList
+){
   return SingleChildScrollView( 
     child: Column(
       children: <Widget> [ 
         SizedBox(height:screen_height*0.0225),
-        ClueContainer(context, '${allLocations[whichLocation].clue}', screen_width, screen_height),
+        ClueContainer(
+          context, 
+          '${allLocations[whichLocation].clue}', 
+          screen_width, 
+          screen_height
+        ),
         allLocations[whichLocation].solved == true ?
-        Divider(thickness: 5, indent: screen_height*0.05, endIndent: screen_height*0.05, height: screen_height*0.05,)
+        Divider(
+          thickness: 5, 
+          indent: screen_height*0.05, 
+          endIndent: screen_height*0.05, 
+          height: screen_height*0.05
+        )
         : SizedBox(height: 0),
         allLocations[whichLocation].solved == false ? 
         SizedBox(height: 0) :
         Center(
           child: Text(
             "${allLocations[whichLocation].solution}",
-            style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1), fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 30, 
+              color: Color.fromRGBO(255,117, 26, 1), 
+              fontWeight: FontWeight.bold
+            ),
           ),
         ),
-        Divider(thickness: 5, indent: screen_height*0.05, endIndent: screen_height*0.05, height: screen_height*0.05,),
+        Divider(
+          thickness: 5, 
+          indent: screen_height*0.05, 
+          endIndent: screen_height*0.05, 
+          height: screen_height*0.05
+        ),
         allLocations[whichLocation].solved == false ?
         //DROPDOWNFORM CURRENTLY IN USE (COMMENT OUT LINE BELOW TO USE GUESSFORM)
-        DropdownForm(context, formKey, setMyState, _saveForm, _myLocation, _myLocationResult, _incorrect, allLocations, dropdownDataList)
+        DropdownForm(
+          context, formKey, 
+          setMyState, _saveForm, 
+          _myLocation, _myLocationResult, 
+          _incorrect, allLocations, 
+          dropdownDataList
+        )
         //GUESSFORM CURRENTLY NOT IN USE (UNCOMMENT THIS LINE AND WIDGETS BELOW TO USE)
         //GuessForm(context, formKey, allLocations, whichLocation, userDetails)
         : Text(
@@ -184,7 +283,16 @@ Widget ClueScreenWidget(BuildContext context, List<ClueLocation> allLocations, f
         RaisedButton(
           child: Text("Go To Map"),
           onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CorrectSolutionScreen(allLocations: allLocations, whichLocation: whichLocation, userDetails: userDetails)));
+            Navigator.push(
+              context, MaterialPageRoute(
+                builder: (context) => 
+                CorrectSolutionScreen(
+                  allLocations: allLocations, 
+                  whichLocation: whichLocation, 
+                  userDetails: userDetails
+                )
+              )
+            );
           }
         ) 
         : SizedBox(height: 0)
@@ -193,7 +301,11 @@ Widget ClueScreenWidget(BuildContext context, List<ClueLocation> allLocations, f
   );
 }
 
-Widget ClueContainer(BuildContext context, String clue, double screen_width, double screen_height){
+Widget ClueContainer(
+  BuildContext context, 
+  String clue, 
+  double screen_width, double screen_height
+){
   return Center(
     child: ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -222,7 +334,13 @@ Widget ClueContainer(BuildContext context, String clue, double screen_width, dou
 
 //CURRENTLY IN USE (COMMENT OUT WHEN NOT IN USE)
 
-Widget DropdownForm(BuildContext context, formKey, void Function(String) setMyState, void Function() _saveForm, String _myLocation, String _myLocationResult, bool _incorrect, List<ClueLocation> allLocations, dropdownDataList){
+Widget DropdownForm(
+  BuildContext context, formKey, 
+  void Function(String) setMyState, 
+  void Function() _saveForm, String _myLocation, 
+  String _myLocationResult, bool _incorrect, 
+  List<ClueLocation> allLocations, dropdownDataList
+){
   return Center(
     child: Form(
       key: formKey,
@@ -253,7 +371,10 @@ Widget DropdownForm(BuildContext context, formKey, void Function(String) setMySt
             padding: EdgeInsets.all(16),
             child: Text(
               _myLocationResult,
-              style: TextStyle(color: _incorrect == false ? Colors.black : Colors.red),
+              style: TextStyle(
+                color: _incorrect == false ? 
+                Colors.black : Colors.red
+              ),
               textAlign: TextAlign.center,
             ),
           ),
@@ -265,7 +386,9 @@ Widget DropdownForm(BuildContext context, formKey, void Function(String) setMySt
               color: Colors.black,
               child: Text(
                 'Enter Guess',
-                style: TextStyle(fontSize: 30, color: Colors.white),
+                style: TextStyle(
+                  fontSize: 30, color: Colors.white
+                ),
               ),
               onPressed: _saveForm
             ),
@@ -355,7 +478,11 @@ Widget EnterGuessButton(BuildContext context, String label, formKey, List<ClueLo
 }
 */
 
-Widget MenuDrawer(BuildContext context, List<ClueLocation> allLocations, int which, List<Challenge> allChallenges, UserDetails userDetails){
+Widget MenuDrawer(
+  BuildContext context, List<ClueLocation> allLocations, 
+  int which, List<Challenge> allChallenges, 
+  UserDetails userDetails
+){
   return GestureDetector(
     onTap: (){
       Navigator.pop(context);
@@ -427,7 +554,10 @@ MenuRulesWidget(BuildContext context){
           child: Padding(
             padding: EdgeInsets.all(2),
             child: FittedBox( 
-              child: Text("Rules", style: TextStyle(color: Colors.white),),
+              child: Text(
+                "Rules", 
+                style: TextStyle(color: Colors.white)
+              ),
             ),
           ),
         ),
@@ -439,7 +569,11 @@ MenuRulesWidget(BuildContext context){
   );
 }
         
-MenuChallengesWidget(BuildContext context, List<Challenge> allChallenges, UserDetails userDetails){
+MenuChallengesWidget(
+  BuildContext context, 
+  List<Challenge> allChallenges, 
+  UserDetails userDetails
+){
   return ListTile(
     leading: Icon(Icons.directions_run, color: Colors.black),
     title: ClipRRect(
@@ -450,20 +584,41 @@ MenuChallengesWidget(BuildContext context, List<Challenge> allChallenges, UserDe
           child: Padding(
             padding: EdgeInsets.all(2),
             child:FittedBox( 
-              child: Text("Challenges", style: TextStyle(color: Colors.white)),
+              child: Text(
+                "Challenges", style: TextStyle(color: Colors.white)
+              ),
             ),
           ),
         )
     ),
     onTap: () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => ChallengeScreen(allChallenges: allChallenges, userDetails: userDetails)));
+      Navigator.push(
+        context, MaterialPageRoute(
+          builder: (context) => 
+          ChallengeScreen(
+            allChallenges: allChallenges, 
+            userDetails: userDetails
+          )
+        )
+      );
     },
   );
 }
 
-Widget MenuClueWidget(BuildContext context, List<ClueLocation> allLocations, int which, List<Challenge> allChallenges, BuildContext scaffoldContext, int current, UserDetails userDetails){
+Widget MenuClueWidget(
+  BuildContext context, 
+  List<ClueLocation> allLocations, 
+  int which, List<Challenge> allChallenges, 
+  BuildContext scaffoldContext, int current, 
+  UserDetails userDetails
+){
   return ListTile(
-    leading: Icon(allLocations[which].solved == true ? Icons.check: Icons.lightbulb_outline, color: allLocations[which].available == true ? Colors.black: Colors.grey),
+    leading: Icon(
+      allLocations[which].solved == true ? 
+      Icons.check: Icons.lightbulb_outline, 
+      color: allLocations[which].available == true ? 
+      Colors.black: Colors.grey
+    ),
     title: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: Container(
@@ -472,7 +627,13 @@ Widget MenuClueWidget(BuildContext context, List<ClueLocation> allLocations, int
           child: Padding(
             padding: EdgeInsets.all(2),
             child:FittedBox( 
-              child: Text("Clue ${allLocations[which].number}", style: TextStyle(color: allLocations[which].available == true ? Colors.white : Colors.grey),),
+              child: Text(
+                "Clue ${allLocations[which].number}", 
+                style: TextStyle(
+                  color: allLocations[which].available == true ? 
+                  Colors.white : Colors.grey
+                ),
+              ),
             ),
           ),
         ),
@@ -485,7 +646,16 @@ Widget MenuClueWidget(BuildContext context, List<ClueLocation> allLocations, int
         }
         else{
           Navigator.pop(context);
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: allLocations, whichLocation: which, allChallenges: allChallenges, userDetails: userDetails,)));
+          Navigator.push(
+            context, MaterialPageRoute(
+              builder: (context) => ClueScreen(
+                allLocations: allLocations, 
+                whichLocation: which, 
+                allChallenges: allChallenges, 
+                userDetails: userDetails
+              )
+            )
+          );
         }
       }
       else{

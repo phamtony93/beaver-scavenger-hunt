@@ -73,9 +73,7 @@ class _ChallengeScreen extends State<ChallengeScreen> {
           text: TextSpan(
             children: [
               TextSpan(text: 'C', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-              TextSpan(text: 'ha', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
-              TextSpan(text: 'l', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-              TextSpan(text: 'lenges', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
+              TextSpan(text: 'hallenges', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
             ]
           )
         ),

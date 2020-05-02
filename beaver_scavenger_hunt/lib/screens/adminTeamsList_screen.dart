@@ -32,7 +32,11 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> {
   Widget build (BuildContext context) {
     return WillPopScope(
       onWillPop: (){
-        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => LoginScreen()));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder:  (context) => LoginScreen()
+          )
+        );
       },
       child: Scaffold(
         appBar: AppBar(
@@ -72,48 +76,47 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> {
                       completed++;
                     }
                   }
-                  
                   var document = snapshot.data.documents[index];
-              /*
-              return ListView.builder(
-                itemCount: snapshot.data.documents.length,
-                itemBuilder: (context, index) {
-                  int checked = 0;
-                  int confirmed = 0;
-                  int completed = 0;
-                  for (int i = 1; i < snapshot.data.documents[index]["challenges"].length + 1; i++){
-                    if (snapshot.data.documents[index]["challenges"]["$i"]["checked"] == true){
-                      checked++;
-                    }
-                    if (snapshot.data.documents[index]["challenges"]["$i"]["confirmed"] == true){
-                      confirmed++;
-                    }
-                    if (snapshot.data.documents[index]["challenges"]["$i"]["completed"] == true){
-                      completed++;
-                    }
-                  }
-                  var document = snapshot.data.documents[index];
-                  */
                   int needToCheck = completed - checked;
                   return ListTile(
                     leading: completed == 0 ? Text("") 
-                    : checked == 10 ? Icon(Icons.check_circle, color: confirmed < checked ? Colors.red : Colors.green) 
+                    : checked == 10 ? Icon(Icons.check_circle, 
+                    color: confirmed < checked ? 
+                    Colors.red : Colors.green) 
                     : needToCheck > 0 ? Icon(Icons.add_circle)
                     : Icon(Icons.check),
                     title: Text("${document["uid"]}"),
                     trailing: RichText(
-            text: TextSpan(
-              style: TextStyle(
-                fontSize: 14.0,
-                color: Colors.black,
-              ),
-              children: <TextSpan>[
-                TextSpan(text: '$checked/$completed checked\n', style: TextStyle(color: confirmed == 10 ? Colors.green : Colors.black)),
-                TextSpan(text: '$confirmed confirmed\n', style: TextStyle(color: confirmed == 10 ? Colors.green: Colors.black)),
-                TextSpan(text: '${checked - confirmed} denied', style: TextStyle(color: checked - confirmed > 0 ? Colors.red : Colors.green))
-              ],
-            ),
-          ),
+                      text: TextSpan(
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: Colors.black,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: '$checked/$completed checked\n', 
+                            style: TextStyle(
+                              color: confirmed == 10 ? 
+                              Colors.green : Colors.black
+                            )
+                          ),
+                          TextSpan(
+                            text: '$confirmed confirmed\n', 
+                            style: TextStyle(
+                              color: confirmed == 10 ? 
+                              Colors.green: Colors.black
+                            )
+                          ),
+                          TextSpan(
+                            text: '${checked - confirmed} denied', 
+                            style: TextStyle(
+                              color: checked - confirmed > 0 ? 
+                              Colors.red : Colors.green
+                            )
+                          )
+                        ],
+                      ),
+                    ),
                     onTap: (){
                       Map<String, dynamic> allChallengesMap = document['challenges'];
 
@@ -147,7 +150,15 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> {
                         Scaffold.of(context).showSnackBar(snackBar);
                       }
                       else{
-                        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminSpecificTeamScreen(teamID: document["uid"], completedChallenges: completedChallenges, whichChallenge: 0) ));
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder:  (context) => AdminSpecificTeamScreen(
+                              teamID: document["uid"], 
+                              completedChallenges: completedChallenges, 
+                              whichChallenge: 0
+                            )
+                          )
+                        );
                       }
                     },
                   );

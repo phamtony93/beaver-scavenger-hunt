@@ -11,13 +11,22 @@ class AdminSpecificTeamScreen extends StatelessWidget {
   final List<Challenge> completedChallenges;
   final int whichChallenge;
 
-  AdminSpecificTeamScreen({Key key, this.teamID, this.completedChallenges, this.whichChallenge}) : super(key: key);
+  AdminSpecificTeamScreen({
+    Key key, 
+    this.teamID, 
+    this.completedChallenges, 
+    this.whichChallenge
+  }) : super(key: key);
 
   @override
   Widget build (BuildContext context) {
     return WillPopScope(
         onWillPop: (){
-          Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminTeamsListScreen()));
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder:  (context) => AdminTeamsListScreen()
+            )
+          );
         },
         child: Scaffold(
         appBar: AppBar(
@@ -36,7 +45,9 @@ class AdminSpecificTeamScreen extends StatelessWidget {
                   height: 300, width: 300,
                   child: Container(
                     child: Center(
-                      child: Image.network(completedChallenges[whichChallenge].photoUrl),
+                      child: Image.network(
+                        completedChallenges[whichChallenge].photoUrl
+                      ),
                     )
                   )
                 ),
@@ -47,10 +58,22 @@ class AdminSpecificTeamScreen extends StatelessWidget {
                   Firestore.instance.collection("users").document("$teamID").updateData({'challenges.${completedChallenges[whichChallenge].number}.checked': true});
                   Firestore.instance.collection("users").document("$teamID").updateData({'challenges.${completedChallenges[whichChallenge].number}.confirmed': true});
                   if (whichChallenge < completedChallenges.length - 1){
-                    Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminSpecificTeamScreen(teamID: teamID, completedChallenges: completedChallenges, whichChallenge: whichChallenge + 1) ));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder:  (context) => AdminSpecificTeamScreen(
+                          teamID: teamID, 
+                          completedChallenges: completedChallenges, 
+                          whichChallenge: whichChallenge + 1
+                        )
+                      )
+                    );
                   }
                   else{
-                    Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminTeamsListScreen()));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder:  (context) => AdminTeamsListScreen()
+                      )
+                    );
                   }
                 },
                 onSwipeLeft: (){
@@ -58,10 +81,22 @@ class AdminSpecificTeamScreen extends StatelessWidget {
                   completedChallenges[whichChallenge].checked = true;
                   Firestore.instance.collection("users").document("$teamID").updateData({'challenges.${completedChallenges[whichChallenge].number}.checked': true});
                   if (whichChallenge < completedChallenges.length - 1){
-                    Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminSpecificTeamScreen(teamID: teamID, completedChallenges: completedChallenges, whichChallenge: whichChallenge + 1) ));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder:  (context) => AdminSpecificTeamScreen(
+                          teamID: teamID, 
+                          completedChallenges: completedChallenges, 
+                          whichChallenge: whichChallenge + 1
+                        )
+                      )
+                    );
                   }
                   else{
-                    Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminTeamsListScreen()));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder:  (context) => AdminTeamsListScreen()
+                      )
+                    );
                   }
                 },
               )

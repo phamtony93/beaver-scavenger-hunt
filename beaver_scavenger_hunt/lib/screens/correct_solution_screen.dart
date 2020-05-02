@@ -20,7 +20,13 @@ class CorrectSolutionScreen extends StatefulWidget {
   final int whichLocation;
   final beginTime;
 
-  CorrectSolutionScreen({this.allLocations, this.whichLocation, this.allChallenges, this.userDetails, this.beginTime});
+  CorrectSolutionScreen({
+    this.allLocations, 
+    this.whichLocation, 
+    this.allChallenges, 
+    this.userDetails, 
+    this.beginTime
+  });
 
   @override
   _CorrectSolutionScreenState createState() => _CorrectSolutionScreenState();
@@ -90,7 +96,12 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
         myDeviceLong = currentLocation.longitude;
       });
       //Calculate device's distance from location
-      distanceAway = calculateDistance(myDeviceLat, myDeviceLong, widget.allLocations[widget.whichLocation].latitude, widget.allLocations[widget.whichLocation].longitude);
+      distanceAway = calculateDistance(
+        myDeviceLat, 
+        myDeviceLong, 
+        widget.allLocations[widget.whichLocation].latitude, 
+        widget.allLocations[widget.whichLocation].longitude
+      );
       
       //When user gets within 50 meters
       if (distanceAway < 50 && widget.allLocations[widget.whichLocation].found == false){
@@ -107,14 +118,32 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
           Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 2}.available': true});
           
           //return to clue screen (next clue available)
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation + 1, allChallenges: widget.allChallenges, userDetails: widget.userDetails, beginTime: widget.beginTime)));
+          Navigator.push(
+            context, MaterialPageRoute(
+              builder: (context) => ClueScreen(
+                allLocations: widget.allLocations, 
+                whichLocation: widget.whichLocation + 1, 
+                allChallenges: widget.allChallenges, 
+                userDetails: widget.userDetails, 
+                beginTime: widget.beginTime
+              )
+            )
+          );
         }
         //for last (10th clue)
         else{
           addEndTime(widget.userDetails);
           Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 1}.found': true});
           //Change to hunt complete screen
-          Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomeScreen(userDetails: widget.userDetails, allLocations: widget.allLocations, allChallenges: widget.allChallenges,)));
+          Navigator.push(
+            context, MaterialPageRoute(
+              builder: (context) => WelcomeScreen(
+                userDetails: widget.userDetails, 
+                allLocations: widget.allLocations, 
+                allChallenges: widget.allChallenges
+              )
+            )
+          );
         }
       }
     }); 
@@ -132,7 +161,14 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
   Future<void> zoomIn(double newZoomAmount, double newLat, double newLong) async {
     GoogleMapController controller = await _controller.future;
     setState(() {
-      controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(newLat, newLong), zoom: newZoomAmount)));
+      controller.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(newLat, newLong), 
+            zoom: newZoomAmount
+          )
+        )
+      );
       zoomAmount = newZoomAmount;
       screenLat = newLat;
       screenLong = newLong;
@@ -142,7 +178,14 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
   Future<void> zoomOut(double newZoomAmount, double newLat, double newLong) async {
     GoogleMapController controller = await _controller.future;
     setState(() {
-      controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(newLat, newLong), zoom: newZoomAmount)));
+      controller.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(newLat, newLong), 
+            zoom: newZoomAmount
+          )
+        )
+      );
       zoomAmount = newZoomAmount;
       screenLat = newLat;
       screenLong = newLong;
@@ -156,17 +199,23 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
     });
   }
 
-  double calculateDistance(double lat1, double long1, double lat2, double long2) {
+  double calculateDistance(
+    double lat1, double long1, 
+    double lat2, double long2
+  ) {
     var constR = 6371e3; // metres
     var one = (lat1 * (pi / 180.0));
     var two = (lat2 * (pi / 180.0));
     var three = ((lat2-lat1) * (pi / 180.0));
     var four = ((long2-long1) * (pi / 180.0));
 
-    var a = sin(three/2) * sin(three/2) + cos(one) * cos(two) * sin(four/2) * sin(four/2);
+    var a = sin(three/2) * sin(three/2) 
+      + cos(one) * cos(two) * sin(four/2) * sin(four/2);
+    
     var c = 2 * atan2(sqrt(a), sqrt(1-a));
     
     var d = constR * c;
+    
     return d;
   }
 
@@ -206,7 +255,10 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                 SizedBox(height: 0),
               Text(
                 "${widget.allLocations[widget.whichLocation].solution}",
-                style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1)),
+                style: TextStyle(
+                  fontSize: 30, 
+                  color: Color.fromRGBO(255,117, 26, 1)
+                ),
                 textAlign: TextAlign.center,
               ),
               widget.allLocations[widget.whichLocation].found == false ?
@@ -223,9 +275,19 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                   color: Colors.grey,
                   child: Center(
                     child: Stack(children: <Widget> [
-                      _googleMap(context, _controller, myMarkers, _updatePosition, screenLat, screenLong),
-                      _zoomInButton(context, zoomAmount, zoomIn, screenLat, screenLong),
-                      _zoomOutButton(context, zoomAmount, zoomOut, screenLat, screenLong),
+                      _googleMap(
+                        context, _controller, 
+                        myMarkers, _updatePosition, 
+                        screenLat, screenLong
+                      ),
+                      _zoomInButton(
+                        context, zoomAmount, 
+                        zoomIn, screenLat, screenLong
+                      ),
+                      _zoomOutButton(
+                        context, zoomAmount, 
+                        zoomOut, screenLat, screenLong
+                      ),
                     ]), 
                   ),
                 ),
@@ -233,7 +295,8 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
               distanceAway == null ? SizedBox(height:0):
               Text("${distanceAway.toStringAsFixed(distanceAway.truncateToDouble() == distanceAway ? 0 : 2)} meters away"),
               Divider(thickness: 5, height: 50, indent: 50, endIndent: 50,),
-              widget.allLocations[widget.whichLocation].found == true ? RaisedButton(
+              widget.allLocations[widget.whichLocation].found == true ? 
+              RaisedButton(
                 color: Color.fromRGBO(255,117, 26, 1),
                 child: Text(
                   "Go To Next Clue",
@@ -241,7 +304,16 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                 ),
                 onPressed: (){
                   if (widget.whichLocation < 9){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation + 1, userDetails: widget.userDetails, beginTime: widget.beginTime)));
+                    Navigator.push(
+                      context, MaterialPageRoute(
+                        builder: (context) => ClueScreen(
+                          allLocations: widget.allLocations, 
+                          whichLocation: widget.whichLocation + 1, 
+                          userDetails: widget.userDetails, 
+                          beginTime: widget.beginTime
+                        )
+                      )
+                    );
                   }
                 }
               ):
@@ -265,14 +337,32 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                     Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 2}.available': true});
                     
                     //return to clue screen (next clue available)
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation + 1, allChallenges: widget.allChallenges, userDetails: widget.userDetails, beginTime: widget.beginTime)));
+                    Navigator.push(
+                      context, MaterialPageRoute(
+                        builder: (context) => ClueScreen(
+                          allLocations: widget.allLocations, 
+                          whichLocation: widget.whichLocation + 1, 
+                          allChallenges: widget.allChallenges, 
+                          userDetails: widget.userDetails, 
+                          beginTime: widget.beginTime
+                        )
+                      )
+                    );
                   }
                   //for last (10th clue)
                   else{
                     addEndTime(widget.userDetails);
                     Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 1}.found': true});
                     //Change to hunt complete screen
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomeScreen(userDetails: widget.userDetails, allLocations: widget.allLocations, allChallenges: widget.allChallenges,)));
+                    Navigator.push(
+                      context, MaterialPageRoute(
+                        builder: (context) => WelcomeScreen(
+                          userDetails: widget.userDetails, 
+                          allLocations: widget.allLocations, 
+                          allChallenges: widget.allChallenges
+                        )
+                      )
+                    );
                   }
                 }
               ),
@@ -284,7 +374,12 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
   }
 }
 
-Widget _googleMap(BuildContext context, _controller, myMarkers, void Function(CameraPosition _position) _updatePosition, double screenLat, double screenLong){
+Widget _googleMap(
+  BuildContext context, 
+  _controller, myMarkers, 
+  void Function(CameraPosition _position) _updatePosition, 
+  double screenLat, double screenLong
+){
   return Container(
     height: MediaQuery.of(context).size.height,
     width: MediaQuery.of(context).size.width,
@@ -306,7 +401,15 @@ Widget _googleMap(BuildContext context, _controller, myMarkers, void Function(Ca
   );
 }
 
-Widget _zoomInButton(BuildContext context, double zoomAmount, void Function(double zoomAmount, double screenLat, double screenLong) zoomIn, double screenLat, double screenLong){
+Widget _zoomInButton(
+  BuildContext context, 
+  double zoomAmount, 
+  void Function(
+    double zoomAmount, 
+    double screenLat, 
+    double screenLong
+  ) zoomIn, 
+  double screenLat, double screenLong){
   return Align(
     alignment: Alignment.bottomRight,
     child: RawMaterialButton(
@@ -323,7 +426,15 @@ Widget _zoomInButton(BuildContext context, double zoomAmount, void Function(doub
   );
 }
 
-Widget _zoomOutButton(BuildContext context, double zoomAmount, void Function(double zoomAmount, double screenLat, double screenLong) zoomOut, double screenLat, double screenLong){
+Widget _zoomOutButton(
+  BuildContext context, 
+  double zoomAmount, 
+  void Function(
+    double zoomAmount, 
+    double screenLat, 
+    double screenLong
+  ) zoomOut, 
+  double screenLat, double screenLong){
   return Align(
     alignment: Alignment.bottomLeft,
     child: RawMaterialButton(
