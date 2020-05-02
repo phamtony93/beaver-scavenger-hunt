@@ -39,7 +39,16 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> {
             title: Text('Teams'),
             centerTitle: true,
         ),
-        body: myUsers == null ? Center(child: CircularProgressIndicator()) :
+        body: myUsers == null ? 
+        Center(child: RaisedButton(
+          child: Text("Check for teams"),
+          onPressed: (){
+            setState(() {
+              
+            });
+          }
+        ))
+        : 
         StreamBuilder(
           stream: Firestore.instance.collection("users").where("uid", whereIn: myUsers).snapshots(),
           builder: (context, snapshot) {

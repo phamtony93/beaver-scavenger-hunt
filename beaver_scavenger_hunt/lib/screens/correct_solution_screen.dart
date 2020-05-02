@@ -245,7 +245,37 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                   }
                 }
               ):
-              SizedBox(height: 0),
+              RaisedButton(
+                color: Color.fromRGBO(255,117, 26, 1),
+                child: Text(
+                  "Skip Clue (used for testing)",
+                  style: TextStyle(color: Colors.white,),
+                ),
+                onPressed: (){
+                  //mark clueLocation as found
+                  widget.allLocations[widget.whichLocation].found = true;
+                  
+                  //for first 9 clues
+                  if (widget.whichLocation < widget.allLocations.length - 1){
+                    
+                    //update object
+                    widget.allLocations[widget.whichLocation + 1].available = true;
+                    //update db
+                    Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 1}.found': true});
+                    Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 2}.available': true});
+                    
+                    //return to clue screen (next clue available)
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: widget.allLocations, whichLocation: widget.whichLocation + 1, allChallenges: widget.allChallenges, userDetails: widget.userDetails, beginTime: widget.beginTime)));
+                  }
+                  //for last (10th clue)
+                  else{
+                    addEndTime(widget.userDetails);
+                    Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 1}.found': true});
+                    //Change to hunt complete screen
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomeScreen(userDetails: widget.userDetails, allLocations: widget.allLocations, allChallenges: widget.allChallenges,)));
+                  }
+                }
+              ),
               SizedBox(height: 20),
             ]
           )
