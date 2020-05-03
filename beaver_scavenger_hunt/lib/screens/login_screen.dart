@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:beaver_scavenger_hunt/functions/upload_new_user_challeges.dart';
 import 'package:beaver_scavenger_hunt/functions/is_new_user.dart';
+import 'package:beaver_scavenger_hunt/functions/is_new_admin.dart';
 import 'package:beaver_scavenger_hunt/functions/get_prev_user.dart';
 import 'package:beaver_scavenger_hunt/models/UserDetails.dart';
 import 'package:beaver_scavenger_hunt/classes/ProviderDetails.dart';
@@ -104,6 +105,86 @@ class _LoginScreen extends State<LoginScreen> {
     }
     return userDetails;
   }
+
+   Future<AuthResult> _signInAsAdmin(BuildContext context) async {
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    final AuthResult userDetails = await _firebaseAuth.signInWithCredential(credential);
+
+    ProviderDetails providerInfo = ProviderDetails(userDetails.additionalUserInfo.providerId);
+
+    List<ProviderDetails> providerData = List<ProviderDetails>();
+    providerData.add(providerInfo);
+
+    UserDetails user = UserDetails(
+      userDetails.user.providerId,
+      userDetails.user.uid, //123
+      userDetails.user.displayName,
+      userDetails.user.photoUrl,
+      userDetails.user.email,
+      // providerData
+    );
+
+    // Map<String, dynamic> prevUser;
+
+    bool isNewAdmin = await is_new_admin(user.uid);
+    if (isNewAdmin) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CreateGameScreen(user: user)
+        )
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AdminTeamsListScreen()
+        )
+      );
+    }
+
+    // //retrieve previousUser info
+    // prevUser = await get_prev_user(user.uid);
+    // Map<String, dynamic> allClueLocationsMap = prevUser['clue locations'];
+    // Map<String, dynamic> allChallengesMap = prevUser['challenges'];
+
+    // //create clueLocation object(s) from json map
+    // List<ClueLocation> allLocations = [];
+    // int which = 0;
+    // for (int i = 1; i < 11; i++){
+    //   ClueLocation loca = ClueLocation.fromJson(allClueLocationsMap["$i"]);
+    //   if (loca.available == true && loca.solved == false){
+    //     which = i-1;
+    //   }
+    //   allLocations.add(loca);
+    // }
+
+    // if(isNewUser){
+    //   Navigator.push(
+    //     context, 
+    //     MaterialPageRoute(
+    //       builder: (context) => JoinGameScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges)
+    //     )
+    //   );
+    // }
+    // else{
+    //   Timestamp begin = await getBeginTime(user.uid);
+    //   DateTime beginTime = DateTime.parse(begin.toDate().toString());
+    //   Navigator.push(
+    //     context, 
+    //     MaterialPageRoute(
+    //       builder: (context) => ClueScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges, whichLocation: which, beginTime: beginTime)
+    //     )
+    //   );
+    // }
+    return userDetails;
+  } 
 
   Widget googleSignInButton(context) {
     return RaisedButton(
@@ -207,9 +288,7 @@ class _LoginScreen extends State<LoginScreen> {
               ),
               RaisedButton(
                 child: Text("Login as Admin"),
-                onPressed: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CreateGameScreen() ));
-                }
+                onPressed: () => _signInAsAdmin(context)
               ),
               RaisedButton(
                 child: Text('Join Game'),

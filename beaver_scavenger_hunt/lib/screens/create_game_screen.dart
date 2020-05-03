@@ -1,8 +1,14 @@
 import 'dart:math';
+import 'package:beaver_scavenger_hunt/screens/adminTeamsList_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:beaver_scavenger_hunt/functions/upload_new_admin.dart';
+import 'package:beaver_scavenger_hunt/models/UserDetails.dart';
 
 
 class CreateGameScreen extends StatefulWidget {
+  final UserDetails user;
+  CreateGameScreen({this.user});
+
   @override
   _CreateGameScreen createState() => _CreateGameScreen();
 }
@@ -24,6 +30,8 @@ class _CreateGameScreen extends State<CreateGameScreen> {
 
   @override
   build(BuildContext context) {
+    String gameCode = getRandomCode();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Create Game'),
@@ -40,7 +48,7 @@ class _CreateGameScreen extends State<CreateGameScreen> {
               ),
               child: Padding(
                 padding: EdgeInsets.all(25),
-                child: Text('${getRandomCode()}', style: TextStyle(fontSize: 50),),
+                child: Text('$gameCode', style: TextStyle(fontSize: 50),),
               ),
             ),
             SizedBox(
@@ -48,7 +56,15 @@ class _CreateGameScreen extends State<CreateGameScreen> {
             ),
             RaisedButton(
               child: Text('Start Game', style: TextStyle(fontSize: 20)),
-              onPressed: () => print('start game'),
+              onPressed: () {
+                uploadNewAdmin(widget.user.uid, gameCode);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AdminTeamsListScreen()
+                  )
+                );
+              }
             )
           ]
         ),
