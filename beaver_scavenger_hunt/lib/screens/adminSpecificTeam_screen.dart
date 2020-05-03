@@ -110,7 +110,7 @@ class AdminSpecificTeamScreen extends StatelessWidget {
                     child: Text("No (swipe left)"),
                     
                     onPressed: (){
-                      /*
+                      //
                       completedChallenges[whichChallenge].checked = true;
                       Firestore.instance.collection("users").document("$teamID").updateData({'challenges.${completedChallenges[whichChallenge].number}.checked': true});
                       if (whichChallenge < completedChallenges.length - 1){
@@ -119,14 +119,14 @@ class AdminSpecificTeamScreen extends StatelessWidget {
                       else{
                         Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminTeamsListScreen()));
                       }
-                      */
+                      //
                     }
                   ),
                   SizedBox(width: 100),
                   RaisedButton(
                     child: Text("Yes (swipe right)"),
                     onPressed: (){
-                      /*
+                      //
                       completedChallenges[whichChallenge].checked = true;
                       completedChallenges[whichChallenge].confirmed = true;
                       Firestore.instance.collection("users").document("$teamID").updateData({'challenges.${completedChallenges[whichChallenge].number}.checked': true});
@@ -137,7 +137,7 @@ class AdminSpecificTeamScreen extends StatelessWidget {
                       else{
                         Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminTeamsListScreen()));
                       }
-                      */
+                      //
                     }
                   ),
                 ],

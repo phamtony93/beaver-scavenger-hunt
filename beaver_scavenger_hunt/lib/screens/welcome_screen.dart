@@ -50,7 +50,7 @@ class WelcomeScreen extends StatelessWidget {
               RaisedButton(
                 child: Text('Start Timer & Begin Hunt'),
                 onPressed: (){
-                  addBeginTime(beginTime, userDetails);
+                  beginTime = addBeginTime(userDetails);
                   print('Hunt Started!');
                   //Go to clue screen, pass allLocations and 0 index as starting location, and user details
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ClueScreen(allLocations: allLocations, whichLocation: 0, allChallenges: allChallenges, userDetails: userDetails,beginTime: beginTime)));
