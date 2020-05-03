@@ -113,9 +113,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(height: 15.0),
                 Text("Email : ${widget.userDetails.userEmail}", style: TextStyle(fontSize: 24),),
                 SizedBox(height: 15.0),
-                Text("Clues Completed: ${completedChallengesCount()}", style: TextStyle(fontSize: 24),),
+                Text("Clues Completed: ${completedCluesCount()}", style: TextStyle(fontSize: 24),),
                 SizedBox(height: 15.0),
-                Text("Challenges Completed: ${completedCluesCount()}", style: TextStyle(fontSize: 24),),
+                Text("Challenges Completed: ${completedChallengesCount()}", style: TextStyle(fontSize: 24),),
                 SizedBox(height: 15.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
