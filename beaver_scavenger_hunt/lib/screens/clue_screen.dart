@@ -197,7 +197,8 @@ class _ClueScreenState extends State<ClueScreen> {
             widget.allLocations, 
             widget.whichLocation, 
             widget.allChallenges, 
-            widget.userDetails
+            widget.userDetails,
+            widget.beginTime
           );
         }
       ),
@@ -481,7 +482,7 @@ Widget EnterGuessButton(BuildContext context, String label, formKey, List<ClueLo
 Widget MenuDrawer(
   BuildContext context, List<ClueLocation> allLocations, 
   int which, List<Challenge> allChallenges, 
-  UserDetails userDetails
+  UserDetails userDetails, DateTime beginTime
 ){
   return GestureDetector(
     onTap: (){
@@ -499,16 +500,16 @@ Widget MenuDrawer(
                 MyDrawerHeader(context),
                 MenuRulesWidget(context),
                 MenuChallengesWidget(context, allChallenges, userDetails),
-                MenuClueWidget(context, allLocations, 0, allChallenges, scaffoldContext, which, userDetails),
-                MenuClueWidget(context, allLocations, 1, allChallenges, scaffoldContext, which, userDetails),
-                MenuClueWidget(context, allLocations, 2, allChallenges, scaffoldContext, which, userDetails),
-                MenuClueWidget(context, allLocations, 3, allChallenges, scaffoldContext, which, userDetails),
-                MenuClueWidget(context, allLocations, 4, allChallenges, scaffoldContext, which, userDetails),
-                MenuClueWidget(context, allLocations, 5, allChallenges, scaffoldContext, which, userDetails),
-                MenuClueWidget(context, allLocations, 6, allChallenges, scaffoldContext, which, userDetails),
-                MenuClueWidget(context, allLocations, 7, allChallenges, scaffoldContext, which, userDetails),
-                MenuClueWidget(context, allLocations, 8, allChallenges, scaffoldContext, which, userDetails),
-                MenuClueWidget(context, allLocations, 9, allChallenges, scaffoldContext, which, userDetails),
+                MenuClueWidget(context, allLocations, 0, allChallenges, scaffoldContext, which, userDetails, beginTime),
+                MenuClueWidget(context, allLocations, 1, allChallenges, scaffoldContext, which, userDetails, beginTime),
+                MenuClueWidget(context, allLocations, 2, allChallenges, scaffoldContext, which, userDetails, beginTime),
+                MenuClueWidget(context, allLocations, 3, allChallenges, scaffoldContext, which, userDetails, beginTime),
+                MenuClueWidget(context, allLocations, 4, allChallenges, scaffoldContext, which, userDetails, beginTime),
+                MenuClueWidget(context, allLocations, 5, allChallenges, scaffoldContext, which, userDetails, beginTime),
+                MenuClueWidget(context, allLocations, 6, allChallenges, scaffoldContext, which, userDetails, beginTime),
+                MenuClueWidget(context, allLocations, 7, allChallenges, scaffoldContext, which, userDetails, beginTime),
+                MenuClueWidget(context, allLocations, 8, allChallenges, scaffoldContext, which, userDetails, beginTime),
+                MenuClueWidget(context, allLocations, 9, allChallenges, scaffoldContext, which, userDetails, beginTime),
               ],
             )
           );
@@ -610,7 +611,7 @@ Widget MenuClueWidget(
   List<ClueLocation> allLocations, 
   int which, List<Challenge> allChallenges, 
   BuildContext scaffoldContext, int current, 
-  UserDetails userDetails
+  UserDetails userDetails, DateTime beginTime
 ){
   return ListTile(
     leading: Icon(
@@ -652,7 +653,8 @@ Widget MenuClueWidget(
                 allLocations: allLocations, 
                 whichLocation: which, 
                 allChallenges: allChallenges, 
-                userDetails: userDetails
+                userDetails: userDetails,
+                beginTime: beginTime,
               )
             )
           );
