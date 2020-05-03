@@ -210,7 +210,7 @@ class _ClueScreenState extends State<ClueScreen> {
           widget.userDetails, setMyState, 
           _saveForm, _myLocation, 
           _myLocationResult, _incorrect, 
-          dropdownDataList
+          dropdownDataList, widget.beginTime
         )
       )
     );
@@ -225,7 +225,8 @@ Widget ClueScreenWidget(
   UserDetails userDetails, 
   void Function(String) setMyState, void Function() _saveForm, 
   String _myLocation, String _myLocationResult, 
-  bool _incorrect, dropdownDataList
+  bool _incorrect, dropdownDataList,
+  DateTime beginTime
 ){
   return SingleChildScrollView( 
     child: Column(
@@ -290,7 +291,8 @@ Widget ClueScreenWidget(
                 CorrectSolutionScreen(
                   allLocations: allLocations, 
                   whichLocation: whichLocation, 
-                  userDetails: userDetails
+                  userDetails: userDetails,
+                  beginTime: beginTime,
                 )
               )
             );
