@@ -27,6 +27,7 @@ class AdminSpecificTeamScreen extends StatelessWidget {
               builder:  (context) => AdminTeamsListScreen()
             )
           );
+          return Future<bool>.value(false);
         },
         child: Scaffold(
         appBar: AppBar(
