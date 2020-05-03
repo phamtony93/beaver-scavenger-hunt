@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import '../models/user_details_model.dart';
 
 
-void uploadNewUserAndChallenges(String uid) async {
+void uploadNewUserAndChallenges(UserDetails user) async {
 
   String json = await rootBundle.loadString("assets/clues_and_challenges.json");
   Map jsonMap = jsonDecode(json);
-  jsonMap["uid"] = '$uid';
-  Firestore.instance.collection('users').document(uid).setData(jsonMap);
+  jsonMap["uid"] = '${user.uid}';
+  jsonMap["email"] = '${user.userEmail}';
+  Firestore.instance.collection('users').document(user.uid).setData(jsonMap);
 }

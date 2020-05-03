@@ -55,7 +55,7 @@ class _LoginScreen extends State<LoginScreen> {
     bool isNewUser = await is_new_user(user.uid);
     if (isNewUser) {
       print("Adding new user");
-      uploadNewUserAndChallenges(user.uid);
+      uploadNewUserAndChallenges(user);
     }
 
     //retrieve previousUser info
@@ -154,7 +154,7 @@ class _LoginScreen extends State<LoginScreen> {
                   bool isNewUser = await is_new_user(user.uid);
                   if (isNewUser) {
                     print("Adding new user");
-                    uploadNewUserAndChallenges(user.uid);
+                    uploadNewUserAndChallenges(user);
                   }
 
                   //retrieve previousUser info
