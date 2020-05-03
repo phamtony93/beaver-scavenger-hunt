@@ -14,7 +14,7 @@ class AdminTeamsListScreen extends StatefulWidget {
 
 class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> {
 
-  final String adminID = "123a";
+  final String adminID = "test_game_id";
   List<dynamic> myUsers;
 
   getUsers() async {
