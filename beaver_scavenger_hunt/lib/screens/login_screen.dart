@@ -145,10 +145,10 @@ class _LoginScreen extends State<LoginScreen> {
                 onPressed: ()  async {
                   UserDetails user = UserDetails(
                     'providerDetails',
-                    'uid130',
-                    'tester2',
+                    'uid123',
+                    'tester',
                     'photoURL',
-                    'tester2@gmail.com'
+                    'tester@gmail.com'
                   );
             
                   bool isNewUser = await is_new_user(user.uid);
