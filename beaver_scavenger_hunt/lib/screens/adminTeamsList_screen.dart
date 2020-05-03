@@ -37,6 +37,7 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> {
             builder:  (context) => LoginScreen()
           )
         );
+        return Future<bool>.value(false);
       },
       child: Scaffold(
         appBar: AppBar(
