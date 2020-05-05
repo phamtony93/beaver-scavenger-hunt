@@ -209,7 +209,7 @@ Widget AcceptanceBar(BuildContext context, bool isAccepted, completedChallenges,
         ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child:Container(
-            child: Icon(Icons.arrow_back, color: Colors.green[200]),
+            child: Icon(Icons.arrow_forward, color: Colors.green[200]),
             color:Colors.green[50]
           )
         ) : 
