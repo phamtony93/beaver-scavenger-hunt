@@ -12,14 +12,18 @@ class AdminTeamsListScreen extends StatefulWidget {
   _AdminTeamsListScreenState createState() => _AdminTeamsListScreenState();
 }
 
-class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> {
+class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with SingleTickerProviderStateMixin{
 
-  final String adminID = "test_game_id";
+
+  final String adminID = "test_admin_2";
+  String gameID = null;
   List<dynamic> myUsers;
 
   getUsers() async {
-    var doc = await Firestore.instance.collection("games").document("$adminID").get();
-    myUsers = doc.data["playerIDs"];
+    var doc1 = await Firestore.instance.collection("admins").document("$adminID").get();
+    gameID = doc1["gameID"];
+    var doc2 = await Firestore.instance.collection("games").document("$gameID").get();
+    myUsers = doc2.data["playerIDs"];
   }
   
   @override
