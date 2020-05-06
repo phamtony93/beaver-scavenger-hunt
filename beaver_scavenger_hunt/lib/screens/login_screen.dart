@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import '../models/clue_location_model.dart';
 import 'clue_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,6 +14,7 @@ import '../screens/adminTeamsList_screen.dart';
 import '../models/challenge_model.dart';
 import 'welcome_screen.dart';
 import '../functions/get_begin_time.dart';
+import '../styles/styles_class.dart';
 
 class LoginScreen extends StatefulWidget{
   @override
@@ -112,7 +114,6 @@ class _LoginScreen extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 60),
               Image(
                 height: 275,
                 width: 275,
@@ -120,25 +121,33 @@ class _LoginScreen extends State<LoginScreen> {
               Text('Scavenger', style: TextStyle(fontSize: 60)),
               Text('Hunt', style: TextStyle(fontSize: 60)),
               SizedBox(
-                height: 75,
+                height: 50,
               ),
-              RaisedButton(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
-                child: Padding(
-                  padding: EdgeInsets.only(left: 0, top: 10, bottom: 10, right: 0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image(image: AssetImage('assets/images/google_logo.png'), height: 25,),
-                      Padding(
-                        padding: EdgeInsets.only(left: 10),
-                        child: Text('Login With Google')
-                      )
-                    ]
-                  ),
-                ),
-                onPressed: () => _signIn(context),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  color: Color.fromRGBO(255,117, 26, 1),
+                  height: 80, width: 200,
+                  padding: EdgeInsets.all(8),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: RaisedButton(
+                      color: Colors.black,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image(image: AssetImage('assets/images/google_logo.png'), height: 30,),
+                          Text(
+                            'oogle Login',
+                            style: Styles.whiteNormalSmall,
+                            )
+                        ]
+                      ),
+                      onPressed: () => _signIn(context),
+                    ),
+                  )
+                )
               ),
               RaisedButton(
                 child: Text('Temp Login'),
@@ -198,15 +207,29 @@ class _LoginScreen extends State<LoginScreen> {
                       )
                     );
                   }
-
                 },
               ),
-              RaisedButton(
-                child: Text("Admin Login"),
-                onPressed: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminTeamsListScreen() ));
-                }
-              )
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  color: Color.fromRGBO(255,117, 26, 1),
+                  height: 80, width: 200,
+                  padding: EdgeInsets.all(8),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: RaisedButton(
+                      color: Colors.black,
+                      child: Text(
+                        "Admin Login",
+                        style: Styles.whiteNormalSmall
+                      ),
+                      onPressed: (){
+                        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminTeamsListScreen() ));
+                      }
+                    ),
+                  )
+                )
+              ),
             ]
           )
         )

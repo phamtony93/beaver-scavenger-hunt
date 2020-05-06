@@ -9,6 +9,7 @@ import 'package:dropdown_formfield/dropdown_formfield.dart';
 import '../screens/profile_screen.dart';
 import '../models/challenge_model.dart';
 import '../screens/challenge_screen.dart';
+import '../styles/styles_class.dart';
 
 class ClueScreen extends StatefulWidget {
   
@@ -114,103 +115,84 @@ class _ClueScreenState extends State<ClueScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var screen_width = MediaQuery.of(context).size.width;
-    var screen_height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      appBar: AppBar(
-        // backgroundColor: Colors.black,
-        title: RichText(
-          text: TextSpan(
-            style: TextStyle(
-              fontSize: 14.0,
-              color: Colors.black,
+    return Theme(
+      data: Styles.osuTheme,
+        child: Scaffold(
+        resizeToAvoidBottomPadding: false,
+        appBar: AppBar(
+          title: RichText(
+            text: TextSpan(
+              children: <TextSpan>[
+                TextSpan(
+                  text: 'C', 
+                  style: Styles.whiteBoldDefault
+                ),
+                TextSpan(
+                  text: 'lue ', 
+                  style: Styles.orangeNormalDefault
+                ),
+                TextSpan(
+                  text: '${widget.allLocations[widget.whichLocation].number}', 
+                  style: Styles.whiteBoldDefault
+                ),
+                TextSpan(
+                  text: '/10 ', 
+                  style: Styles.orangeNormalDefault
+                ),
+              ],
             ),
-            children: <TextSpan>[
-              TextSpan(
-                text: 'C', 
-                style: TextStyle(
-                  fontSize: 30, 
-                  color: Colors.white, 
-                  fontWeight: FontWeight.bold
-                )
-              ),
-              TextSpan(
-                text: 'lue ', 
-                style: TextStyle(
-                  fontSize: 30, 
-                  color: Color.fromRGBO(255,117, 26, 1)
-                )
-              ),
-              TextSpan(
-                text: '${widget.allLocations[widget.whichLocation].number}', 
-                style: TextStyle(
-                  fontSize: 30, 
-                  color: Colors.white, 
-                  fontWeight: FontWeight.bold
-                )
-              ),
-              TextSpan(
-                text: '/10 ', 
-                style: TextStyle(
-                  fontSize: 30, 
-                  color: Color.fromRGBO(255,117, 26, 1)
-                )
-              ),
-            ],
           ),
-        ),
-        centerTitle: true,
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              tooltip: "Menu",
-            );
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.account_circle),
-            onPressed: () => Navigator.push(
-              context, 
-              MaterialPageRoute(
-                builder: (context) => 
-                ProfileScreen(
-                userDetails: widget.userDetails, 
-                allChallenges: widget.allChallenges, 
-                allLocations: widget.allLocations,
-                beginTime: widget.beginTime,
+          centerTitle: true,
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                tooltip: "Menu",
+              );
+            },
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.account_circle),
+              onPressed: () => Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => 
+                  ProfileScreen(
+                  userDetails: widget.userDetails, 
+                  allChallenges: widget.allChallenges, 
+                  allLocations: widget.allLocations,
+                  beginTime: widget.beginTime,
+                  )
                 )
-              )
-            ),
+              ),
+            )
+          ],
+        ),
+        drawer: Builder(
+          builder: (BuildContext cntx) {
+            return MenuDrawer(
+              context, 
+              widget.allLocations, 
+              widget.whichLocation, 
+              widget.allChallenges, 
+              widget.userDetails,
+              widget.beginTime
+            );
+          }
+        ),
+        body: SingleChildScrollView(
+          child: ClueScreenWidget(
+            context, widget.allLocations, 
+            formKey, widget.whichLocation, 
+            widget.userDetails, setMyState, 
+            _saveForm, _myLocation, 
+            _myLocationResult, _incorrect, 
+            dropdownDataList, widget.beginTime
           )
-        ],
-      ),
-      drawer: Builder(
-        builder: (BuildContext cntx) {
-          return MenuDrawer(
-            context, 
-            widget.allLocations, 
-            widget.whichLocation, 
-            widget.allChallenges, 
-            widget.userDetails,
-            widget.beginTime
-          );
-        }
-      ),
-      body: SingleChildScrollView(
-        child: ClueScreenWidget(
-          context, widget.allLocations, 
-          formKey, widget.whichLocation, 
-          screen_height, screen_width, 
-          widget.userDetails, setMyState, 
-          _saveForm, _myLocation, 
-          _myLocationResult, _incorrect, 
-          dropdownDataList, widget.beginTime
         )
       )
     );
@@ -220,14 +202,15 @@ class _ClueScreenState extends State<ClueScreen> {
 Widget ClueScreenWidget(
   BuildContext context, 
   List<ClueLocation> allLocations, formKey, 
-  int whichLocation, 
-  double screen_height, double screen_width, 
+  int whichLocation,
   UserDetails userDetails, 
   void Function(String) setMyState, void Function() _saveForm, 
   String _myLocation, String _myLocationResult, 
   bool _incorrect, dropdownDataList,
   DateTime beginTime
 ){
+  var screen_width = MediaQuery.of(context).size.width;
+  var screen_height = MediaQuery.of(context).size.height;
   return SingleChildScrollView( 
     child: Column(
       children: <Widget> [ 
@@ -238,6 +221,8 @@ Widget ClueScreenWidget(
           screen_width, 
           screen_height
         ),
+        //if clue is already solved,
+        //show divider and correct solution
         allLocations[whichLocation].solved == true ?
         Divider(
           thickness: 5, 
@@ -246,24 +231,23 @@ Widget ClueScreenWidget(
           height: screen_height*0.05
         )
         : SizedBox(height: 0),
-        allLocations[whichLocation].solved == false ? 
-        SizedBox(height: 0) :
+        allLocations[whichLocation].solved == true ?
         Center(
           child: Text(
             "${allLocations[whichLocation].solution}",
-            style: TextStyle(
-              fontSize: 30, 
-              color: Color.fromRGBO(255,117, 26, 1), 
-              fontWeight: FontWeight.bold
-            ),
+            style: Styles.orangeBoldDefault
           ),
-        ),
+        ):
+        SizedBox(height: 0),
         Divider(
           thickness: 5, 
           indent: screen_height*0.05, 
           endIndent: screen_height*0.05, 
           height: screen_height*0.05
         ),
+        
+        //if clue is not yet solved,
+        //show dropdown
         allLocations[whichLocation].solved == false ?
         //DROPDOWNFORM CURRENTLY IN USE (COMMENT OUT LINE BELOW TO USE GUESSFORM)
         DropdownForm(
@@ -277,27 +261,45 @@ Widget ClueScreenWidget(
         //GuessForm(context, formKey, allLocations, whichLocation, userDetails)
         : Text(
           "This clue has been solved",
-          style: TextStyle(fontSize: 30),
+          style: Styles.blackNormalDefault,
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 100),
+        
+        //if clue is not yet solved,
+        //show go to map button
         allLocations[whichLocation].solved == true ?
-        RaisedButton(
-          child: Text("Go To Map"),
-          onPressed: (){
-            Navigator.push(
-              context, MaterialPageRoute(
-                builder: (context) => 
-                CorrectSolutionScreen(
-                  allLocations: allLocations, 
-                  whichLocation: whichLocation, 
-                  userDetails: userDetails,
-                  beginTime: beginTime,
-                )
-              )
-            );
-          }
-        ) 
+        ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            color: Color.fromRGBO(255,117, 26, 1),
+            height: 80, width: 300,
+            padding: EdgeInsets.all(8),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: RaisedButton(
+                color: Colors.black,
+                child: Text(
+                  'Go To Map',
+                  style: Styles.whiteBoldDefault
+                ),
+                onPressed: (){
+                  Navigator.push(
+                    context, MaterialPageRoute(
+                      builder: (context) => 
+                      CorrectSolutionScreen(
+                        allLocations: allLocations, 
+                        whichLocation: whichLocation, 
+                        userDetails: userDetails,
+                        beginTime: beginTime,
+                      )
+                    )
+                  );
+                }
+              ),
+            )
+          )
+        )
         : SizedBox(height: 0)
       ]
     ),
@@ -323,7 +325,7 @@ Widget ClueContainer(
               Wrap(children: <Widget> [
                 Text(
                   "$clue", 
-                  style: TextStyle(fontSize: 30, color: Colors.white),
+                  style: Styles.whiteNormalDefault,
                   textAlign: TextAlign.center,
                 )
               ])
@@ -345,58 +347,65 @@ Widget DropdownForm(
   List<ClueLocation> allLocations, dropdownDataList
 ){
   return Center(
-    child: Form(
-      key: formKey,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(10),
-            child: DropDownFormField(
-              required: true,
-              errorText: "Please select a location",
-              titleText: 'Location',
-              hintText: 'Please select one',
-              value: _myLocation,
-              onSaved: (value) {
-                setMyState(value);
-              },
-              onChanged: (value) {
-                setMyState(value);
-              },
-              dataSource: dropdownDataList,
-              textField: 'display',
-              valueField: 'value',
-            ),
-          ),
-          Container(
-            height: 110,
-            padding: EdgeInsets.all(16),
-            child: Text(
-              _myLocationResult,
-              style: TextStyle(
-                color: _incorrect == false ? 
-                Colors.black : Colors.red
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(50),
+      child: Form(
+        key: formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.all(10),
+              child: DropDownFormField(
+                required: true,
+                errorText: "Please select a location",
+                titleText: 'Location',
+                hintText: 'Please select one',
+                value: _myLocation,
+                onSaved: (value) {
+                  setMyState(value);
+                },
+                onChanged: (value) {
+                  setMyState(value);
+                },
+                dataSource: dropdownDataList,
+                textField: 'display',
+                valueField: 'value',
               ),
-              textAlign: TextAlign.center,
             ),
-          ),
-          Container(
-            color: Color.fromRGBO(255,117, 26, 1),
-            height: 100, width: 300,
-            padding: EdgeInsets.all(8),
-            child: RaisedButton(
-              color: Colors.black,
+            Container(
+              height: 110,
+              padding: EdgeInsets.all(16),
               child: Text(
-                'Enter Guess',
+                _myLocationResult,
                 style: TextStyle(
-                  fontSize: 30, color: Colors.white
+                  color: _incorrect == false ? 
+                  Colors.black : Colors.red
                 ),
+                textAlign: TextAlign.center,
               ),
-              onPressed: _saveForm
             ),
-          )
-        ],
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Container(
+                color: Color.fromRGBO(255,117, 26, 1),
+                height: 80, width: 300,
+                padding: EdgeInsets.all(8),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: RaisedButton(
+                    color: Colors.black,
+                    child: Text(
+                      'Enter Guess',
+                      style: Styles.whiteBoldDefault
+                    ),
+                    onPressed: _saveForm
+                  ),
+                )
+              )
+            )
+          ],
+        )
       )
     )
   );
@@ -533,7 +542,7 @@ Widget MyDrawerHeader(BuildContext context){
             child: FittedBox(
               child:Text(
                 'Menu', 
-                style: TextStyle(color: Colors.white), 
+                style: TextStyle(fontSize: 30, color: Colors.white), 
                 textAlign: TextAlign.center,
               ),
             ),

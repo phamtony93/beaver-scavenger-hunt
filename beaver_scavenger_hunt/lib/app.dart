@@ -3,6 +3,7 @@ import 'screens/login_screen.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/challenge_screen.dart';
 import 'screens/rules_screen.dart';  
+import 'styles/styles_class.dart';
 
 class App extends StatelessWidget {
 
@@ -16,13 +17,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Beaver Scavenger Hunt',
-      theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          color: Colors.black,
-        )
-      ),
+      theme: Styles.osuTheme,
       routes: routes,
-
     );
   }
 }
