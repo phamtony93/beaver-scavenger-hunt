@@ -11,6 +11,7 @@ import 'welcome_screen.dart';
 import '../functions/add_end_time.dart';
 import 'dart:math';
 import 'dart:async';
+import 'hunt_complete_screen.dart';
 
 class CorrectSolutionScreen extends StatefulWidget {
   
@@ -356,7 +357,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                     //Change to hunt complete screen
                     Navigator.push(
                       context, MaterialPageRoute(
-                        builder: (context) => WelcomeScreen(
+                        builder: (context) => HuntCompleteScreen(
                           userDetails: widget.userDetails, 
                           allLocations: widget.allLocations, 
                           allChallenges: widget.allChallenges
