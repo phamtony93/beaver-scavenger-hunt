@@ -5,8 +5,6 @@ class Challenge{
   String description;
   String photoUrl;
 
-  bool solved = false;
-  bool available = false;
   bool confirmed = false;
   bool checked = false;
 

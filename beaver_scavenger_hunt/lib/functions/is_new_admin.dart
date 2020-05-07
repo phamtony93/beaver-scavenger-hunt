@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-Future<bool> is_new_admin(String adminID) async {
-  DocumentSnapshot prevAdmin =  await Firestore.instance.collection("admins").document(adminID).get();
-  if (prevAdmin.data != null){
-    print("Admin:$adminID found");
-    return false;
+Future<String> is_new_admin(String uid) async {
+  DocumentSnapshot prevUser =  await Firestore.instance.collection("admins").document(uid).get();
+  if (prevUser.data != null){
+    print("user:$uid found");
+    return prevUser.data['gameID'];
   }
   else{
-    print("no previous admin found");
-    return true;
+    print("no previous user found");
+    return 'newAdmin';
   }
 }
+

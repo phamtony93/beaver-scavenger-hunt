@@ -1,7 +1,7 @@
 import 'package:beaver_scavenger_hunt/models/user_details_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../screens/adminSpecificTeam_screen.dart';
+import '../screens/admin_specific_team_screen.dart';
 import '../screens/login_screen.dart';
 import '../models/challenge_model.dart';
 
@@ -23,7 +23,7 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
   
   getUsers() async {
     var doc2 = await Firestore.instance.collection("games").document("${widget.gameID}").get();
-    myUsers = doc2.data["playerIDs"];
+    myUsers = doc2.data == null ? null : doc2.data["playerIDs"];
   }
   
   @override
