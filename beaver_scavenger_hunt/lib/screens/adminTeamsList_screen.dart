@@ -23,7 +23,7 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
   
   getUsers() async {
     var doc2 = await Firestore.instance.collection("games").document("${widget.gameID}").get();
-    myUsers = doc2.data["playerIDs"];
+    myUsers = doc2.data == null ? null : doc2.data["playerIDs"];
   }
   
   @override
