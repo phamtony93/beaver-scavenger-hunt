@@ -316,6 +316,20 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                       )
                     );
                   }
+                  else {
+                    addEndTime(widget.userDetails);
+                    Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 1}.found': true});
+                    //Change to hunt complete screen
+                    Navigator.push(
+                      context, MaterialPageRoute(
+                        builder: (context) => HuntCompleteScreen(
+                          userDetails: widget.userDetails, 
+                          allLocations: widget.allLocations, 
+                          allChallenges: widget.allChallenges
+                        )
+                      )
+                    );
+                  }
                 }
               ):
               RaisedButton(
