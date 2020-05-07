@@ -6,8 +6,11 @@ import 'clue_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../functions/upload_new_user_challeges.dart';
+import '../functions/upload_new_admin.dart';
 import '../functions/is_new_user.dart';
+import '../functions/is_new_admin.dart';
 import '../functions/get_prev_user.dart';
+import '../functions/get_prev_admin.dart';
 import '../models/user_details_model.dart';
 import '../models/provider_details_model.dart';
 import '../screens/adminTeamsList_screen.dart';
@@ -28,7 +31,7 @@ class _LoginScreen extends State<LoginScreen> {
   String email;
   String photoUrl;
 
-  Future<AuthResult> _signIn(BuildContext context) async {
+  Future<AuthResult> _signIn(BuildContext context, bool userOrAdmin) async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
     final AuthCredential credential = GoogleAuthProvider.getCredential(
@@ -53,54 +56,86 @@ class _LoginScreen extends State<LoginScreen> {
     );
 
     Map<String, dynamic> prevUser;
-
-    bool isNewUser = await is_new_user(user.uid);
-    if (isNewUser) {
-      print("Adding new user");
-      uploadNewUserAndChallenges(user);
-    }
-
-    //retrieve previousUser info
-    prevUser = await get_prev_user(user.uid);
-    Map<String, dynamic> allClueLocationsMap = prevUser['clue locations'];
-    Map<String, dynamic> allChallengesMap = prevUser['challenges'];
-
-    //create clueLocation object(s) from json map
-    List<ClueLocation> allLocations = [];
-    int which = 0;
-    for (int i = 1; i < 11; i++){
-      ClueLocation loca = ClueLocation.fromJson(allClueLocationsMap["$i"]);
-      if (loca.available == true && loca.solved == false){
-        which = i-1;
+    Map<String, dynamic> prevAdmin;
+    bool isNewUser;
+    bool isNewAdmin;
+    
+    //Is new user or admin
+    if (userOrAdmin == true){
+      isNewUser = await is_new_user(user.uid);
+      if (isNewUser) {
+        print("Adding new user");
+        uploadNewUserAndChallenges(user);
       }
-      allLocations.add(loca);
-    }
-
-    //create challenge object(s) from json map
-    List<Challenge> allChallenges = [];
-    for (int i = 1; i < 11; i++){
-      Challenge chall = Challenge.fromJson(allChallengesMap["$i"]);
-      allChallenges.add(chall);
-    }  
-
-    if(isNewUser){
-      Navigator.push(
-        context, 
-        MaterialPageRoute(
-          builder: (context) => WelcomeScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges)
-        )
-      );
     }
     else{
-      Timestamp begin = await getBeginTime(user.uid);
-      DateTime beginTime = DateTime.parse(begin.toDate().toString());
-      Navigator.push(
-        context, 
-        MaterialPageRoute(
-          builder: (context) => ClueScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges, whichLocation: which, beginTime: beginTime)
-        )
-      );
+      isNewAdmin = await is_new_admin(user.uid);
+      if (isNewAdmin) {
+        print("Adding new admin");
+        
+        // ADD THIS FUNCTION
+        
+        //String randGameID = generateRandomGameId();
+        uploadNewAdmin(user, "123b");
+      }
     }
+    
+    //get user or admin info
+    if (userOrAdmin == true){
+      //retrieve previousUser info
+      prevUser = await get_prev_user(user.uid);
+      Map<String, dynamic> allClueLocationsMap = prevUser['clue locations'];
+      Map<String, dynamic> allChallengesMap = prevUser['challenges'];
+
+      //create clueLocation object(s) from json map
+      List<ClueLocation> allLocations = [];
+      int which = 0;
+      for (int i = 1; i < 11; i++){
+        ClueLocation loca = ClueLocation.fromJson(allClueLocationsMap["$i"]);
+        if (loca.available == true && loca.solved == false){
+          which = i-1;
+        }
+        allLocations.add(loca);
+      }
+
+      //create challenge object(s) from json map
+      List<Challenge> allChallenges = [];
+      for (int i = 1; i < 11; i++){
+        Challenge chall = Challenge.fromJson(allChallengesMap["$i"]);
+        allChallenges.add(chall);
+      }  
+
+      if(isNewUser){
+        Navigator.push(
+          context, 
+          MaterialPageRoute(
+            builder: (context) => WelcomeScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges)
+          )
+        );
+      }
+      else{
+        Timestamp begin = await getBeginTime(user.uid);
+        DateTime beginTime = DateTime.parse(begin.toDate().toString());
+        Navigator.push(
+          context, 
+          MaterialPageRoute(
+            builder: (context) => ClueScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges, whichLocation: which, beginTime: beginTime)
+          )
+        );
+      }
+    }
+    else{
+      //retrieve previousAdmin info
+      prevAdmin = await get_prev_admin(user.uid);
+      String gameID = prevAdmin["gameID"];
+      Navigator.push(
+          context, 
+          MaterialPageRoute(
+            builder: (context) => AdminTeamsListScreen(adminUser: user, gameID: gameID,)
+          )
+        );
+    }
+
     return userDetails;
  
   }
@@ -144,7 +179,7 @@ class _LoginScreen extends State<LoginScreen> {
                             )
                         ]
                       ),
-                      onPressed: () => _signIn(context),
+                      onPressed: () => _signIn(context, true),
                     ),
                   )
                 )
@@ -223,9 +258,7 @@ class _LoginScreen extends State<LoginScreen> {
                         "Admin Login",
                         style: Styles.whiteNormalSmall
                       ),
-                      onPressed: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminTeamsListScreen() ));
-                      }
+                      onPressed: () => _signIn(context, false),
                     ),
                   )
                 )

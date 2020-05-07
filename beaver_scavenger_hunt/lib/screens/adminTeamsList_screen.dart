@@ -1,3 +1,4 @@
+import 'package:beaver_scavenger_hunt/models/user_details_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../screens/adminSpecificTeam_screen.dart';
@@ -6,7 +7,10 @@ import '../models/challenge_model.dart';
 
 class AdminTeamsListScreen extends StatefulWidget {
   
-  AdminTeamsListScreen({Key key}) : super(key: key);
+  final UserDetails adminUser;
+  final String gameID;
+  
+  AdminTeamsListScreen({Key key, this.adminUser, this.gameID}) : super(key: key);
   
   @override
   _AdminTeamsListScreenState createState() => _AdminTeamsListScreenState();
@@ -15,14 +19,10 @@ class AdminTeamsListScreen extends StatefulWidget {
 class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with SingleTickerProviderStateMixin{
 
 
-  final String adminID = "test_admin_2";
-  String gameID = null;
   List<dynamic> myUsers;
-
+  
   getUsers() async {
-    var doc1 = await Firestore.instance.collection("admins").document("$adminID").get();
-    gameID = doc1["gameID"];
-    var doc2 = await Firestore.instance.collection("games").document("$gameID").get();
+    var doc2 = await Firestore.instance.collection("games").document("${widget.gameID}").get();
     myUsers = doc2.data["playerIDs"];
   }
   
@@ -45,18 +45,35 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
       },
       child: Scaffold(
         appBar: AppBar(
-            title: Text('Teams'),
+            title: widget.gameID == null ? Text("Game ID: Loading..."): Text('Game ID: ${widget.gameID}'),
             centerTitle: true,
         ),
         body: myUsers == null ? 
-        Center(child: RaisedButton(
-          child: Text("Check for teams"),
-          onPressed: (){
-            setState(() {
-              
-            });
+        Builder(
+          builder: (BuildContext scaffoldContext) {
+            return Center(
+              child: RaisedButton(
+                child: Text("Check for teams"),
+                onPressed: (){
+                  if (myUsers == null){
+                    final snackBar = SnackBar(
+                      content: Text(
+                        "There are no teams currently using game ID: ${widget.gameID}",
+                        textAlign: TextAlign.center
+                      )
+                    );
+                    Scaffold.of(scaffoldContext).showSnackBar(snackBar);
+                  }
+                  else{
+                    setState(() {
+                    //
+                    });
+                  }
+                }
+              )
+            );
           }
-        ))
+        )
         : 
         StreamBuilder(
           stream: Firestore.instance.collection("users").where("uid", whereIn: myUsers).snapshots(),
@@ -158,6 +175,8 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder:  (context) => AdminSpecificTeamScreen(
+                              adminUser: widget.adminUser,
+                              gameID: widget.gameID,
                               teamID: document["uid"], 
                               completedChallenges: completedChallenges, 
                               whichChallenge: 0
