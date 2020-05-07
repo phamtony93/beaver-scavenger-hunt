@@ -45,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int completedChallengesCount() {
     int count = 0;
     for (var index = 0; index < widget.allChallenges.length; index++) {
-      if (widget.allChallenges[index].solved) {
+      if (widget.allChallenges[index].completed) {
         count +=1;
       }
     }

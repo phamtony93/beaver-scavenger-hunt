@@ -27,15 +27,14 @@ class HuntCompleteScreen extends StatelessWidget {
           ),
           centerTitle: true,
         ),
-      //body: completedCluesCount() == 10 ? complete () : notComplete()
-      body: complete()
+      body: completedChallengesCount() >= 5 ? complete () : notComplete()
     );
   }
 
   int completedChallengesCount() {
     int count = 0;
     for (var index = 0; index < allChallenges.length; index++) {
-      if (allChallenges[index].solved) {
+      if (allChallenges[index].completed) {
         count +=1;
       }
     }
@@ -58,7 +57,7 @@ class HuntCompleteScreen extends StatelessWidget {
         Text('Hunt Complete'),
         Text("Clues Completed: ${completedCluesCount()}", style: TextStyle(fontSize: 24),),
         SizedBox(height: 15.0),
-        //Text("Challenges Completed: ${completedChallengesCount()}", style: TextStyle(fontSize: 24),),
+        Text("Challenges Completed: ${completedChallengesCount()}", style: TextStyle(fontSize: 24),),
         SizedBox(height: 15.0),
       ],);
   }
@@ -69,7 +68,7 @@ class HuntCompleteScreen extends StatelessWidget {
         Text('Hunt Not Complete Yet'),
         Text("Clues Completed: ${completedCluesCount()}", style: TextStyle(fontSize: 24),),
         SizedBox(height: 15.0),
-        //Text("Challenges Completed: ${completedChallengesCount()}", style: TextStyle(fontSize: 24),),
+        Text("Challenges Completed: ${completedChallengesCount()}", style: TextStyle(fontSize: 24),),
         SizedBox(height: 15.0),
       ],);
   }

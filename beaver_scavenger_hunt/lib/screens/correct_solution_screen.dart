@@ -139,7 +139,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
           //Change to hunt complete screen
           Navigator.push(
             context, MaterialPageRoute(
-              builder: (context) => WelcomeScreen(
+              builder: (context) => HuntCompleteScreen(
                 userDetails: widget.userDetails, 
                 allLocations: widget.allLocations, 
                 allChallenges: widget.allChallenges
