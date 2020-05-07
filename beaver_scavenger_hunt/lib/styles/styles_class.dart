@@ -8,9 +8,6 @@ class Styles {
   static const _textSizeDefault = 16.0;
   static const _textSizeSmall = 14.0;
 
-  static final Color _textColorDefault = Colors.black;
-  static final Color _textColorWhite = Colors.white;
-
   // static final bubbles = TextStyle (
   //   fontSize: _textSizeMedium,
   //   color: _textColorWhite,
@@ -34,6 +31,100 @@ class Styles {
     fontWeight: FontWeight.w800,
     fontSize: _textSizeMedium,
   );
+
+
+  //JAKE
+  static const defaultFontSize = 30.0;
+
+  static final orangeNormalDefault = TextStyle(
+    color: osuOrange,
+    fontFamily: _defaultText,
+    fontWeight: FontWeight.normal,
+    fontSize: defaultFontSize
+  );
+
+  static final orangeBoldDefault = TextStyle(
+    color: osuOrange,
+    fontFamily: _defaultText,
+    fontWeight: FontWeight.bold,
+    fontSize: defaultFontSize
+  );
+
+  static final whiteNormalDefault = TextStyle(
+    color: osuWhite,
+    fontFamily: _defaultText,
+    fontWeight: FontWeight.normal,
+    fontSize: defaultFontSize
+  );
+
+  static final whiteNormalSmall = TextStyle(
+    color: osuWhite,
+    fontFamily: _defaultText,
+    fontWeight: FontWeight.normal,
+    fontSize: 20
+  );
+  
+  static final whiteBoldDefault = TextStyle(
+    color: osuWhite,
+    fontFamily: _defaultText,
+    fontWeight: FontWeight.bold,
+    fontSize: defaultFontSize
+  );
+
+  static final blackBoldDefault = TextStyle(
+    color: osuBlack,
+    fontFamily: _defaultText,
+    fontWeight: FontWeight.bold,
+    fontSize: defaultFontSize
+  );
+
+  static final blackBoldSmall = TextStyle(
+    color: osuBlack,
+    fontFamily: _defaultText,
+    fontWeight: FontWeight.bold,
+    fontSize: 20
+  );
+  
+  static final blackNormalDefault = TextStyle(
+    color: osuBlack,
+    fontFamily: _defaultText,
+    fontWeight: FontWeight.normal,
+    fontSize: defaultFontSize
+  );
+
+  static final blackNormalSmall = TextStyle(
+    color: osuBlack,
+    fontFamily: _defaultText,
+    fontWeight: FontWeight.normal,
+    fontSize: 20
+  );
+
+  static final blackNormalBig = TextStyle(
+    color: osuBlack,
+    fontFamily: _defaultText,
+    fontWeight: FontWeight.normal,
+    fontSize: 50
+  );
+
+
+  static final Color osuBlack = Colors.black;
+  static final Color osuWhite = Colors.white;
+  static final Color osuOrange = Color.fromRGBO(255,117, 26, 1);
+
+  static final osuTheme = ThemeData(
+    primaryColor: osuBlack,
+    accentColor: osuOrange, 
+    fontFamily: 'OpenSans',
+    textTheme: TextTheme(
+      headline: TextStyle(
+        color: osuWhite,
+        fontSize: defaultFontSize,
+        fontWeight: FontWeight.bold
+      ),
+      title: titles,
+      body1: bodyText, 
+    )
+    );
 
 
 }

@@ -9,6 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'welcome_screen.dart';
 import '../functions/add_end_time.dart';
+import '../styles/styles_class.dart';
 import 'dart:math';
 import 'dart:async';
 import 'hunt_complete_screen.dart';
@@ -227,10 +228,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Text(
-            "Correct!",
-            style: TextStyle(color: Color.fromRGBO(255,117, 26, 1)),
-          ),
+        title: AppBarTextSpan(context),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -239,29 +237,28 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
               SizedBox(height: 20),
               Text(
                 "Congratulations!!",
-                style: TextStyle(fontSize: 50),
-                textAlign: TextAlign.center,
+                style: Styles.blackNormalBig,
               ),
+              SizedBox(height: 5),
               Text(
                 "You solved the clue.",
-                style: TextStyle(fontSize: 20),
+                style: Styles.blackNormalSmall,
                 textAlign: TextAlign.center,
                 ),
+              SizedBox(height: 5),
               widget.allLocations[widget.whichLocation].found == false ? 
               Text(
                 "Get within 50 meters of",
                 style: TextStyle(fontSize: 20),
                 textAlign: TextAlign.center,
-                ):
-                SizedBox(height: 0),
+                )
+              : SizedBox(height: 0),
               Text(
                 "${widget.allLocations[widget.whichLocation].solution}",
-                style: TextStyle(
-                  fontSize: 30, 
-                  color: Color.fromRGBO(255,117, 26, 1)
-                ),
+                style: Styles.orangeNormalDefault,
                 textAlign: TextAlign.center,
               ),
+              SizedBox(height: 5),
               widget.allLocations[widget.whichLocation].found == false ?
               Text(
                 "to unlock the next clue.",
@@ -272,67 +269,72 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
               SizedBox(height: 20),
               SizedBox(
                 height: screen_height*0.35, width: screen_width*0.9,
-                child: Container(
-                  color: Colors.grey,
-                  child: Center(
-                    child: Stack(children: <Widget> [
-                      _googleMap(
-                        context, _controller, 
-                        myMarkers, _updatePosition, 
-                        screenLat, screenLong
-                      ),
-                      _zoomInButton(
-                        context, zoomAmount, 
-                        zoomIn, screenLat, screenLong
-                      ),
-                      _zoomOutButton(
-                        context, zoomAmount, 
-                        zoomOut, screenLat, screenLong
-                      ),
-                    ]), 
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    color: Colors.grey,
+                    child: Center(
+                      child: Stack(children: <Widget> [
+                        _googleMap(
+                          context, _controller, 
+                          myMarkers, _updatePosition, 
+                          screenLat, screenLong
+                        ),
+                        _zoomInButton(
+                          context, zoomAmount, 
+                          zoomIn, screenLat, screenLong
+                        ),
+                        _zoomOutButton(
+                          context, zoomAmount, 
+                          zoomOut, screenLat, screenLong
+                        ),
+                      ]), 
+                    ),
                   ),
-                ),
+                )
               ),
-              distanceAway == null ? SizedBox(height:0):
-              Text("${distanceAway.toStringAsFixed(distanceAway.truncateToDouble() == distanceAway ? 0 : 2)} meters away"),
+              SizedBox(height:20),
+              distanceAway == null ? SizedBox(height:0)
+              : Text(
+                "${distanceAway.toStringAsFixed(distanceAway.truncateToDouble() == distanceAway ? 0 : 0)} meters away",
+                style: Styles.blackBoldSmall,
+              ),
               Divider(thickness: 5, height: 50, indent: 50, endIndent: 50,),
               widget.allLocations[widget.whichLocation].found == true ? 
-              RaisedButton(
-                color: Color.fromRGBO(255,117, 26, 1),
-                child: Text(
-                  "Go To Next Clue",
-                  style: TextStyle(color: Colors.white,),
-                ),
-                onPressed: (){
-                  if (widget.whichLocation < 9){
-                    Navigator.push(
-                      context, MaterialPageRoute(
-                        builder: (context) => ClueScreen(
-                          allLocations: widget.allLocations, 
-                          whichLocation: widget.whichLocation + 1, 
-                          userDetails: widget.userDetails, 
-                          beginTime: widget.beginTime
-                        )
-                      )
-                    );
-                  }
-                  else {
-                    addEndTime(widget.userDetails);
-                    Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 1}.found': true});
-                    //Change to hunt complete screen
-                    Navigator.push(
-                      context, MaterialPageRoute(
-                        builder: (context) => HuntCompleteScreen(
-                          userDetails: widget.userDetails, 
-                          allLocations: widget.allLocations, 
-                          allChallenges: widget.allChallenges
-                        )
-                      )
-                    );
-                  }
-                }
-              ):
-              RaisedButton(
+              
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  color: Color.fromRGBO(255,117, 26, 1),
+                  height: 80, width: 300,
+                  padding: EdgeInsets.all(8),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: RaisedButton(
+                      color: Colors.black,
+                      child: Text(
+                        'Next Clue',
+                        style: Styles.whiteBoldDefault
+                      ),
+                      onPressed: (){
+                        if (widget.whichLocation < 9){
+                          Navigator.push(
+                            context, MaterialPageRoute(
+                              builder: (context) => ClueScreen(
+                                allLocations: widget.allLocations, 
+                                whichLocation: widget.whichLocation + 1, 
+                                userDetails: widget.userDetails, 
+                                beginTime: widget.beginTime
+                              )
+                            )
+                          );
+                        }
+                      }
+                    ),
+                  )
+                )
+              )
+              : RaisedButton(
                 color: Color.fromRGBO(255,117, 26, 1),
                 child: Text(
                   "Skip Clue (used for testing)",
@@ -463,6 +465,31 @@ Widget _zoomOutButton(
       },
       child: Icon(Icons.remove),
     )
+  );
+}
+
+Widget AppBarTextSpan(BuildContext context){
+  return RichText(
+    text: TextSpan(
+      children: <TextSpan>[
+        TextSpan(
+          text: 'C', 
+          style: Styles.whiteBoldDefault
+        ),
+        TextSpan(
+          text: 'orrect ', 
+          style: Styles.orangeNormalDefault
+        ),
+        TextSpan(
+          text: 'L', 
+          style: Styles.whiteBoldDefault
+        ),
+        TextSpan(
+          text: 'ocation', 
+          style: Styles.orangeNormalDefault
+        ),
+      ],
+    ),
   );
 }
 
