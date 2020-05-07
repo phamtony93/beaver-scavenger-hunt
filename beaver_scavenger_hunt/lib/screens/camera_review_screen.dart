@@ -17,9 +17,20 @@ class CameraReviewScreen extends StatelessWidget {
   Widget build (BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('Review Photo/Video'),
+          title: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(text: 'R', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
+                TextSpan(text: 'eview ', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
+                TextSpan(text: 'P', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
+                TextSpan(text: 'hoto/', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
+                TextSpan(text: 'V', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
+                TextSpan(text: 'ideo', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
+              ]
+            )
+          ),
           centerTitle: true,
-      ),
+        ),
       body: CameraReview(path: path, isImage: isImage, fileName: fileName, userDetails: userDetails, challengeNum: challengeNum, allChallenges:allChallenges),
     );
   }
