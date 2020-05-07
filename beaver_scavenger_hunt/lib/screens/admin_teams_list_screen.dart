@@ -1,7 +1,7 @@
 import 'package:beaver_scavenger_hunt/models/user_details_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../screens/adminSpecificTeam_screen.dart';
+import '../screens/admin_specific_team_screen.dart';
 import '../screens/login_screen.dart';
 import '../models/challenge_model.dart';
 

@@ -22,8 +22,24 @@ class _JoinGameScreen extends State<JoinGameScreen> {
   String gameCode;
 
   void addPlayerToGame(String playerID, String gameID) async {
+<<<<<<< HEAD
     // var ref = Firestore.instance.collection('games').document(gameID).get();
     Firestore.instance.collection('games').document(gameID).updateData({'playerID': FieldValue.arrayUnion([playerID])});
+=======
+    Firestore.instance.collection("users").document("$playerID").updateData({'gameID': '$gameCode'});
+    Firestore.instance.collection('games').document("$gameID").updateData({'playerIDs': FieldValue.arrayUnion([playerID])});
+  }
+
+  String _validateGameCode(String gameCode) {
+    //validate whether gamecode is in db
+    if (gameCode.isEmpty) {
+      return 'Please enter your 4 digit code';
+    }
+    if (gameCode.length != 4) {
+      return 'Please enter your 4 digit code';
+    }
+    return null;
+>>>>>>> seawellj_branch
   }
 
   void submitForm(formKey) {
@@ -64,6 +80,7 @@ class _JoinGameScreen extends State<JoinGameScreen> {
                     ),
                   ),
                   // maxLength: 6,
+<<<<<<< HEAD
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Please enter your 4 digit code';
@@ -73,6 +90,9 @@ class _JoinGameScreen extends State<JoinGameScreen> {
                     }
                     return null;
                   },
+=======
+                  validator: (value) => _validateGameCode(value),
+>>>>>>> seawellj_branch
                   onSaved: (value) {
                     gameCode = value;
                   },

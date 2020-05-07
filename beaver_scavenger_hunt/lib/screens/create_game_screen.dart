@@ -1,8 +1,16 @@
 import 'dart:math';
+<<<<<<< HEAD
 import 'package:beaver_scavenger_hunt/screens/adminTeamsList_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:beaver_scavenger_hunt/functions/upload_new_admin.dart';
 import '../models/user_details_model.dart';
+=======
+import 'package:beaver_scavenger_hunt/screens/admin_teams_list_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:beaver_scavenger_hunt/functions/upload_new_admin.dart';
+import '../models/user_details_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+>>>>>>> seawellj_branch
 
 
 class CreateGameScreen extends StatefulWidget {
