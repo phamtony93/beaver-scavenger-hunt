@@ -20,7 +20,6 @@ class JoinGameScreen extends StatefulWidget {
 class _JoinGameScreen extends State<JoinGameScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   String gameCode;
-  bool isValid;
 
   void addPlayerToGame(String playerID, String gameID) async {
     Firestore.instance.collection("users").document("$playerID").updateData({'gameID': '$gameCode'});
