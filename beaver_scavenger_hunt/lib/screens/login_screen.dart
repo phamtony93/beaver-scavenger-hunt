@@ -20,6 +20,7 @@ import '../models/challenge_model.dart';
 import 'welcome_screen.dart';
 import '../functions/get_begin_time.dart';
 import '../styles/styles_class.dart';
+import '../widgets/control_button.dart';
 
 class LoginScreen extends StatefulWidget{
   @override
@@ -229,7 +230,13 @@ class _LoginScreen extends State<LoginScreen> {
               SizedBox(
                 height: 50,
               ),
-              googleSignInButton(context),
+              // googleSignInButton(context),
+              ControlButton(
+                context: context,
+                text: 'Login as Player',
+                onPressFunction: _signInAsPlayer,
+                imageLogo: 'assets/images/google_logo.png',
+              ),
               RaisedButton(
                 child: Text('Temp Login'),
                 onPressed: ()  async {
@@ -290,10 +297,16 @@ class _LoginScreen extends State<LoginScreen> {
                   }
                 },
               ),
-              RaisedButton(
-                child: Text("Login as Admin"),
-                onPressed: () => _signInAsAdmin(context)
+              ControlButton(
+                context: context, 
+                text: 'Login as Admin', 
+                onPressFunction: _signInAsAdmin, 
+                imageLogo: 'assets/images/google_logo.png'
               ),
+              // RaisedButton(
+              //   child: Text("Login as Admin"),
+              //   onPressed: () => _signInAsAdmin(context)
+              // ),
               RaisedButton(
                 child: Text('Join Game'),
                 onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => JoinGameScreen())),

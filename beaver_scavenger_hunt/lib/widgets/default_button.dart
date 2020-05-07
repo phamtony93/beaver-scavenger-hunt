@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../styles/styles_class.dart';
 
-Widget DefaultButton(BuildContext context, text){
+Widget DefaultButton({BuildContext context, String text, String imageLogo, Function onPressFunction}){
   return ClipRRect(
     borderRadius: BorderRadius.circular(10),
     child: Container(
@@ -17,7 +17,7 @@ Widget DefaultButton(BuildContext context, text){
             style: Styles.whiteBoldDefault
           ),
           onPressed: (){
-            //onPressed function goes here
+            onPressFunction(context);
           }
         ),
       )

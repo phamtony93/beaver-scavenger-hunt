@@ -4,6 +4,7 @@ import 'package:beaver_scavenger_hunt/models/clue_location_model.dart';
 import 'package:beaver_scavenger_hunt/models/challenge_model.dart';
 import 'package:beaver_scavenger_hunt/screens/welcome_screen.dart';
 import '../models/user_details_model.dart';
+import '../widgets/control_button.dart';
 
 class JoinGameScreen extends StatefulWidget {
   final UserDetails userDetails;
@@ -25,6 +26,19 @@ class _JoinGameScreen extends State<JoinGameScreen> {
     Firestore.instance.collection('games').document(gameID).updateData({'playerID': FieldValue.arrayUnion([playerID])});
   }
 
+  void submitForm(formKey) {
+    if (formKey.currentState.validate()) {
+      formKey.currentState.save();
+      addPlayerToGame(widget.userDetails.uid, gameCode);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => WelcomeScreen(userDetails: widget.userDetails, allLocations: widget.allLocations, allChallenges: widget.allChallenges)
+        )
+      );
+    }
+  }
+
   @override
   build(BuildContext context) {
     return Scaffold(
@@ -34,10 +48,10 @@ class _JoinGameScreen extends State<JoinGameScreen> {
       body: Form(
         key: _formKey,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          // mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              height: 50,
+              height: MediaQuery.of(context).size.height * .10,
             ),
             Center(
               child: Container(
@@ -67,18 +81,7 @@ class _JoinGameScreen extends State<JoinGameScreen> {
             ),
             RaisedButton(
               child: Text('Join'),
-              onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  _formKey.currentState.save();
-                  addPlayerToGame(widget.userDetails.uid, gameCode);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => WelcomeScreen(userDetails: widget.userDetails, allLocations: widget.allLocations, allChallenges: widget.allChallenges)
-                    )
-                  );
-                }
-              },
+              onPressed: () => submitForm(_formKey)
             )
           ]
         )

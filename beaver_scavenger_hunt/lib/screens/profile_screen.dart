@@ -6,6 +6,7 @@ import '../models/challenge_model.dart';
 import '../models/clue_location_model.dart';
 import '../widgets/timer_text.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
+import '../widgets/control_button.dart';
 
 class ProfileScreen extends StatefulWidget {
   final UserDetails userDetails;
@@ -128,12 +129,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(height: 15.0),
                 Text("Preliminary Points Earned: ${getPrelimPoints()}", style: TextStyle(fontSize: 24),),
                 SizedBox(height: 25.0),
-                RaisedButton(
-                  child: Text('Sign Out'),
-                  onPressed: () {
-                    _signOut(context);
-                  },
-                )
+                ControlButton(
+                  context: context,
+                  text: 'Sign Out',
+                  onPressFunction: _signOut,)
               ]
             )
           )
