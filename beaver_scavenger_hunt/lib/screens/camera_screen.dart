@@ -13,10 +13,21 @@ class CameraScreen extends StatelessWidget {
   @override
   Widget build (BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Text('Take a Photo/Video'),
+     appBar: AppBar(
+          title: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(text: 'T', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
+                TextSpan(text: 'ake a ', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
+                TextSpan(text: 'P', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
+                TextSpan(text: 'hoto/', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
+                TextSpan(text: 'V', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
+                TextSpan(text: 'ideo', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
+              ]
+            )
+          ),
           centerTitle: true,
-      ),
+        ),
       body: Camera(userDetails: userDetails, challengeNum: challengeNum, allChallenges: allChallenges)
     );
   }

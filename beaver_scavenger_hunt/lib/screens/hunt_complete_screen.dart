@@ -14,9 +14,19 @@ class HuntCompleteScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('Hunt Complete'),
+          title: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(text: 'H', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
+                TextSpan(text: 'unt ', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
+                TextSpan(text: 'C', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
+                TextSpan(text: 'omplete', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
+
+              ]
+            )
+          ),
           centerTitle: true,
-      ),
+        ),
       //body: completedCluesCount() == 10 ? complete () : notComplete()
       body: complete()
     );
