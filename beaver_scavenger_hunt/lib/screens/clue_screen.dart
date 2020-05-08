@@ -10,6 +10,7 @@ import '../screens/profile_screen.dart';
 import '../models/challenge_model.dart';
 import '../screens/challenge_screen.dart';
 import '../styles/styles_class.dart';
+import '../screens/hunt_complete_screen.dart';
 
 class ClueScreen extends StatefulWidget {
   
@@ -524,6 +525,7 @@ Widget MenuDrawer(
                 MenuClueWidget(context, allLocations, 7, allChallenges, scaffoldContext, which, userDetails, beginTime),
                 MenuClueWidget(context, allLocations, 8, allChallenges, scaffoldContext, which, userDetails, beginTime),
                 MenuClueWidget(context, allLocations, 9, allChallenges, scaffoldContext, which, userDetails, beginTime),
+                MenuHuntCompleteWidget(context, allLocations, 9, allChallenges, scaffoldContext, which, userDetails, beginTime),
               ],
             )
           );
@@ -678,6 +680,65 @@ Widget MenuClueWidget(
         final snackBar = SnackBar(
           content: Text(
             "This clue is not yet available",
+            textAlign: TextAlign.center
+          )
+        );
+        Scaffold.of(scaffoldContext).showSnackBar(snackBar);
+      }
+    },
+  );
+}
+
+Widget MenuHuntCompleteWidget(
+  BuildContext context, 
+  List<ClueLocation> allLocations, 
+  int which, List<Challenge> allChallenges, 
+  BuildContext scaffoldContext, int current, 
+  UserDetails userDetails, DateTime beginTime
+){
+  return ListTile(
+    leading: Icon(
+      allLocations[9].found == true ? 
+      Icons.check: Icons.redo, 
+      color: allLocations[9].found == true ? 
+      Colors.black: Colors.grey
+    ),
+    title: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          height: 35,
+          color: Color.fromRGBO(255,117, 26, 1),
+          child: Padding(
+            padding: EdgeInsets.all(2),
+            child:FittedBox( 
+              child: Text(
+                "Complete Hunt", 
+                style: TextStyle(
+                  color: allLocations[9].found == true ? 
+                  Colors.white : Colors.grey
+                ),
+              ),
+            ),
+          ),
+        ),
+    ),
+    onTap: () {
+      //navigate to clue
+      if (allLocations[9].found == true) {
+        Navigator.push(
+          context, MaterialPageRoute(
+            builder: (context) => HuntCompleteScreen(
+              userDetails: userDetails,
+              allChallenges: allChallenges,
+              allLocations: allLocations
+            )
+          )
+        );
+      }
+      else{
+        final snackBar = SnackBar(
+          content: Text(
+            "This page is not yet available",
             textAlign: TextAlign.center
           )
         );
