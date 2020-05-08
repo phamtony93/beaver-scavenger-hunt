@@ -191,7 +191,8 @@ class _ClueScreenState extends State<ClueScreen> {
             widget.userDetails, setMyState, 
             _saveForm, _myLocation, 
             _myLocationResult, _incorrect, 
-            dropdownDataList, widget.beginTime
+            dropdownDataList, widget.beginTime,
+            widget.allChallenges
           )
         )
       )
@@ -207,7 +208,8 @@ Widget ClueScreenWidget(
   void Function(String) setMyState, void Function() _saveForm, 
   String _myLocation, String _myLocationResult, 
   bool _incorrect, dropdownDataList,
-  DateTime beginTime
+  DateTime beginTime,
+  List<Challenge> allChallenges
 ){
   var screen_width = MediaQuery.of(context).size.width;
   var screen_height = MediaQuery.of(context).size.height;
@@ -291,6 +293,7 @@ Widget ClueScreenWidget(
                         allLocations: allLocations, 
                         whichLocation: whichLocation, 
                         userDetails: userDetails,
+                        allChallenges: allChallenges,
                         beginTime: beginTime,
                       )
                     )

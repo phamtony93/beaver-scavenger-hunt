@@ -312,10 +312,8 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                     borderRadius: BorderRadius.circular(10),
                     child: RaisedButton(
                       color: Colors.black,
-                      child: Text(
-                        'Next Clue',
-                        style: Styles.whiteBoldDefault
-                      ),
+                      child: widget.whichLocation < 9 ? 
+                      Text('Next Clue',style: Styles.whiteBoldDefault) : Text('Check Results', style: Styles.whiteBoldDefault),
                       onPressed: (){
                         if (widget.whichLocation < 9){
                           Navigator.push(
@@ -325,6 +323,18 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                                 whichLocation: widget.whichLocation + 1, 
                                 userDetails: widget.userDetails, 
                                 beginTime: widget.beginTime
+                              )
+                            )
+                          );
+                        }
+                        else{
+                          //Change to hunt complete screen
+                          Navigator.push(
+                            context, MaterialPageRoute(
+                              builder: (context) => HuntCompleteScreen(
+                                userDetails: widget.userDetails, 
+                                allLocations: widget.allLocations, 
+                                allChallenges: widget.allChallenges
                               )
                             )
                           );
