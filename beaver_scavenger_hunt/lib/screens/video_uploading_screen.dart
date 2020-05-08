@@ -1,10 +1,14 @@
+// Packages
 import 'package:flutter/material.dart';
-import '../models/user_details_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../functions/upload_media.dart';
+// Screens
+import 'challenge_screen.dart';
+// Models
+import '../models/user_details_model.dart';
 import '../models/media_model.dart';
-import '../screens/challenge_screen.dart';
 import '../models/challenge_model.dart';
+// Functions
+import '../functions/upload_media.dart';
 
 class VideoUploading extends StatefulWidget {
   final String path;

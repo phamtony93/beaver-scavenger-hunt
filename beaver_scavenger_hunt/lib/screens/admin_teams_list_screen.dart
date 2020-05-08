@@ -1,9 +1,14 @@
+// Packages
 import 'package:beaver_scavenger_hunt/models/user_details_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../screens/admin_specific_team_screen.dart';
-import '../screens/login_screen.dart';
+// Screens
+import 'admin_specific_team_screen.dart';
+import 'login_screen.dart';
+// Models
 import '../models/challenge_model.dart';
+// Styles
+import '../Styles/styles_class.dart';
 
 class AdminTeamsListScreen extends StatefulWidget {
   
@@ -52,25 +57,40 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
         Builder(
           builder: (BuildContext scaffoldContext) {
             return Center(
-              child: RaisedButton(
-                child: Text("Check for teams"),
-                onPressed: (){
-                  if (myUsers == null){
-                    final snackBar = SnackBar(
-                      content: Text(
-                        "There are no teams currently using game ID: ${widget.gameID}",
-                        textAlign: TextAlign.center
-                      )
-                    );
-                    Scaffold.of(scaffoldContext).showSnackBar(snackBar);
-                  }
-                  else{
-                    setState(() {
-                    //
-                    });
-                  }
-                }
-              )
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  color: Color.fromRGBO(255,117, 26, 1),
+                  height: 80, width: 300,
+                  padding: EdgeInsets.all(8),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: RaisedButton(
+                      color: Colors.black,
+                      child: Text(
+                        "Check for teams",
+                        style: Styles.whiteBoldDefault
+                      ),
+                      onPressed: (){
+                        if (myUsers == null){
+                          final snackBar = SnackBar(
+                            content: Text(
+                              "There are no teams currently using game ID: ${widget.gameID}",
+                              textAlign: TextAlign.center
+                            )
+                          );
+                          Scaffold.of(scaffoldContext).showSnackBar(snackBar);
+                        }
+                        else{
+                          setState(() {
+                          //
+                          });
+                        }
+                      }
+                    ),
+                  )
+                )
+              ),
             );
           }
         )

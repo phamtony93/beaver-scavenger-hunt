@@ -1,6 +1,5 @@
+// Packages
 import 'package:flutter/material.dart';
-//import '../functions/get_begin_time.dart';
-//import 'package:beaver_scavenger_hunt/classes/UserDetails.dart';
 import 'dart:async';
 
 class TimerText extends StatefulWidget {

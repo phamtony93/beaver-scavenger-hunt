@@ -1,3 +1,4 @@
+// Packages
 import 'package:flutter/material.dart';
 
 class Styles {
@@ -69,6 +70,13 @@ class Styles {
     fontFamily: _defaultText,
     fontWeight: FontWeight.bold,
     fontSize: defaultFontSize
+  );
+
+  static final whiteBoldSmall = TextStyle(
+    color: osuWhite,
+    fontFamily: _defaultText,
+    fontWeight: FontWeight.bold,
+    fontSize: 20
   );
 
   static final blackBoldDefault = TextStyle(

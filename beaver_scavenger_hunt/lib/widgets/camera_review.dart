@@ -1,14 +1,18 @@
-import 'dart:io';
-import '../models/user_details_model.dart';
+// Packages
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:video_player/video_player.dart';
-import '../functions/upload_media.dart';
-import '../models/media_model.dart';
-import '../screens/challenge_screen.dart';
+import 'dart:io';
+//Screens
 import '../screens/video_uploading_screen.dart';
+import '../screens/challenge_screen.dart';
+// Models
+import '../models/user_details_model.dart';
+import '../models/media_model.dart';
 import '../models/challenge_model.dart';
+// Functions
+import '../functions/upload_media.dart';
 
 class CameraReview extends StatefulWidget {
   final String path;

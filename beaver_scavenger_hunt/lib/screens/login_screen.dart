@@ -1,25 +1,25 @@
+// Packages
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import '../models/clue_location_model.dart';
-import 'clue_screen.dart';
-import 'join_game_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import '../functions/upload_new_user_challeges.dart';
-import '../functions/upload_new_admin.dart';
+// Screens
+import 'clue_screen.dart';
+import 'join_game_screen.dart';
+import 'admin_teams_list_screen.dart';
+import 'create_game_screen.dart';
+// Models
+import '../models/clue_location_model.dart';
+import '../models/user_details_model.dart';
+import '../models/provider_details_model.dart';
+import '../models/challenge_model.dart';
+// Functions
+import '../functions/upload_new_user_and_challenges.dart';
 import '../functions/is_new_user.dart';
 import '../functions/is_new_admin.dart';
 import '../functions/get_prev_user.dart';
-import '../functions/get_prev_admin.dart';
-import '../models/user_details_model.dart';
-import '../models/provider_details_model.dart';
-import '../screens/admin_teams_list_screen.dart';
-import 'package:beaver_scavenger_hunt/screens/create_game_screen.dart';
-import '../models/challenge_model.dart';
-import 'welcome_screen.dart';
 import '../functions/get_begin_time.dart';
-import '../styles/styles_class.dart';
+//Widgets
 import '../widgets/control_button.dart';
 
 class LoginScreen extends StatefulWidget{
@@ -28,13 +28,17 @@ class LoginScreen extends StatefulWidget{
 }
 
 class _LoginScreen extends State<LoginScreen> {
+  
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   String name;
   String email;
   String photoUrl;
 
+  // SIGN IN AS PLAYER FUNCTION:
   Future<AuthResult> _signInAsPlayer(BuildContext context) async {
+    
+    // AUTHENTICATE PLAYER / USER
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
     final AuthCredential credential = GoogleAuthProvider.getCredential(
@@ -49,6 +53,7 @@ class _LoginScreen extends State<LoginScreen> {
     List<ProviderDetails> providerData = List<ProviderDetails>();
     providerData.add(providerInfo);
 
+    // CREATE USER DETAILS OBJECT
     UserDetails user = UserDetails(
       userDetails.user.providerId,
       userDetails.user.uid, //123
@@ -58,73 +63,96 @@ class _LoginScreen extends State<LoginScreen> {
       // providerData
     );
 
-    Map<String, dynamic> prevUser;
+    // DETERMINE IF NEW OR PREV USER
 
     bool isNewUser = await is_new_user(user.uid);
-    if (isNewUser) {
-      print("Adding new user");
-      uploadNewUserAndChallenges(user);
-    }
+    
+    //IF PREVIOUS USER:
+    if (!isNewUser) {
+      
+      print("Previous User Found");
+      print("Retreiving user data from db...");
 
-    //retrieve previousUser info
-    prevUser = await get_prev_user(user.uid);
-    Map<String, dynamic> allClueLocationsMap = prevUser['clue locations'];
-    Map<String, dynamic> allChallengesMap = prevUser['challenges'];
+      //retrieve previousUser info
+      Map<String, dynamic> prevUser;
+      prevUser = await get_prev_user(user.uid);
+      Map<String, dynamic> allClueLocationsMap = prevUser['clue locations'];
+      Map<String, dynamic> allChallengesMap = prevUser['challenges'];
 
-    //create clueLocation object(s) from json map
-    List<ClueLocation> allLocations = [];
-    int which = 0;
-    for (int i = 1; i < 11; i++){
-      ClueLocation loca = ClueLocation.fromJson(allClueLocationsMap["$i"]);
-      if (loca.available == true && loca.solved == false){
-        which = i-1;
+      //create clueLocation object(s) from json map
+      List<ClueLocation> allLocations = [];
+      int which = 0;
+      for (int i = 1; i < 11; i++){
+        ClueLocation loca = ClueLocation.fromJson(allClueLocationsMap["$i"]);
+        if (loca.available == true && loca.solved == false){
+          which = i-1;
+        }
+        allLocations.add(loca);
       }
-      allLocations.add(loca);
-    }
 
-    //create challenge object(s) from json map
-    List<Challenge> allChallenges = [];
-    for (int i = 1; i < 11; i++){
-      Challenge chall = Challenge.fromJson(allChallengesMap["$i"]);
-      allChallenges.add(chall);
-    }  
+      //create challenge object(s) from json map
+      List<Challenge> allChallenges = [];
+      for (int i = 1; i < 11; i++){
+        Challenge chall = Challenge.fromJson(allChallengesMap["$i"]);
+        allChallenges.add(chall);
+      }
 
-    if(isNewUser){
-      Navigator.push(
-        context, 
-        MaterialPageRoute(
-          builder: (context) => JoinGameScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges)
-        )
-      );
-    }
-    else{
+      //get beginTime timeStamp from db
+      print("Getting startTime from database...");
       Timestamp begin = await getBeginTime(user.uid);
       DateTime beginTime = DateTime.parse(begin.toDate().toString());
+      
+      //Navigate to clue screen 
+      // (with userDetails, allLocations, allChallenges, whichLocation, and beginTime)
+      print("user data obtained");
+      print("Navigating to Clue Screen...");
       Navigator.push(
         context, 
         MaterialPageRoute(
-          builder: (context) => ClueScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges, whichLocation: which, beginTime: beginTime)
+          builder: (context) => ClueScreen(
+            userDetails: user, 
+            allLocations: allLocations, 
+            allChallenges: allChallenges, 
+            whichLocation: which, 
+            beginTime: beginTime
+          )
         )
       );
     }
+    
+    // IF NEW USER
+    else{
+      
+      print("No previous user found.");
+      print("Navigating to Join Game Screen");
+      //Navigate to Join Game Screen (with user details)
+      Navigator.push(
+          context, 
+          MaterialPageRoute(
+            builder: (context) => JoinGameScreen(userDetails: user)
+          )
+        );
+    }  
+    //return userDetails to sign-in function
     return userDetails;
   }
 
-   Future<AuthResult> _signInAsAdmin(BuildContext context) async {
+  // SIGN IN AS ADMIN FUNCTION
+  Future<AuthResult> _signInAsAdmin(BuildContext context) async {
+    
+    // AUTHENTICATE ADMIN / USER
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-
     final AuthResult userDetails = await _firebaseAuth.signInWithCredential(credential);
-
     ProviderDetails providerInfo = ProviderDetails(userDetails.additionalUserInfo.providerId);
-
     List<ProviderDetails> providerData = List<ProviderDetails>();
     providerData.add(providerInfo);
 
+    // CREATE USER DETAILS OBJECT
     UserDetails user = UserDetails(
       userDetails.user.providerId,
       userDetails.user.uid, //123
@@ -134,18 +162,23 @@ class _LoginScreen extends State<LoginScreen> {
       // providerData
     );
 
-    // Map<String, dynamic> prevUser;
-
+    // GET GAME CODE
     String adminGameCode = await is_new_admin(user.uid);
+    
+    // IF NEW ADMIN
     if (adminGameCode == 'newAdmin') {
+      //Navigate to Create Game Screen
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => CreateGameScreen(user: user)
         )
       );
-    } else {
+    } 
+    // IF PREV ADMIN
+    else {
       user.gameID = adminGameCode;
+      //Navigate to Admin Teams List Screen (with user details and game code)
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -154,42 +187,9 @@ class _LoginScreen extends State<LoginScreen> {
       );
     }
 
-    // //retrieve previousUser info
-    // prevUser = await get_prev_user(user.uid);
-    // Map<String, dynamic> allClueLocationsMap = prevUser['clue locations'];
-    // Map<String, dynamic> allChallengesMap = prevUser['challenges'];
-
-    // //create clueLocation object(s) from json map
-    // List<ClueLocation> allLocations = [];
-    // int which = 0;
-    // for (int i = 1; i < 11; i++){
-    //   ClueLocation loca = ClueLocation.fromJson(allClueLocationsMap["$i"]);
-    //   if (loca.available == true && loca.solved == false){
-    //     which = i-1;
-    //   }
-    //   allLocations.add(loca);
-    // }
-
-    // if(isNewUser){
-    //   Navigator.push(
-    //     context, 
-    //     MaterialPageRoute(
-    //       builder: (context) => JoinGameScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges)
-    //     )
-    //   );
-    // }
-    // else{
-    //   Timestamp begin = await getBeginTime(user.uid);
-    //   DateTime beginTime = DateTime.parse(begin.toDate().toString());
-    //   Navigator.push(
-    //     context, 
-    //     MaterialPageRoute(
-    //       builder: (context) => ClueScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges, whichLocation: which, beginTime: beginTime)
-    //     )
-    //   );
-    // }
+    //return userDetails object to admin log-in function
     return userDetails;
-  } 
+  }
 
   Widget googleSignInButton(context) {
     return RaisedButton(
@@ -281,7 +281,7 @@ class _LoginScreen extends State<LoginScreen> {
                     Navigator.push(
                       context, 
                       MaterialPageRoute(
-                        builder: (context) => JoinGameScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges,)
+                        builder: (context) => JoinGameScreen(userDetails: user)
                       )
                     );
                   }

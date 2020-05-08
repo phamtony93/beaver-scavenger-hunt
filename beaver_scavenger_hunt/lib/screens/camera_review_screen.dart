@@ -1,7 +1,10 @@
+// Packages
 import 'package:flutter/material.dart';
+// Models
 import '../models/user_details_model.dart';
-import '../widgets/camera_review.dart';
 import '../models/challenge_model.dart';
+// Widgets
+import '../widgets/camera_review.dart';
 
 class CameraReviewScreen extends StatelessWidget {
    final String path;

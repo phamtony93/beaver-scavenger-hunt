@@ -1,10 +1,13 @@
+// Packages
 import 'package:beaver_scavenger_hunt/models/user_details_model.dart';
-import 'package:flutter/material.dart';
-import '../models/challenge_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import '../screens/admin_teams_list_screen.dart';
 import 'package:swipedetector/swipedetector.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+// Screens
+import 'admin_teams_list_screen.dart';
+// Models
+import '../models/challenge_model.dart';
 
 class AdminSpecificTeamScreen extends StatefulWidget {
 

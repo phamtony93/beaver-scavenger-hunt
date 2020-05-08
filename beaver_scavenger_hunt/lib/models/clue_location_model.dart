@@ -1,4 +1,3 @@
-
 class ClueLocation{
 
   int number;

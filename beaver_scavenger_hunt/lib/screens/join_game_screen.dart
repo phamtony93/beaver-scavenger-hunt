@@ -1,32 +1,28 @@
+// Packages
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:beaver_scavenger_hunt/models/clue_location_model.dart';
-import 'package:beaver_scavenger_hunt/models/challenge_model.dart';
-import 'package:beaver_scavenger_hunt/screens/welcome_screen.dart';
+// Screens
+import 'welcome_screen.dart';
+// Models
 import '../models/user_details_model.dart';
-import '../widgets/control_button.dart';
 
 class JoinGameScreen extends StatefulWidget {
   final UserDetails userDetails;
-  final List<ClueLocation> allLocations;
-  final List<Challenge> allChallenges;
 
-  JoinGameScreen({this.userDetails, this.allLocations, this.allChallenges});
+  //gets user details from Login Screen
+  JoinGameScreen({this.userDetails});
 
   @override
   _JoinGameScreen createState() => _JoinGameScreen();
 }
 
 class _JoinGameScreen extends State<JoinGameScreen> {
+  
   final GlobalKey<FormState> _formKey = GlobalKey();
   String gameCode;
 
-  void addPlayerToGame(String playerID, String gameID) async {
-    Firestore.instance.collection("users").document("$playerID").updateData({'gameID': '$gameCode'});
-    Firestore.instance.collection('games').document("$gameID").updateData({'playerIDs': FieldValue.arrayUnion([playerID])});
-  }
-
+  //Validate Game Code Function
   String _validateGameCode(String gameCode) {
+    print("Validating game code...");
     //validate whether gamecode is in db
     if (gameCode.isEmpty) {
       return 'Please enter your 4 digit code';
@@ -37,14 +33,23 @@ class _JoinGameScreen extends State<JoinGameScreen> {
     return null;
   }
 
-  void submitForm(formKey) {
+  //Submit GameCode Form Function
+  void _submitForm(formKey)  async {
     if (formKey.currentState.validate()) {
+      //save currentState
       formKey.currentState.save();
-      addPlayerToGame(widget.userDetails.uid, gameCode);
+      //Navigate to Welcome screen (with user details and game code)
+      
+      print("Game Code validated");
+      print("Navigating to Welcome Screen...");
+
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => WelcomeScreen(userDetails: widget.userDetails, allLocations: widget.allLocations, allChallenges: widget.allChallenges)
+          builder: (context) => WelcomeScreen(
+            userDetails: widget.userDetails, 
+            gameCode: gameCode
+          )
         )
       );
     }
@@ -59,7 +64,6 @@ class _JoinGameScreen extends State<JoinGameScreen> {
       body: Form(
         key: _formKey,
         child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
               height: MediaQuery.of(context).size.height * .10,
@@ -75,6 +79,7 @@ class _JoinGameScreen extends State<JoinGameScreen> {
                     ),
                   ),
                   // maxLength: 6,
+                  //Call _validateGameCode Function (above)
                   validator: (value) => _validateGameCode(value),
                   onSaved: (value) {
                     gameCode = value;
@@ -84,7 +89,8 @@ class _JoinGameScreen extends State<JoinGameScreen> {
             ),
             RaisedButton(
               child: Text('Join'),
-              onPressed: () => submitForm(_formKey)
+              //Call submitForm Function (above)
+              onPressed: () => _submitForm(_formKey)
             )
           ]
         )

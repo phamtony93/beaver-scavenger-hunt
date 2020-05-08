@@ -1,11 +1,14 @@
-import '../screens/login_screen.dart';
+// Packages
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+// Screens
+import 'login_screen.dart';
+// Models
 import '../models/user_details_model.dart';
 import '../models/challenge_model.dart';
 import '../models/clue_location_model.dart';
+// Widgets
 import '../widgets/timer_text.dart';
-// import 'package:google_sign_in/google_sign_in.dart';
 import '../widgets/control_button.dart';
 
 class ProfileScreen extends StatefulWidget {

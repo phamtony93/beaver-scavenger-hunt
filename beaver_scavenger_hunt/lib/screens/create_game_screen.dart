@@ -1,9 +1,12 @@
-import 'dart:math';
-import 'package:beaver_scavenger_hunt/screens/admin_teams_list_screen.dart';
+// Packages
 import 'package:flutter/material.dart';
-import 'package:beaver_scavenger_hunt/functions/upload_new_admin.dart';
+import 'dart:math';
+// Screens
+import 'admin_teams_list_screen.dart';
+// Functions
+import '../functions/upload_new_admin.dart';
+// Models
 import '../models/user_details_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class CreateGameScreen extends StatefulWidget {

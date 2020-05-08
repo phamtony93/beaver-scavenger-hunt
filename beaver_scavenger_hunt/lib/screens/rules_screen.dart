@@ -1,6 +1,32 @@
+// Packages
 import 'package:flutter/material.dart';
+// Screens
+import 'profile_screen.dart';
+// Models
+import '../models/user_details_model.dart';
+import '../models/challenge_model.dart';
+import '../models/clue_location_model.dart';
+// Widgets
+import '../widgets/menu_drawer.dart';
 
 class RulesScreen extends StatelessWidget {
+  
+  UserDetails userDetails;
+  final List<ClueLocation> allLocations;
+  final List<Challenge> allChallenges;
+  final int whichLocation;
+  final beginTime;
+  
+  RulesScreen({
+    Key key, 
+    this.allLocations, 
+    this.allChallenges, 
+    this.whichLocation, 
+    this.userDetails, 
+    this.beginTime
+  }) : super(key: key);
+  
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,6 +41,53 @@ class RulesScreen extends StatelessWidget {
           ),
         ),
         centerTitle: true,
+        leading: allChallenges != null ? Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              tooltip: "Menu",
+            );
+          },
+        )
+        :IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: (){
+            Navigator.pop(context);
+          },
+        ),
+        actions: [
+          allChallenges != null ? IconButton(
+            icon: Icon(Icons.account_circle),
+            onPressed: () => Navigator.push(
+              context, 
+              MaterialPageRoute(
+                builder: (context) => 
+                ProfileScreen(
+                userDetails: userDetails, 
+                allChallenges: allChallenges, 
+                allLocations: allLocations,
+                beginTime: beginTime,
+                )
+              )
+            ),
+          )
+          :Container()
+        ],
+      ),
+      drawer: Builder(
+        builder: (BuildContext cntx) {
+          return MenuDrawer(
+            context, 
+            allLocations, 
+            whichLocation, 
+            allChallenges, 
+            userDetails,
+            beginTime
+          );
+        }
       ),
       body: SafeArea(
         child: ListView(

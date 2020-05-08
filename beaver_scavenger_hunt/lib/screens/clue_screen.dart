@@ -1,16 +1,21 @@
+// Packages
 import 'package:flutter/material.dart';
-import '../models/clue_location_model.dart';
-import 'correct_solution_screen.dart';
-import '../models/user_details_model.dart';
-import '../functions/make_random_dropdown_list.dart';
-import '../functions/remove_dropdown_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_formfield/dropdown_formfield.dart';
-import '../screens/profile_screen.dart';
+// Screens
+import 'correct_solution_screen.dart';
+import 'profile_screen.dart';
+// Models
+import '../models/clue_location_model.dart';
+import '../models/user_details_model.dart';
 import '../models/challenge_model.dart';
-import '../screens/challenge_screen.dart';
+// Functions
+import '../functions/make_random_dropdown_list.dart';
+import '../functions/remove_dropdown_item.dart';
+// Widgets
+import '../widgets/menu_drawer.dart';
+// Styles
 import '../styles/styles_class.dart';
-import '../screens/hunt_complete_screen.dart';
 
 class ClueScreen extends StatefulWidget {
   
@@ -20,6 +25,8 @@ class ClueScreen extends StatefulWidget {
   final int whichLocation;
   final beginTime;
   
+  // from login screen (if prev user)
+  // or welcome screen (if new user)
   ClueScreen({
     Key key, 
     this.allLocations, 
@@ -46,23 +53,27 @@ class _ClueScreenState extends State<ClueScreen> {
   void initState() {
     super.initState();
     _myLocation = "";
+    
+    //NEED TO UPDATE TO NEW RULES
     _myLocationResult = 
       "Guess carefully !!" 
       + "\nEach incorrect guess will add 5 minutes\nto your hunt timer";
     _incorrect = false;
     _guessNumber = 0;
     
+    // makes randomized list of locations for solution dropdown
     makeRandomDropdownList(widget.allLocations, dropdownDataList);
-
+    //for each clue location
     for (int i = 0; i < 10; i++){
+      //if location is already solved
       if (widget.allLocations[i].solved == true){
+        //remove it from the list
         removeDropdownItem(widget.allLocations[i].solution, dropdownDataList);
       }
       else{
         break;
       }
     }
-
   }
 
   //SET MY STATE FUNCTION
@@ -89,13 +100,25 @@ class _ClueScreenState extends State<ClueScreen> {
         + "5 minutes have been added to your timer.\n\nTry again.";
       });
     }
+    // If correct solution is selected
     else if (form.validate()) {
       _incorrect = false;
       form.save();
+      // mark clue as solved
       widget.allLocations[widget.whichLocation].solved = true;
+      // remove clue from dropdown list
       removeDropdownItem(_myLocation, dropdownDataList);
-      if (widget.whichLocation < 10){
+      
+      //for first 9 clues
+      //if (widget.whichLocation < 10){
+        
+        //mark clue as solved in database
         Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 1}.solved': true});
+        
+        //Navigate to Correct Solution Screen
+        // (with allLocations, whichLocation, allChallenges
+        // userDetails, and beginTime)
+        print("Navigating to Correct Solution Screen...");
         Navigator.push(
           context, 
           MaterialPageRoute(
@@ -109,8 +132,7 @@ class _ClueScreenState extends State<ClueScreen> {
             )
           )
         );
-      }
-      
+      //}
     }
   }
 
@@ -155,26 +177,33 @@ class _ClueScreenState extends State<ClueScreen> {
               );
             },
           ),
+          // Profile Icon on right side of appbar
           actions: [
             IconButton(
               icon: Icon(Icons.account_circle),
-              onPressed: () => Navigator.push(
-                context, 
-                MaterialPageRoute(
-                  builder: (context) => 
-                  ProfileScreen(
-                  userDetails: widget.userDetails, 
-                  allChallenges: widget.allChallenges, 
-                  allLocations: widget.allLocations,
-                  beginTime: widget.beginTime,
+              onPressed: () { 
+                //Naviage to Profile Screen (with userDetails,
+                // allChallenges, allLocations, and beginTime)
+                print("Navigating to Profile Screen...");
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(
+                    builder: (context) => 
+                    ProfileScreen(
+                    userDetails: widget.userDetails, 
+                    allChallenges: widget.allChallenges, 
+                    allLocations: widget.allLocations,
+                    beginTime: widget.beginTime,
+                    )
                   )
-                )
-              ),
+                );
+              },
             )
           ],
         ),
         drawer: Builder(
           builder: (BuildContext cntx) {
+            //Menu Drawer Widget
             return MenuDrawer(
               context, 
               widget.allLocations, 
@@ -212,6 +241,7 @@ Widget ClueScreenWidget(
   DateTime beginTime,
   List<Challenge> allChallenges
 ){
+  //get screen height and width
   var screen_width = MediaQuery.of(context).size.width;
   var screen_height = MediaQuery.of(context).size.height;
   return SingleChildScrollView( 
@@ -238,7 +268,8 @@ Widget ClueScreenWidget(
         Center(
           child: Text(
             "${allLocations[whichLocation].solution}",
-            style: Styles.orangeBoldDefault
+            style: Styles.orangeBoldDefault,
+            textAlign: TextAlign.center,
           ),
         ):
         SizedBox(height: 0),
@@ -287,6 +318,10 @@ Widget ClueScreenWidget(
                   style: Styles.whiteBoldDefault
                 ),
                 onPressed: (){
+                  //Navigate to Correct Solution Screen
+                  // (with allLocations, whichLocation, userDetails
+                  // allChallenges, and beginTime)
+                  print("Navigating to Correct Solution Screen...");
                   Navigator.push(
                     context, MaterialPageRoute(
                       builder: (context) => 
@@ -493,257 +528,3 @@ Widget EnterGuessButton(BuildContext context, String label, formKey, List<ClueLo
   );
 }
 */
-
-Widget MenuDrawer(
-  BuildContext context, List<ClueLocation> allLocations, 
-  int which, List<Challenge> allChallenges, 
-  UserDetails userDetails, DateTime beginTime
-){
-  return GestureDetector(
-    onTap: (){
-      Navigator.pop(context);
-    },
-    child:Scaffold(
-      backgroundColor: Color.fromRGBO(0, 0, 0, 0),
-      body: Builder(
-        builder: (BuildContext scaffoldContext) {
-          return Drawer(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                SizedBox(height: 25),
-                MyDrawerHeader(context),
-                MenuRulesWidget(context),
-                MenuChallengesWidget(context, allChallenges, userDetails),
-                MenuClueWidget(context, allLocations, 0, allChallenges, scaffoldContext, which, userDetails, beginTime),
-                MenuClueWidget(context, allLocations, 1, allChallenges, scaffoldContext, which, userDetails, beginTime),
-                MenuClueWidget(context, allLocations, 2, allChallenges, scaffoldContext, which, userDetails, beginTime),
-                MenuClueWidget(context, allLocations, 3, allChallenges, scaffoldContext, which, userDetails, beginTime),
-                MenuClueWidget(context, allLocations, 4, allChallenges, scaffoldContext, which, userDetails, beginTime),
-                MenuClueWidget(context, allLocations, 5, allChallenges, scaffoldContext, which, userDetails, beginTime),
-                MenuClueWidget(context, allLocations, 6, allChallenges, scaffoldContext, which, userDetails, beginTime),
-                MenuClueWidget(context, allLocations, 7, allChallenges, scaffoldContext, which, userDetails, beginTime),
-                MenuClueWidget(context, allLocations, 8, allChallenges, scaffoldContext, which, userDetails, beginTime),
-                MenuClueWidget(context, allLocations, 9, allChallenges, scaffoldContext, which, userDetails, beginTime),
-                MenuHuntCompleteWidget(context, allLocations, 9, allChallenges, scaffoldContext, which, userDetails, beginTime),
-              ],
-            )
-          );
-        }
-      )
-    )
-  );
-}
-
-Widget MyDrawerHeader(BuildContext context){
-  return ListTile(
-      title: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: SizedBox(
-          height: 55,
-          child: Container(
-            padding: EdgeInsets.all(5),
-            color: Colors.black,
-            child: FittedBox(
-              child:Text(
-                'Menu', 
-                style: TextStyle(fontSize: 30, color: Colors.white), 
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-        ),
-      ),
-      onTap: () {
-        Navigator.pop(context);
-      },
-  );
-}
-
-MenuRulesWidget(BuildContext context){
-  return ListTile(
-    leading: Icon(Icons.list, color: Colors.black),
-    title: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Container(
-          height: 35,
-          color: Color.fromRGBO(255,117, 26, 1),
-          child: Padding(
-            padding: EdgeInsets.all(2),
-            child: FittedBox( 
-              child: Text(
-                "Rules", 
-                style: TextStyle(color: Colors.white)
-              ),
-            ),
-          ),
-        ),
-    ),
-    onTap: () {
-      //navigate to rules
-      Navigator.popAndPushNamed(context, '/rules_screen');
-    },
-  );
-}
-        
-MenuChallengesWidget(
-  BuildContext context, 
-  List<Challenge> allChallenges, 
-  UserDetails userDetails
-){
-  return ListTile(
-    leading: Icon(Icons.directions_run, color: Colors.black),
-    title: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Container(
-          height: 35,
-          color: Color.fromRGBO(255,117, 26, 1),
-          child: Padding(
-            padding: EdgeInsets.all(2),
-            child:FittedBox( 
-              child: Text(
-                "Challenges", style: TextStyle(color: Colors.white)
-              ),
-            ),
-          ),
-        )
-    ),
-    onTap: () {
-      Navigator.push(
-        context, MaterialPageRoute(
-          builder: (context) => 
-          ChallengeScreen(
-            allChallenges: allChallenges, 
-            userDetails: userDetails
-          )
-        )
-      );
-    },
-  );
-}
-
-Widget MenuClueWidget(
-  BuildContext context, 
-  List<ClueLocation> allLocations, 
-  int which, List<Challenge> allChallenges, 
-  BuildContext scaffoldContext, int current, 
-  UserDetails userDetails, DateTime beginTime
-){
-  return ListTile(
-    leading: Icon(
-      allLocations[which].solved == true ? 
-      Icons.check: Icons.lightbulb_outline, 
-      color: allLocations[which].available == true ? 
-      Colors.black: Colors.grey
-    ),
-    title: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Container(
-          height: 35,
-          color: Color.fromRGBO(255,117, 26, 1),
-          child: Padding(
-            padding: EdgeInsets.all(2),
-            child:FittedBox( 
-              child: Text(
-                "Clue ${allLocations[which].number}", 
-                style: TextStyle(
-                  color: allLocations[which].available == true ? 
-                  Colors.white : Colors.grey
-                ),
-              ),
-            ),
-          ),
-        ),
-    ),
-    onTap: () {
-      //navigate to clue
-      if (allLocations[which].available == true) {
-        if (which == current){
-          Navigator.pop(context);
-        }
-        else{
-          Navigator.pop(context);
-          Navigator.push(
-            context, MaterialPageRoute(
-              builder: (context) => ClueScreen(
-                allLocations: allLocations, 
-                whichLocation: which, 
-                allChallenges: allChallenges, 
-                userDetails: userDetails,
-                beginTime: beginTime,
-              )
-            )
-          );
-        }
-      }
-      else{
-        final snackBar = SnackBar(
-          content: Text(
-            "This clue is not yet available",
-            textAlign: TextAlign.center
-          )
-        );
-        Scaffold.of(scaffoldContext).showSnackBar(snackBar);
-      }
-    },
-  );
-}
-
-Widget MenuHuntCompleteWidget(
-  BuildContext context, 
-  List<ClueLocation> allLocations, 
-  int which, List<Challenge> allChallenges, 
-  BuildContext scaffoldContext, int current, 
-  UserDetails userDetails, DateTime beginTime
-){
-  return ListTile(
-    leading: Icon(
-      allLocations[9].found == true ? 
-      Icons.check: Icons.redo, 
-      color: allLocations[9].found == true ? 
-      Colors.black: Colors.grey
-    ),
-    title: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Container(
-          height: 35,
-          color: Color.fromRGBO(255,117, 26, 1),
-          child: Padding(
-            padding: EdgeInsets.all(2),
-            child:FittedBox( 
-              child: Text(
-                "Complete Hunt", 
-                style: TextStyle(
-                  color: allLocations[9].found == true ? 
-                  Colors.white : Colors.grey
-                ),
-              ),
-            ),
-          ),
-        ),
-    ),
-    onTap: () {
-      //navigate to clue
-      if (allLocations[9].found == true) {
-        Navigator.push(
-          context, MaterialPageRoute(
-            builder: (context) => HuntCompleteScreen(
-              userDetails: userDetails,
-              allChallenges: allChallenges,
-              allLocations: allLocations
-            )
-          )
-        );
-      }
-      else{
-        final snackBar = SnackBar(
-          content: Text(
-            "This page is not yet available",
-            textAlign: TextAlign.center
-          )
-        );
-        Scaffold.of(scaffoldContext).showSnackBar(snackBar);
-      }
-    },
-  );
-}

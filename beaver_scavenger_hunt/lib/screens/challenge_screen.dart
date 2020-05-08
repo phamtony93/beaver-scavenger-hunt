@@ -1,15 +1,26 @@
-import '../models/user_details_model.dart';
+// Packages
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/challenge_model.dart';
+// Screens
 import 'camera_screen.dart';
+import 'profile_screen.dart';
+// Models
+import '../models/clue_location_model.dart';
+import '../models/user_details_model.dart';
+import '../models/challenge_model.dart';
+// Widgets
+import '../widgets/menu_drawer.dart';
 
 class ChallengeScreen extends StatefulWidget {
   
   final List<Challenge> allChallenges;
   final UserDetails userDetails;
+  final List<ClueLocation> allLocations;
+  final int whichLocation;
+  final DateTime beginTime;
 
-  ChallengeScreen({Key key, this.allChallenges, this.userDetails}) : super(key: key);
+
+  ChallengeScreen({Key key, this.allChallenges, this.userDetails, this.allLocations, this.whichLocation, this.beginTime}) : super(key: key);
   
   @override
   _ChallengeScreen createState() => _ChallengeScreen();
@@ -77,7 +88,46 @@ class _ChallengeScreen extends State<ChallengeScreen> {
             ]
           )
         ),
-        centerTitle: true,
+        centerTitle: true,leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              tooltip: "Menu",
+            );
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.account_circle),
+            onPressed: () => Navigator.push(
+              context, 
+              MaterialPageRoute(
+                builder: (context) => 
+                ProfileScreen(
+                userDetails: widget.userDetails, 
+                allChallenges: widget.allChallenges, 
+                allLocations: widget.allLocations,
+                beginTime: widget.beginTime,
+                )
+              )
+            ),
+          )
+        ],
+      ),
+      drawer: Builder(
+        builder: (BuildContext cntx) {
+          return MenuDrawer(
+            context, 
+            widget.allLocations, 
+            widget.whichLocation, 
+            widget.allChallenges, 
+            widget.userDetails,
+            widget.beginTime
+          );
+        }
       ),
       body: StreamBuilder(
         stream: Firestore.instance.collection("users").document(widget.userDetails.uid).snapshots(),

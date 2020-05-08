@@ -1,4 +1,5 @@
-  import 'dart:io';
+// Packages
+import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 
 Future<String> uploadMedia(String path,String fileName) async {

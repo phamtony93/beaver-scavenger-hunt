@@ -1,11 +1,13 @@
+// Packages
 import 'package:camera/camera.dart';
-import '../models/user_details_model.dart';
 import 'package:flutter/material.dart';
-//import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import '../main.dart';
+// Screens
 import '../screens/camera_review_screen.dart';
+import '../main.dart';
+// Models
+import '../models/user_details_model.dart';
 import '../models/challenge_model.dart';
 
 class Camera extends StatefulWidget {

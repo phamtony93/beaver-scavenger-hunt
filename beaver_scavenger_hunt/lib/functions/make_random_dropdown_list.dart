@@ -1,5 +1,7 @@
-import '../models/clue_location_model.dart';
+// Packages
 import 'dart:math';
+// Models
+import '../models/clue_location_model.dart';
 
 makeRandomDropdownList(allLocations, dropdownDataList)  {
     List<ClueLocation> allLocasCopy = List<ClueLocation>.from(allLocations);

@@ -1,18 +1,21 @@
-
-import '../models/user_details_model.dart';
-import 'package:flutter/material.dart';
-import '../models/clue_location_model.dart';
-import '../models/challenge_model.dart';
-import 'clue_screen.dart';
+// Packages
 import 'package:location/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'welcome_screen.dart';
-import '../functions/add_end_time.dart';
-import '../styles/styles_class.dart';
+import 'package:flutter/material.dart';
 import 'dart:math';
 import 'dart:async';
+// Screens
+import 'clue_screen.dart';
 import 'hunt_complete_screen.dart';
+// Models
+import '../models/user_details_model.dart';
+import '../models/clue_location_model.dart';
+import '../models/challenge_model.dart';
+// Functions
+import '../functions/add_end_time.dart';
+// Styles
+import '../styles/styles_class.dart';
 
 class CorrectSolutionScreen extends StatefulWidget {
   
@@ -44,7 +47,6 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
   bool _serviceEnabled;
   PermissionStatus _permissionGranted;
   LocationData _locationData;
-  
   double myDeviceLat;
   double myDeviceLong;
   double distanceAway;
@@ -136,7 +138,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
         else{
           addEndTime(widget.userDetails);
           Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 1}.found': true});
-          //Change to hunt complete screen
+          //Nav to Hunt Complete Screen
           Navigator.push(
             context, MaterialPageRoute(
               builder: (context) => HuntCompleteScreen(
@@ -235,37 +237,20 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
         child: Column(
           children: <Widget>[
               SizedBox(height: 20),
-              Text(
-                "Congratulations!!",
-                style: Styles.blackNormalBig,
-              ),
+              TextWidget(context, "Congratulations!!", Styles.blackNormalBig, false),
               SizedBox(height: 5),
-              Text(
-                "You solved the clue.",
-                style: Styles.blackNormalSmall,
-                textAlign: TextAlign.center,
-                ),
-              SizedBox(height: 5),
-              widget.allLocations[widget.whichLocation].found == false ? 
-              Text(
-                "Get within 50 meters of",
-                style: TextStyle(fontSize: 20),
-                textAlign: TextAlign.center,
-                )
-              : SizedBox(height: 0),
-              Text(
-                "${widget.allLocations[widget.whichLocation].solution}",
-                style: Styles.orangeNormalDefault,
-                textAlign: TextAlign.center,
-              ),
+              TextWidget(context, "You solved the clue.", Styles.blackNormalSmall, true),
               SizedBox(height: 5),
               widget.allLocations[widget.whichLocation].found == false ?
-              Text(
-                "to unlock the next clue.",
-                style: TextStyle(fontSize: 20),
-                textAlign: TextAlign.center,
-              ):
-              SizedBox(height: 0),
+              TextWidget(context, "Get within 50 meters of", Styles.blackNormalSmall, true)
+              : SizedBox(height: 0),
+              TextWidget(context, "${widget.allLocations[widget.whichLocation].solution}", Styles.orangeNormalDefault, true),
+              SizedBox(height: 5),
+              widget.allLocations[widget.whichLocation].found == false ?
+              widget.whichLocation == 9 ?
+              TextWidget(context, "to complete your hunt.", Styles.blackNormalSmall, true)
+              :TextWidget(context, "to unlock the next clue.", Styles.blackNormalSmall, true)
+              : SizedBox(height: 0),
               SizedBox(height: 20),
               SizedBox(
                 height: screen_height*0.35, width: screen_width*0.9,
@@ -295,9 +280,11 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
               ),
               SizedBox(height:20),
               distanceAway == null ? SizedBox(height:0)
-              : Text(
-                "${distanceAway.toStringAsFixed(distanceAway.truncateToDouble() == distanceAway ? 0 : 0)} meters away",
-                style: Styles.blackBoldSmall,
+              : TextWidget(
+                context, 
+                "${distanceAway.toStringAsFixed(distanceAway.truncateToDouble() == distanceAway ? 0 : 0)} meters away", 
+                Styles.blackBoldSmall, 
+                false
               ),
               Divider(thickness: 5, height: 50, indent: 50, endIndent: 50,),
               widget.allLocations[widget.whichLocation].found == true ? 
@@ -313,9 +300,10 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                     child: RaisedButton(
                       color: Colors.black,
                       child: widget.whichLocation < 9 ? 
-                      Text('Next Clue',style: Styles.whiteBoldDefault) : Text('Check Results', style: Styles.whiteBoldDefault),
+                      Text('Next Clue',style: Styles.whiteBoldDefault) : Text('Check Progress', style: Styles.whiteBoldDefault),
                       onPressed: (){
                         if (widget.whichLocation < 9){
+                          print("Navigating to Clue Screen...");
                           Navigator.push(
                             context, MaterialPageRoute(
                               builder: (context) => ClueScreen(
@@ -329,12 +317,15 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                         }
                         else{
                           //Change to hunt complete screen
+                          print("Navigating to Hunt Complete Screen...");
                           Navigator.push(
                             context, MaterialPageRoute(
                               builder: (context) => HuntCompleteScreen(
                                 userDetails: widget.userDetails, 
                                 allLocations: widget.allLocations, 
-                                allChallenges: widget.allChallenges
+                                allChallenges: widget.allChallenges,
+                                whichLocation: widget.whichLocation,
+                                beginTime: widget.beginTime,
                               )
                             )
                           );
@@ -356,7 +347,6 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                   
                   //for first 9 clues
                   if (widget.whichLocation < widget.allLocations.length - 1){
-                    
                     //update object
                     widget.allLocations[widget.whichLocation + 1].available = true;
                     //update db
@@ -364,6 +354,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                     Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 2}.available': true});
                     
                     //return to clue screen (next clue available)
+                    print("Navigating to Clue Screen...");
                     Navigator.push(
                       context, MaterialPageRoute(
                         builder: (context) => ClueScreen(
@@ -381,6 +372,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                     addEndTime(widget.userDetails);
                     Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 1}.found': true});
                     //Change to hunt complete screen
+                    print("Navigating to Hunt Complete Screen...");
                     Navigator.push(
                       context, MaterialPageRoute(
                         builder: (context) => HuntCompleteScreen(
@@ -399,6 +391,14 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
         )
     );
   }
+}
+
+Widget TextWidget(BuildContext context, String text, TextStyle style, bool centered){
+  return Text(
+    text,
+    style: style,
+    textAlign: centered == true ? TextAlign.center : TextAlign.left,
+  );
 }
 
 Widget _googleMap(

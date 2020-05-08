@@ -1,23 +1,72 @@
+// Packages
 import 'package:flutter/material.dart';
+// Screens
+import 'profile_screen.dart';
+// Models
 import '../models/clue_location_model.dart';
 import '../models/user_details_model.dart';
 import '../models/challenge_model.dart';
+// Widgets
+import '../widgets/menu_drawer.dart';
+// Styles
 import '../styles/styles_class.dart';
 
 class HuntCompleteScreen extends StatelessWidget {
   final UserDetails userDetails;
   final List<ClueLocation> allLocations;
   final List<Challenge> allChallenges;
+  final int whichLocation;
+  final DateTime beginTime;
 
-   HuntCompleteScreen({Key key, this.userDetails, this.allLocations, this.allChallenges}) : super(key: key);
+   HuntCompleteScreen({Key key, this.userDetails, this.allLocations, this.allChallenges, this.whichLocation, this.beginTime}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title:  completedChallengesCount() >= 5 ? titleComplete () : titleNotComplete(),
-          centerTitle: true,
+        title:  completedChallengesCount() >= 5 ? titleComplete () : titleNotComplete(),
+        centerTitle: true,
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              tooltip: "Menu",
+            );
+          },
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.account_circle),
+            onPressed: () => Navigator.push(
+              context, 
+              MaterialPageRoute(
+                builder: (context) => 
+                ProfileScreen(
+                userDetails: userDetails, 
+                allChallenges: allChallenges, 
+                allLocations: allLocations,
+                beginTime: beginTime,
+                )
+              )
+            ),
+          )
+        ],
+      ),
+      drawer: Builder(
+        builder: (BuildContext cntx) {
+          return MenuDrawer(
+            context, 
+            allLocations, 
+            whichLocation, 
+            allChallenges, 
+            userDetails,
+            beginTime
+          );
+        }
+      ),
       body: completedChallengesCount() >= 5 ? complete () : notComplete()
     );
   }

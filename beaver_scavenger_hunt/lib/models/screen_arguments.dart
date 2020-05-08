@@ -1,6 +1,8 @@
-import 'UserDetails.dart';
+// Packages
 import 'package:beaver_scavenger_hunt/models/challenge_model.dart';
 import 'package:beaver_scavenger_hunt/models/clue_location_model.dart';
+// Models
+import 'user_details_model.dart';
 
 class ScreenArguments {
   UserDetails user;

@@ -1,6 +1,8 @@
+// Packages
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'dart:convert';
+// Models
 import '../models/user_details_model.dart';
 
 
