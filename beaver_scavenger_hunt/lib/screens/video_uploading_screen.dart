@@ -86,8 +86,6 @@ class _VideoUploadingState extends State<VideoUploading> {
   void updateList() {
     widget.allChallenges[widget.challengeNum].completed = true;
     widget.allChallenges[widget.challengeNum].photoUrl = video.getURL();
-    widget.allChallenges[widget.challengeNum].solved = true;
-    widget.allChallenges[widget.challengeNum].available = false;
   }
 
   

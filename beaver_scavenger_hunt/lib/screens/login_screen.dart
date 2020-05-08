@@ -14,7 +14,7 @@ import '../functions/get_prev_user.dart';
 import '../functions/get_prev_admin.dart';
 import '../models/user_details_model.dart';
 import '../models/provider_details_model.dart';
-import '../screens/adminTeamsList_screen.dart';
+import '../screens/admin_teams_list_screen.dart';
 import 'package:beaver_scavenger_hunt/screens/create_game_screen.dart';
 import '../models/challenge_model.dart';
 import 'welcome_screen.dart';
