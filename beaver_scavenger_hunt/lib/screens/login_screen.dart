@@ -87,6 +87,9 @@ class _LoginScreen extends State<LoginScreen> {
         if (loca.available == true && loca.solved == false){
           which = i-1;
         }
+        if (loca.number == 10 && loca.available == true){
+          which = 9;
+        }
         allLocations.add(loca);
       }
 
@@ -105,7 +108,10 @@ class _LoginScreen extends State<LoginScreen> {
       //Navigate to clue screen 
       // (with userDetails, allLocations, allChallenges, whichLocation, and beginTime)
       print("user data obtained");
-      print("Navigating to Clue Screen...");
+      //if game complete
+      //navigate to end game screen
+      //else
+      print("Navigating to Clue Screen ${which + 1}...");
       Navigator.push(
         context, 
         MaterialPageRoute(

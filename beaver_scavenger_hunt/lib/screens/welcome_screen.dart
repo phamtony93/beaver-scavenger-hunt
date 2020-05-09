@@ -114,12 +114,14 @@ class WelcomeScreen extends StatelessWidget {
 
                               //create clueLocation object(s) from json map
                               List<ClueLocation> allLocations = [];
-                              int which = 0;
+                              //int which = 0;
                               for (int i = 1; i < 11; i++){
                                 ClueLocation loca = ClueLocation.fromJson(allClueLocationsMap["$i"]);
+                                /*
                                 if (loca.available == true && loca.solved == false){
                                   which = i-1;
                                 }
+                                */
                                 allLocations.add(loca);
                               }
                               

@@ -101,12 +101,12 @@ class EndGameScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start, 
           children: <Widget>[
             SizedBox(height: 25.0),
-            Text('Your Final Time and Score', style: Styles.blackNormalDefault, textAlign: TextAlign.center,),
+            Text('Your Final Time and Score', style: Styles.blackBoldDefault, textAlign: TextAlign.center,),
             SizedBox(height: 25.0),
-            Text('Finish Time:', style: Styles.orangeNormalDefault, textAlign: TextAlign.center,),
+            Text('Finish Time:', style: Styles.orangeBoldDefault, textAlign: TextAlign.center,),
             getTime(),
             SizedBox(height: 15.0),
-            Text('Points:', style: Styles.orangeNormalDefault, textAlign: TextAlign.center,),
+            Text('Points:', style: Styles.orangeBoldDefault, textAlign: TextAlign.center,),
             points(),
             SizedBox(height: 25.0),
             Text("LEADERBOARD", style: Styles.blackBoldDefault, textAlign: TextAlign.center,),
@@ -123,7 +123,7 @@ class EndGameScreen extends StatelessWidget {
     return Text((difference.inHours).toString().padLeft(2, '0') + 
         ':' + (difference.inMinutes%60).toString().padLeft(2, '0') + 
         ':' + (difference.inSeconds%60).toString().padLeft(2, '0'),
-        style: TextStyle(fontSize: 24), textAlign: TextAlign.center,);
+        style: Styles.blackNormalDefault, textAlign: TextAlign.center,);
   }
 
 int completedChallengesCount() {
@@ -155,7 +155,10 @@ int completedChallengesCount() {
     int challengePointsEarned = challengePoints * completedChallengesCount();
     int timerPointsDeducted = 2 * timerDeduction;
 
-    return Text((cluePointsEarned + challengePointsEarned + timerPointsDeducted).toString(), textAlign: TextAlign.center,);
+    return Text(
+      (cluePointsEarned + challengePointsEarned + timerPointsDeducted).toString(), 
+      style: Styles.blackNormalDefault,
+      textAlign: TextAlign.center,);
   }
 
 }
