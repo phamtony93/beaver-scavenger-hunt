@@ -225,8 +225,8 @@ class _LoginScreen extends State<LoginScreen> {
                 height: 275,
                 width: 275,
                 image: AssetImage('assets/images/osu_logo.png')),
-              Text('Scavenger', style: TextStyle(fontSize: 60)),
-              Text('Hunt', style: TextStyle(fontSize: 60)),
+              Text('Scavenger', style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold)),
+              Text('Hunt', style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold)),
               SizedBox(
                 height: 50,
               ),

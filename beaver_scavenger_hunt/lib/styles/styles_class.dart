@@ -105,8 +105,7 @@ class Styles {
     fontWeight: FontWeight.normal,
     fontSize: 50
   );
-
-
+  
   static final Color osuBlack = Colors.black;
   static final Color osuWhite = Colors.white;
   static final Color osuOrange = Color.fromRGBO(255,117, 26, 1);

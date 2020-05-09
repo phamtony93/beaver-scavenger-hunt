@@ -21,26 +21,71 @@ class _JoinGameScreen extends State<JoinGameScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   String gameCode;
 
+  bool _isInAsyncCall = false;
+  bool _isInvalidGameCode = false;
+  bool _joinedGame = false;
+
+  String _validateGameCode(String gameCode) {
+    if (gameCode.isEmpty) {
+      return 'Please enter your 4 digit code';
+    }
+    if (gameCode.length != 4) {
+      return 'Please enter your 4 digit code';
+    }
+    if (_isInvalidGameCode) {
+      _isInvalidGameCode = false;
+      return 'Invalid Game Code';
+    }
+
+    return null;    
+  }
+
   void addPlayerToGame(String playerID, String gameID) async {
     // var ref = Firestore.instance.collection('games').document(gameID).get();
     Firestore.instance.collection('games').document(gameID).updateData({'playerID': FieldValue.arrayUnion([playerID])});
   }
 
+  Future<bool> gameExists(String gameCode) async {
+    DocumentSnapshot game = await Firestore.instance.collection('games').document(gameCode).get();
+    if (game.data != null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   void submitForm(formKey) {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
-      addPlayerToGame(widget.userDetails.uid, gameCode);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => WelcomeScreen(userDetails: widget.userDetails, allLocations: widget.allLocations, allChallenges: widget.allChallenges)
-        )
-      );
+
+      setState(() {
+        _isInAsyncCall = true;
+      });
+      
+      setState(() {
+        if (gameExists(gameCode) != null) {
+          _isInvalidGameCode = false;
+          _joinedGame = true;
+        } else {
+          _isInvalidGameCode = true;
+        }
+      });
+
+      if (_joinedGame) {
+        addPlayerToGame(widget.userDetails.uid, gameCode);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WelcomeScreen(userDetails: widget.userDetails, allLocations: widget.allLocations, allChallenges: widget.allChallenges)
+          )
+        );
+      }
     }
   }
 
   @override
   build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Join Game'),
@@ -64,15 +109,15 @@ class _JoinGameScreen extends State<JoinGameScreen> {
                     ),
                   ),
                   // maxLength: 6,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter your 4 digit code';
-                    }
-                    if (value.length != 4) {
-                      return 'Please enter your 4 digit code';
-                    }
-                    return null;
-                  },
+                  validator: _validateGameCode,
+                  // (value) {
+                  //   if (value.isEmpty) {
+                  //     return 'Please enter your 4 digit code';
+                  //   }
+                  //   if (value.length != 4) {
+                  //     return 'Please enter your 4 digit code';
+                  //   }
+                  // },
                   onSaved: (value) {
                     gameCode = value;
                   },
