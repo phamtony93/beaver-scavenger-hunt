@@ -2,12 +2,15 @@
 import 'package:flutter/material.dart';
 // Screens
 import 'profile_screen.dart';
+import 'end_game_screen.dart';
 // Models
 import '../models/clue_location_model.dart';
 import '../models/user_details_model.dart';
 import '../models/challenge_model.dart';
 // Widgets
 import '../widgets/menu_drawer.dart';
+// Functions
+import '../functions/add_end_time.dart';
 // Styles
 import '../styles/styles_class.dart';
 
@@ -67,7 +70,7 @@ class HuntCompleteScreen extends StatelessWidget {
           );
         }
       ),
-      body: completedChallengesCount() >= 5 ? complete () : notComplete()
+      body: completedChallengesCount() >= 5 ? complete (context) : notComplete(context)
     );
   }
 
@@ -119,44 +122,65 @@ class HuntCompleteScreen extends StatelessWidget {
     return count;
   }
 
-  Widget complete() {
-     return Center(
-      child: Column(mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(height: 25.0),
-          Text('Congratulations! Your Hunt is Complete!',  style: Styles.titles,),
-          SizedBox(height: 25.0),
-          Text("Clues Completed:", style: Styles.orangeNormalDefault, textAlign: TextAlign.center,),
-          Text("${completedCluesCount()} out of 10", style: Styles.orangeNormalDefault, textAlign: TextAlign.center,),
-          SizedBox(height: 15.0),
-          Text("Challenges Completed:", style: Styles.orangeNormalDefault, textAlign: TextAlign.center,),
-          Text("${completedChallengesCount()} out of 5", style: Styles.orangeNormalDefault, textAlign: TextAlign.center,),
-          SizedBox(height: 15.0),
-          
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Container(
-              color: Color.fromRGBO(255,117, 26, 1),
-              height: 80, width: 300,
-              padding: EdgeInsets.all(8),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: RaisedButton(
-                  color: Colors.black,
-                  child: Text('View Leaderboard', style: Styles.whiteBoldDefault),
-                    onPressed: () {
-                      print('go to leaderboard screen');
-                    }
+  Widget complete(BuildContext context) {
+     return Padding(
+       padding: const EdgeInsets.all(8.0),
+       child: Center(
+        child: Column(mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(height: 25.0),
+            Text('Congratulations! Your Hunt is Complete!', style: Styles.titles, textAlign: TextAlign.center,),
+            completedChallengesCount() < 10 ? Text('You can complete all 10 challenges to earn more points. Or click End Game to finish now.', textAlign: TextAlign.center,) :
+              Text('You have finished all clues and challenges. Click on End Game now.', textAlign: TextAlign.center,),
+            SizedBox(height: 25.0),
+            Text("Clues Completed:", style: Styles.orangeNormalDefault, textAlign: TextAlign.center,),
+            Text("${completedCluesCount()} out of 10", style: Styles.orangeNormalDefault, textAlign: TextAlign.center,),
+            SizedBox(height: 15.0),
+            Text("Challenges Completed:", style: Styles.orangeNormalDefault, textAlign: TextAlign.center,),
+            Text("${completedChallengesCount()} out of 5", style: Styles.orangeNormalDefault, textAlign: TextAlign.center,),
+            SizedBox(height: 15.0),
+            
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Container(
+                color: Color.fromRGBO(255,117, 26, 1),
+                height: 80, width: 300,
+                padding: EdgeInsets.all(8),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: RaisedButton(
+                    color: Colors.black,
+                    child: Text('End Game', style: Styles.whiteBoldDefault),
+                      onPressed: () {
+                        print('End Game');
+                        final endTime = addEndTime(userDetails);
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context, MaterialPageRoute(
+                            builder: (context) => 
+                            EndGameScreen(
+                              allChallenges: allChallenges,
+                              allLocations: allLocations, 
+                              userDetails: userDetails,
+                              whichLocation: whichLocation,
+                              beginTime: beginTime,
+                              endTime: endTime,
+                            )
+                          )
+                        );
+                        
+                      }
+                  ),
                 ),
               ),
             ),
-          ),
 
-        ],),
-    );
+          ],),
+    ),
+     );
   }
 
-  Widget notComplete() {
+  Widget notComplete(BuildContext context) {
     return Center(
       child: Column(mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
@@ -171,6 +195,38 @@ class HuntCompleteScreen extends StatelessWidget {
           Text("Challenges Completed:", style: Styles.orangeNormalDefault, textAlign: TextAlign.center,),
           Text("${completedChallengesCount()} out of 5", style: Styles.orangeNormalDefault, textAlign: TextAlign.center,),
           SizedBox(height: 15.0),
+          // ClipRRect(
+          //   borderRadius: BorderRadius.circular(10),
+          //   child: Container(
+          //     color: Color.fromRGBO(255,117, 26, 1),
+          //     height: 80, width: 300,
+          //     padding: EdgeInsets.all(8),
+          //     child: ClipRRect(
+          //       borderRadius: BorderRadius.circular(10),
+          //       child: RaisedButton(
+          //         color: Colors.black,
+          //         child: Text('Challenges', style: Styles.whiteBoldDefault),
+          //           onPressed: () {
+          //             print('go to challenges');
+          //             Navigator.pop(context);
+          //             Navigator.push(
+          //               context, MaterialPageRoute(
+          //                 builder: (context) => 
+          //                 ChallengeScreen(
+          //                   allChallenges: allChallenges,
+          //                   allLocations: allLocations, 
+          //                   userDetails: userDetails,
+          //                   whichLocation: whichLocation,
+          //                   beginTime: beginTime,
+          //                 )
+          //               )
+          //             );
+                                    
+          //           }
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],),
     );
   }

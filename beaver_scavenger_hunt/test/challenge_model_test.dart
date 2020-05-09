@@ -20,7 +20,7 @@ void main() {
       expect(test_challenge.completed, test_completed);
       expect(test_challenge.description, test_description);
       expect(test_challenge.photoUrl, test_photoUrl);
-      expect(test_challenge.solved, false);
+      expect(test_challenge.completed, false);
       expect(test_challenge.available, false);
       expect(test_challenge.confirmed, false);
       expect(test_challenge.checked, false);
@@ -46,7 +46,7 @@ void main() {
       expect(test_challenge2.completed, test_completed);
       expect(test_challenge2.description, test_description);
       expect(test_challenge2.photoUrl, test_photoUrl);
-      expect(test_challenge2.solved, false);
+      expect(test_challenge2.completed, false);
       expect(test_challenge2.available, false);
       expect(test_challenge2.confirmed, false);
       expect(test_challenge2.checked, false);
