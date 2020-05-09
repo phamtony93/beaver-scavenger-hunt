@@ -1,13 +1,16 @@
 // Packages
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 // Screens
 import 'profile_screen.dart';
+import 'login_screen.dart';
 // Models
 import '../models/clue_location_model.dart';
 import '../models/user_details_model.dart';
 import '../models/challenge_model.dart';
 // Widgets
 import '../widgets/menu_drawer.dart';
+import '../widgets/control_button.dart';
 // Styles
 import '../styles/styles_class.dart';
 
@@ -25,6 +28,7 @@ class EndGameScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: RichText(
             text: TextSpan(
               children: <TextSpan>[
@@ -48,68 +52,74 @@ class EndGameScreen extends StatelessWidget {
             ),
           ),
         centerTitle: true,
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              tooltip: "Menu",
-            );
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.account_circle),
-            onPressed: () => Navigator.push(
-              context, 
-              MaterialPageRoute(
-                builder: (context) => 
-                ProfileScreen(
-                userDetails: userDetails, 
-                allChallenges: allChallenges, 
-                allLocations: allLocations,
-                beginTime: beginTime,
-                )
-              )
-            ),
-          )
-        ],
+        // leading: Builder(
+        //   builder: (BuildContext context) {
+        //     return IconButton(
+        //       icon: Icon(Icons.menu),
+        //       onPressed: () {
+        //         Scaffold.of(context).openDrawer();
+        //       },
+        //       tooltip: "Menu",
+        //     );
+        //   },
+        // ),
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.account_circle),
+        //     onPressed: () => Navigator.push(
+        //       context, 
+        //       MaterialPageRoute(
+        //         builder: (context) => 
+        //         ProfileScreen(
+        //         userDetails: userDetails, 
+        //         allChallenges: allChallenges, 
+        //         allLocations: allLocations,
+        //         beginTime: beginTime,
+        //         )
+        //       )
+        //     ),
+        //   )
+        // ],
       ),
-      drawer: Builder(
-        builder: (BuildContext cntx) {
-          return MenuDrawer(
-            context, 
-            allLocations, 
-            whichLocation, 
-            allChallenges, 
-            userDetails,
-            beginTime
-          );
-        }
-      ),
-      body: summary(),
+      // drawer: Builder(
+      //   builder: (BuildContext cntx) {
+      //     return MenuDrawer(
+      //       context, 
+      //       allLocations, 
+      //       whichLocation, 
+      //       allChallenges, 
+      //       userDetails,
+      //       beginTime
+      //     );
+      //   }
+      // ),
+      body: summary(context),
     );
   }
 
-  Widget summary() {
+  Widget summary(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Center(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start, 
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center, 
           children: <Widget>[
             SizedBox(height: 25.0),
-            Text('Your Final Time and Score', style: Styles.blackBoldDefault, textAlign: TextAlign.center,),
+            Text('Your Final Time and Score', style: Styles.blackBoldDefault),
             SizedBox(height: 25.0),
-            Text('Finish Time:', style: Styles.orangeBoldDefault, textAlign: TextAlign.center,),
+            Text('Finish Time:', style: Styles.orangeBoldDefault),
             getTime(),
             SizedBox(height: 15.0),
-            Text('Points:', style: Styles.orangeBoldDefault, textAlign: TextAlign.center,),
+            Text('Points:', style: Styles.orangeBoldDefault,),
             points(),
             SizedBox(height: 25.0),
-            Text("LEADERBOARD", style: Styles.blackBoldDefault, textAlign: TextAlign.center,),
+            ControlButton(
+                  context: context,
+                  text: 'Sign Out',
+                  onPressFunction: _signOut,),
+            SizedBox(height: 25.0),
+            Text("LEADERBOARD", style: Styles.blackBoldDefault),
             Text('add leaderboard here...')
           ],
       )),
@@ -159,6 +169,12 @@ int completedChallengesCount() {
       (cluePointsEarned + challengePointsEarned + timerPointsDeducted).toString(), 
       style: Styles.blackNormalDefault,
       textAlign: TextAlign.center,);
+  }
+
+  void _signOut(BuildContext context) {
+    FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+    _firebaseAuth.signOut();
+    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 
 }
