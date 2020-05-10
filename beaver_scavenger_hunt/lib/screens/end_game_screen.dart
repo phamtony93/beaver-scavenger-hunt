@@ -31,74 +31,77 @@ class EndGameScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: RichText(
-            text: TextSpan(
-              children: <TextSpan>[
-                TextSpan(
-                  text: 'E', 
-                  style: Styles.whiteBoldDefault
-                ),
-                TextSpan(
-                  text: 'nd ', 
-                  style: Styles.orangeNormalDefault
-                ),
-                TextSpan(
-                  text: 'G', 
-                  style: Styles.whiteBoldDefault
-                ),
-                TextSpan(
-                  text: 'ame', 
-                  style: Styles.orangeNormalDefault
-                ),
-              ],
+    return WillPopScope(
+        onWillPop: () => _onBackPress(),
+        child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: RichText(
+              text: TextSpan(
+                children: <TextSpan>[
+                  TextSpan(
+                    text: 'E', 
+                    style: Styles.whiteBoldDefault
+                  ),
+                  TextSpan(
+                    text: 'nd ', 
+                    style: Styles.orangeNormalDefault
+                  ),
+                  TextSpan(
+                    text: 'G', 
+                    style: Styles.whiteBoldDefault
+                  ),
+                  TextSpan(
+                    text: 'ame', 
+                    style: Styles.orangeNormalDefault
+                  ),
+                ],
+              ),
             ),
-          ),
-        centerTitle: true,
-        // leading: Builder(
-        //   builder: (BuildContext context) {
-        //     return IconButton(
-        //       icon: Icon(Icons.menu),
-        //       onPressed: () {
-        //         Scaffold.of(context).openDrawer();
-        //       },
-        //       tooltip: "Menu",
-        //     );
-        //   },
-        // ),
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.account_circle),
-        //     onPressed: () => Navigator.push(
+          centerTitle: true,
+          // leading: Builder(
+          //   builder: (BuildContext context) {
+          //     return IconButton(
+          //       icon: Icon(Icons.menu),
+          //       onPressed: () {
+          //         Scaffold.of(context).openDrawer();
+          //       },
+          //       tooltip: "Menu",
+          //     );
+          //   },
+          // ),
+          // actions: [
+          //   IconButton(
+          //     icon: Icon(Icons.account_circle),
+          //     onPressed: () => Navigator.push(
+          //       context, 
+          //       MaterialPageRoute(
+          //         builder: (context) => 
+          //         ProfileScreen(
+          //         userDetails: userDetails, 
+          //         allChallenges: allChallenges, 
+          //         allLocations: allLocations,
+          //         beginTime: beginTime,
+          //         )
+          //       )
+          //     ),
+          //   )
+          // ],
+        ),
+        // drawer: Builder(
+        //   builder: (BuildContext cntx) {
+        //     return MenuDrawer(
         //       context, 
-        //       MaterialPageRoute(
-        //         builder: (context) => 
-        //         ProfileScreen(
-        //         userDetails: userDetails, 
-        //         allChallenges: allChallenges, 
-        //         allLocations: allLocations,
-        //         beginTime: beginTime,
-        //         )
-        //       )
-        //     ),
-        //   )
-        // ],
+        //       allLocations, 
+        //       whichLocation, 
+        //       allChallenges, 
+        //       userDetails,
+        //       beginTime
+        //     );
+        //   }
+        // ),
+        body: summary(context),
       ),
-      // drawer: Builder(
-      //   builder: (BuildContext cntx) {
-      //     return MenuDrawer(
-      //       context, 
-      //       allLocations, 
-      //       whichLocation, 
-      //       allChallenges, 
-      //       userDetails,
-      //       beginTime
-      //     );
-      //   }
-      // ),
-      body: summary(context),
     );
   }
 
@@ -119,6 +122,9 @@ class EndGameScreen extends StatelessWidget {
             Text('Points:', style: Styles.orangeBoldDefault,),
             points(),
             SizedBox(height: 25.0),
+            Text('If you would like to play again,', textAlign: TextAlign.center),
+            Text('sign out and join a new game.', textAlign: TextAlign.center),
+            SizedBox(height: 20.0),
             ControlButton(
                   context: context,
                   text: 'Sign Out',
@@ -181,6 +187,10 @@ class EndGameScreen extends StatelessWidget {
           }
         }
       );
+  }
+
+   Future<bool> _onBackPress() {
+    return Future<bool>.value(false);
   }
 
 }
