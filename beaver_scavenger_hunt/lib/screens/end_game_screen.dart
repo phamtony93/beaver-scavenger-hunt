@@ -1,9 +1,13 @@
 // Packages
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 // Screens
 import 'profile_screen.dart';
 import 'login_screen.dart';
+// Functions
+import '../functions/add_points.dart';
+import '../functions/calculate_points.dart';
 // Models
 import '../models/clue_location_model.dart';
 import '../models/user_details_model.dart';
@@ -21,6 +25,7 @@ class EndGameScreen extends StatelessWidget {
   final int whichLocation;
   final DateTime beginTime;
   final DateTime endTime;
+  int totalPoints;
 
   EndGameScreen({Key key, this.userDetails, this.allLocations, this.allChallenges, this.whichLocation, this.beginTime, this.endTime}) : super(key: key);
 
@@ -120,7 +125,9 @@ class EndGameScreen extends StatelessWidget {
                   onPressFunction: _signOut,),
             SizedBox(height: 25.0),
             Text("LEADERBOARD", style: Styles.blackBoldDefault),
-            Text('add leaderboard here...')
+            Text('Ranking/Team/Points'),
+            SizedBox(height: 15.0),
+            Expanded(child:leaderboard()),
           ],
       )),
     );
@@ -136,37 +143,11 @@ class EndGameScreen extends StatelessWidget {
         style: Styles.blackNormalDefault, textAlign: TextAlign.center,);
   }
 
-int completedChallengesCount() {
-    int count = 0;
-    for (var index = 0; index < allChallenges.length; index++) {
-      if (allChallenges[index].completed) {
-        count +=1;
-      }
-    }
-    return count;
-  }
-
-  int completedCluesCount() {
-    int count = 0;
-    for (var index = 0; index < allLocations.length; index++) {
-      if (allLocations[index].solved) {
-        count += 1;
-      }
-    }
-    return count;
-  }
-
   Widget points() {
-    int cluePoints = 10;
-    int challengePoints = 5;
-    int timerDeduction = -1;
-
-    int cluePointsEarned = cluePoints * completedCluesCount();
-    int challengePointsEarned = challengePoints * completedChallengesCount();
-    int timerPointsDeducted = 2 * timerDeduction;
-
+    totalPoints = calculatePoints(allLocations, allChallenges);
+    addPoints(userDetails, totalPoints);
     return Text(
-      (cluePointsEarned + challengePointsEarned + timerPointsDeducted).toString(), 
+      totalPoints.toString(), 
       style: Styles.blackNormalDefault,
       textAlign: TextAlign.center,);
   }
@@ -175,6 +156,31 @@ int completedChallengesCount() {
     FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
     _firebaseAuth.signOut();
     Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+  }
+
+  Widget leaderboard() {
+    return StreamBuilder(
+        stream: Firestore.instance.collection("users").orderBy('points', descending: true).snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting || snapshot.data.documents.length == 0) {
+            return CircularProgressIndicator();
+          } else {
+          return 
+          ListView.builder(
+            itemCount: snapshot.data.documents.length,
+              itemBuilder: (context, index) {
+                var doc = snapshot.data.documents[index];
+                return ListTile(
+                  dense: true,
+                  leading: Text((index+1).toString(), style: TextStyle(fontSize: 16)),
+                  title: Text(doc['email'].toString(),  style: TextStyle(fontSize: 16)),
+                  trailing: Text(doc['points'].toString(), style: Styles.blackBoldSmall),
+                );
+              },
+            );
+          }
+        }
+      );
   }
 
 }

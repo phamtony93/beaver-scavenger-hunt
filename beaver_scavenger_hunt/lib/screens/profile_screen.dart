@@ -3,6 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 // Screens
 import 'login_screen.dart';
+// Functions
+import '../functions/calculate_points.dart';
+import '../functions/completed_clues_count.dart';
+import '../functions/completed_challenges_count.dart';
 // Models
 import '../models/user_details_model.dart';
 import '../models/challenge_model.dart';
@@ -46,43 +50,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  int completedChallengesCount() {
-    int count = 0;
-    for (var index = 0; index < widget.allChallenges.length; index++) {
-      if (widget.allChallenges[index].completed) {
-        count +=1;
-      }
-    }
-    return count;
-  }
-
-  int completedCluesCount() {
-    int count = 0;
-    for (var index = 0; index < widget.allLocations.length; index++) {
-      if (widget.allLocations[index].solved) {
-        count += 1;
-      }
-    }
-    return count;
-  }
-
   void _signOut(BuildContext context) {
     FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
     _firebaseAuth.signOut();
     Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 
-  int getPrelimPoints() {
-    int cluePoints = 10;
-    int challengePoints = 5;
-    int timerDeduction = -1;
-
-    int cluePointsEarned = cluePoints * completedCluesCount();
-    int challengePointsEarned = challengePoints * completedChallengesCount();
-    int timerPointsDeducted = 2 * timerDeduction;
-
-    return (cluePointsEarned + challengePointsEarned + timerPointsDeducted);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,9 +90,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(height: 15.0),
                 Text("Email : ${widget.userDetails.userEmail}", style: TextStyle(fontSize: 24),),
                 SizedBox(height: 15.0),
-                Text("Clues Completed: ${completedCluesCount()}", style: TextStyle(fontSize: 24),),
+                Text("Clues Completed: ${completedCluesCount(widget.allLocations)}", style: TextStyle(fontSize: 24),),
                 SizedBox(height: 15.0),
-                Text("Challenges Completed: ${completedChallengesCount()}", style: TextStyle(fontSize: 24),),
+                Text("Challenges Completed: ${completedChallengesCount(widget.allChallenges)}", style: TextStyle(fontSize: 24),),
                 SizedBox(height: 15.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -130,7 +103,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 //Text("Current Time: xx", style: TextStyle(fontSize: 24),),
                 SizedBox(height: 15.0),
-                Text("Preliminary Points Earned: ${getPrelimPoints()}", style: TextStyle(fontSize: 24),),
+                Text("Preliminary Points Earned: ${calculatePoints(widget.allLocations, widget.allChallenges)}", style: TextStyle(fontSize: 24),),
                 SizedBox(height: 25.0),
                 ControlButton(
                   context: context,
