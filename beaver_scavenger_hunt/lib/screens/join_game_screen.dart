@@ -1,5 +1,4 @@
 // Packages
-import 'package:beaver_scavenger_hunt/widgets/control_button.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // Screens

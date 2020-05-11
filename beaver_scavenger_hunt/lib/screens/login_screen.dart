@@ -14,7 +14,6 @@ import '../models/user_details_model.dart';
 import '../models/provider_details_model.dart';
 import '../models/challenge_model.dart';
 // Functions
-import '../functions/upload_new_user_and_challenges.dart';
 import '../functions/is_new_user.dart';
 import '../functions/is_new_admin.dart';
 import '../functions/get_prev_user.dart';
@@ -65,7 +64,7 @@ class _LoginScreen extends State<LoginScreen> {
 
     // DETERMINE IF NEW OR PREV USER
 
-    bool isNewUser = await is_new_user(user.userEmail);
+    bool isNewUser = await is_new_user(user);
     
     //IF PREVIOUS USER:
     if (!isNewUser) {
@@ -102,7 +101,7 @@ class _LoginScreen extends State<LoginScreen> {
 
       //get beginTime timeStamp from db
       print("Getting startTime from database...");
-      Timestamp begin = await getBeginTime(user.uid);
+      Timestamp begin = await getBeginTime(user);
       DateTime beginTime = DateTime.parse(begin.toDate().toString());
       
       //Navigate to clue screen 
@@ -169,7 +168,7 @@ class _LoginScreen extends State<LoginScreen> {
     );
 
     // GET GAME CODE
-    String adminGameCode = await is_new_admin(user.userEmail);
+    String adminGameCode = await is_new_admin(user);
     
     // IF NEW ADMIN
     if (adminGameCode == 'newAdmin') {
@@ -243,6 +242,14 @@ class _LoginScreen extends State<LoginScreen> {
                 onPressFunction: _signInAsPlayer,
                 imageLogo: 'assets/images/google_logo.png',
               ),
+              SizedBox(height: 15),
+              ControlButton(
+                context: context, 
+                text: 'Login as Admin', 
+                onPressFunction: _signInAsAdmin, 
+                imageLogo: 'assets/images/google_logo.png'
+              ),
+              //TEMP LOGIN BUTTON
               RaisedButton(
                 child: Text('Temp Login'),
                 onPressed: ()  async {
@@ -256,7 +263,7 @@ class _LoginScreen extends State<LoginScreen> {
             
                   // DETERMINE IF NEW OR PREV USER
 
-                  bool isNewUser = await is_new_user(user.uid);
+                  bool isNewUser = await is_new_user(user);
                   
                   //IF PREVIOUS USER:
                   if (!isNewUser) {
@@ -293,7 +300,7 @@ class _LoginScreen extends State<LoginScreen> {
 
                     //get beginTime timeStamp from db
                     print("Getting startTime from database...");
-                    Timestamp begin = await getBeginTime(user.uid);
+                    Timestamp begin = await getBeginTime(user);
                     DateTime beginTime = DateTime.parse(begin.toDate().toString());
                     
                     //Navigate to clue screen 
@@ -331,12 +338,6 @@ class _LoginScreen extends State<LoginScreen> {
                       );
                   }
                 },
-              ),
-              ControlButton(
-                context: context, 
-                text: 'Login as Admin', 
-                onPressFunction: _signInAsAdmin, 
-                imageLogo: 'assets/images/google_logo.png'
               )
             ]
           )

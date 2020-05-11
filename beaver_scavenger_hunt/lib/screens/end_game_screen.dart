@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // Screens
-import 'profile_screen.dart';
 import 'login_screen.dart';
 // Functions
 import '../functions/add_points.dart';
@@ -13,7 +12,6 @@ import '../models/clue_location_model.dart';
 import '../models/user_details_model.dart';
 import '../models/challenge_model.dart';
 // Widgets
-import '../widgets/menu_drawer.dart';
 import '../widgets/control_button.dart';
 // Styles
 import '../styles/styles_class.dart';

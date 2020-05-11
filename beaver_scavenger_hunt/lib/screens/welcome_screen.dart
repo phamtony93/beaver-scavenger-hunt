@@ -1,6 +1,5 @@
 // Packages
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 // Screens
 import 'clue_screen.dart';
 import 'rules_screen.dart';

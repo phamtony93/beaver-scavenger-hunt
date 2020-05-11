@@ -80,7 +80,7 @@ class _CreateGameScreen extends State<CreateGameScreen> {
                   child: RaisedButton(
                     color: Colors.black,
                     child: Text(
-                      "Open Game",
+                      "Start Game",
                       style: Styles.whiteBoldDefault
                     ),
                     onPressed: (){
