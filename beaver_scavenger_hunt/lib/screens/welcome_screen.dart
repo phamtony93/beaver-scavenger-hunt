@@ -11,6 +11,7 @@ import '../models/user_details_model.dart';
 // Functions
 import '../functions/add_begin_time.dart';
 import '../functions/get_prev_user.dart';
+import '../functions/add_player_to_game.dart';
 import '../functions/upload_new_user_and_challenges.dart';
 // Styles
 import '../styles/styles_class.dart';
@@ -24,11 +25,6 @@ class WelcomeScreen extends StatelessWidget {
    
   //Gets user details and game code from join game screen
   WelcomeScreen({this.userDetails, this.gameCode});
-
-  //adds user's uid to "games" collection in db
-  void addPlayerToGame(String gameID) async {
-    Firestore.instance.collection('games').document("$gameCode").updateData({'playerIDs': FieldValue.arrayUnion([userDetails.userEmail])});
-  }
   
   @override
   Widget build(BuildContext context) {
@@ -109,7 +105,7 @@ class WelcomeScreen extends StatelessWidget {
                               //retrieve user info from db
                               
                               //newUser = await get_prev_user(userDetails.uid);
-                              newUser = await get_prev_user(userDetails.userEmail);
+                              newUser = await get_prev_user(userDetails);
 
                               //get clue locations and challenges from db
                               Map<String, dynamic> allClueLocationsMap = newUser['clue locations'];
@@ -131,7 +127,7 @@ class WelcomeScreen extends StatelessWidget {
                               
                               //add player's gameCode to "games" collection in db (above)
                               print("Adding new player uid to 'games' collection in db...");
-                              addPlayerToGame(gameCode);
+                              addPlayerToGame(gameCode, userDetails);
                               
                               // add timestamp (now) to database, and store it
                               // here as beginTime

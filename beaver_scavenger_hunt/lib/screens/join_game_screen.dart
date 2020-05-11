@@ -23,38 +23,20 @@ class _JoinGameScreen extends State<JoinGameScreen> {
   
   final GlobalKey<FormState> _formKey = GlobalKey();
   String gameCode;
-  List<String> allUserIds = [];
-
-  @override
-  void initState(){
-    super.initState();
-    getAllUserIds();
-  }
-
-  void getAllUserIds() async {
-    var ds = await Firestore.instance.collection("games").getDocuments();
-    for (int i = 0; i < ds.documents.length; i++){
-      if (ds.documents[i]['open'] == true)
-      allUserIds.add(ds.documents[i].documentID);
-    }
-  }
-
-  bool isGameCodeValid(String gameCode){
-    for (int i = 0; i < allUserIds.length; i++){
-      if (gameCode == allUserIds[i]){
-        return true;
-      }
-    }
-    return false;
-  }
-
+  
   //Validate Game Code Function
-  String _validateGameCode(String gameCode) {
+  String _validateGameCode(String gameCode, List<String> possibleGameCodes) {
     print("Validating game code...");
     //validate whether gamecode is in db
-    if (!isGameCodeValid(gameCode)){
+    bool isValid = false; 
+    for (int i = 0; i < possibleGameCodes.length; i++){
+      if (gameCode == possibleGameCodes[i]){
+        isValid = true;
+      }
+    }
+    if (isValid == false){
       print("Game code invalid");
-      return 'That is not a valid game code.\n(Game codes are case-sensitive)';
+      return 'That is not a valid game code.\n(Reminder: Game codes are case-sensitive)';
     }
     if (gameCode.isEmpty) {
       print("Game code invalid");
@@ -95,66 +77,81 @@ class _JoinGameScreen extends State<JoinGameScreen> {
         title: AppBarTextSpan(context),
         centerTitle: true,
       ),
-      body: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .10,
-            ),
-            Text(
-              "Game Code",
-              style: Styles.blackBoldDefault,
-            ),
-            Center(
-              child: Container(
-                width: 300,
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Input code',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)), 
+      body: StreamBuilder(
+          stream: Firestore.instance.collection("games").snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(child: CircularProgressIndicator());
+            } else {
+              List<DocumentSnapshot> allSnapshots = snapshot.data.documents;
+              List<String> allGameCodes = [];
+              for (int i = 0; i < allSnapshots.length; i++){
+                if (allSnapshots[i]['open'] == true){
+                  allGameCodes.add(allSnapshots[i].documentID);
+                }
+              }
+              return Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .10,
                     ),
-                  ),
-                  // maxLength: 6,
-                  //Call _validateGameCode Function (above)
-                  validator: (value) => _validateGameCode(value),
-                  onSaved: (value) {
-                    gameCode = value;
-                  },
-                ),
-              ),
-            ),
-            Expanded(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    color: Color.fromRGBO(255,117, 26, 1),
-                    height: 80, width: 300,
-                    padding: EdgeInsets.all(8),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: RaisedButton(
-                        color: Colors.black,
-                        child: Text(
-                          "Join",
-                          style: Styles.whiteBoldDefault
+                    Text(
+                      "Game Code",
+                      style: Styles.blackBoldDefault,
+                    ),
+                    Center(
+                      child: Container(
+                        width: 300,
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: 'Input code',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10)), 
+                            ),
+                          ),
+                          //Call _validateGameCode Function (above)
+                          validator: (value) => _validateGameCode(value, allGameCodes),
+                          onSaved: (value) {
+                            gameCode = value;
+                          },
                         ),
-                        onPressed: (){
-                          _submitForm(_formKey);
-                        }
                       ),
-                    )
-                  )
+                    ),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Container(
+                            color: Color.fromRGBO(255,117, 26, 1),
+                            height: 80, width: 300,
+                            padding: EdgeInsets.all(8),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: RaisedButton(
+                                color: Colors.black,
+                                child: Text(
+                                  "Join",
+                                  style: Styles.whiteBoldDefault
+                                ),
+                                onPressed: (){
+                                  _submitForm(_formKey);
+                                }
+                              ),
+                            )
+                          )
+                        )
+                      )
+                    ),
+                    SizedBox(height: 10)
+                  ]
                 )
-              )
-            ),
-            SizedBox(height: 10)
-          ]
+              );
+            }
+          }
         )
-      )
     );
   }
 }

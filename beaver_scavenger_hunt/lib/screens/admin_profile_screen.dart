@@ -33,8 +33,8 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
     print("Closing game: ${widget.gameCode}");
     Firestore.instance.collection('games').document(widget.gameCode).updateData({'open': false});
     //remove admin from "admins" collection
-    print("Removing admin: ${widget.userDetails.userEmail} from 'admins' collection");
-    Firestore.instance.collection('admins').document(widget.userDetails.userEmail).delete();
+    print("Removing admin: ${widget.userDetails.uid} from 'admins' collection");
+    Firestore.instance.collection('admins').document(widget.userDetails.uid).delete();
     //log-out
     FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
     _firebaseAuth.signOut();

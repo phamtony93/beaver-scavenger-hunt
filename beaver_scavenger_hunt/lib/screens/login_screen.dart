@@ -75,7 +75,7 @@ class _LoginScreen extends State<LoginScreen> {
 
       //retrieve previousUser info
       Map<String, dynamic> prevUser;
-      prevUser = await get_prev_user(user.uid);
+      prevUser = await get_prev_user(user);
       Map<String, dynamic> allClueLocationsMap = prevUser['clue locations'];
       Map<String, dynamic> allChallengesMap = prevUser['challenges'];
 
@@ -266,7 +266,7 @@ class _LoginScreen extends State<LoginScreen> {
 
                     //retrieve previousUser info
                     Map<String, dynamic> prevUser;
-                    prevUser = await get_prev_user(user.uid);
+                    prevUser = await get_prev_user(user);
                     Map<String, dynamic> allClueLocationsMap = prevUser['clue locations'];
                     Map<String, dynamic> allChallengesMap = prevUser['challenges'];
 

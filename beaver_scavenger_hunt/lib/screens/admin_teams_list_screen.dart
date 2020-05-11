@@ -30,11 +30,10 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
   getUsers() async {
     var doc2 = await Firestore.instance.collection("games").document("${widget.gameID}").get();
     myUsers = doc2.data == null ? null : doc2.data["playerIDs"];
-    /*
+    
     for (int i = 0; i < myUsers.length; i++){
       myUsers[i] = myUsers[i] + "_" + widget.gameID;
     }
-    */
   }
   
   @override
@@ -124,36 +123,21 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
                 Expanded(
                   child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Container(
-                        color: Color.fromRGBO(255,117, 26, 1),
-                        height: 80, width: 300,
-                        padding: EdgeInsets.all(8),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: RaisedButton(
-                            color: Colors.black,
-                            child: Text(
-                              "Close Game",
-                              style: Styles.whiteBoldDefault
-                            ),
-                            onPressed: (){
-                              //mark game as closed
-                              print("Closing game: ${widget.gameID}");
-                              Firestore.instance.collection('games').document(widget.gameID).updateData({'open': false});
-                              //navigate back to login screen
-                              print("Navigaing to login screen...");
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder:  (context) => LoginScreen()
-                                )
-                              );
-                            }
-                          ),
-                        )
-                      )
-                    )
+                    child: StreamBuilder(
+                      stream: Firestore.instance.collection("games").snapshots(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(child: CircularProgressIndicator());
+                        } else {
+                          List<DocumentSnapshot> allSnapshots = snapshot.data.documents;
+                          for (int i = 0; i < allSnapshots.length; i++){
+                            if (allSnapshots[i].documentID == widget.gameID && allSnapshots[i]['open'] == true)
+                              return CloseGameButton(context, widget.gameID);
+                          }
+                          return OpenGameButton(context, widget.gameID);
+                        }
+                      }
+                    ),
                   )
                 ),
                 SizedBox(height: 10)
@@ -281,4 +265,56 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
       )
     );
   }
+}
+
+Widget CloseGameButton(BuildContext context, String gameID){
+  return ClipRRect(
+    borderRadius: BorderRadius.circular(10),
+    child: Container(
+      color: Color.fromRGBO(255,117, 26, 1),
+      height: 80, width: 300,
+      padding: EdgeInsets.all(8),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: RaisedButton(
+          color: Colors.black,
+          child: Text(
+            "Close Game",
+            style: Styles.whiteBoldDefault
+          ),
+          onPressed: (){
+            //mark game as closed
+            print("Closing game: $gameID");
+            Firestore.instance.collection('games').document(gameID).updateData({'open': false});
+          }
+        ),
+      )
+    )
+  );
+}
+
+Widget OpenGameButton(BuildContext context, String gameID){
+  return ClipRRect(
+    borderRadius: BorderRadius.circular(10),
+    child: Container(
+      color: Color.fromRGBO(255,117, 26, 1),
+      height: 80, width: 300,
+      padding: EdgeInsets.all(8),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: RaisedButton(
+          color: Colors.black,
+          child: Text(
+            "Open Game",
+            style: Styles.whiteBoldDefault
+          ),
+          onPressed: (){
+            //mark game as closed
+            print("Opening game: $gameID");
+            Firestore.instance.collection('games').document(gameID).updateData({'open': true});
+          }
+        ),
+      )
+    )
+  );
 }
