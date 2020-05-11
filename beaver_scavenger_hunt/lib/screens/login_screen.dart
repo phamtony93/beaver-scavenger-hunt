@@ -65,7 +65,7 @@ class _LoginScreen extends State<LoginScreen> {
 
     // DETERMINE IF NEW OR PREV USER
 
-    bool isNewUser = await is_new_user(user.uid);
+    bool isNewUser = await is_new_user(user.userEmail);
     
     //IF PREVIOUS USER:
     if (!isNewUser) {
@@ -169,7 +169,7 @@ class _LoginScreen extends State<LoginScreen> {
     );
 
     // GET GAME CODE
-    String adminGameCode = await is_new_admin(user.uid);
+    String adminGameCode = await is_new_admin(user.userEmail);
     
     // IF NEW ADMIN
     if (adminGameCode == 'newAdmin') {
@@ -254,52 +254,81 @@ class _LoginScreen extends State<LoginScreen> {
                     'tester@gmail.com'
                   );
             
+                  // DETERMINE IF NEW OR PREV USER
+
                   bool isNewUser = await is_new_user(user.uid);
-                  if (isNewUser) {
-                    print("Adding new user");
-                    uploadNewUserAndChallenges(user);
-                  }
+                  
+                  //IF PREVIOUS USER:
+                  if (!isNewUser) {
+                    
+                    print("Previous User Found");
+                    print("Retreiving user data from db...");
 
-                  //retrieve previousUser info
-                  prevUser = await get_prev_user(user.uid);
-                  Map<String, dynamic> allClueLocationsMap = prevUser['clue locations'];
-                  Map<String, dynamic> allChallengesMap = prevUser['challenges'];
+                    //retrieve previousUser info
+                    Map<String, dynamic> prevUser;
+                    prevUser = await get_prev_user(user.uid);
+                    Map<String, dynamic> allClueLocationsMap = prevUser['clue locations'];
+                    Map<String, dynamic> allChallengesMap = prevUser['challenges'];
 
-                  //create clueLocation object(s) from json map
-                  List<ClueLocation> allLocations = [];
-                  int which = 0;
-                  for (int i = 1; i < 11; i++){
-                    ClueLocation loca = ClueLocation.fromJson(allClueLocationsMap["$i"]);
-                    if (loca.available == true && loca.solved == false){
-                      which = i-1;
+                    //create clueLocation object(s) from json map
+                    List<ClueLocation> allLocations = [];
+                    int which = 0;
+                    for (int i = 1; i < 11; i++){
+                      ClueLocation loca = ClueLocation.fromJson(allClueLocationsMap["$i"]);
+                      if (loca.available == true && loca.solved == false){
+                        which = i-1;
+                      }
+                      if (loca.number == 10 && loca.available == true){
+                        which = 9;
+                      }
+                      allLocations.add(loca);
                     }
-                    allLocations.add(loca);
-                  }
 
-                  //create challenge object(s) from json map
-                  List<Challenge> allChallenges = [];
-                  for (int i = 1; i < 11; i++){
-                    Challenge chall = Challenge.fromJson(allChallengesMap["$i"]);
-                    allChallenges.add(chall);
-                  }  
+                    //create challenge object(s) from json map
+                    List<Challenge> allChallenges = [];
+                    for (int i = 1; i < 11; i++){
+                      Challenge chall = Challenge.fromJson(allChallengesMap["$i"]);
+                      allChallenges.add(chall);
+                    }
 
-                  if(isNewUser){
-                    Navigator.push(
-                      context, 
-                      MaterialPageRoute(
-                        builder: (context) => JoinGameScreen(userDetails: user)
-                      )
-                    );
-                  }
-                  else{
+                    //get beginTime timeStamp from db
+                    print("Getting startTime from database...");
                     Timestamp begin = await getBeginTime(user.uid);
                     DateTime beginTime = DateTime.parse(begin.toDate().toString());
+                    
+                    //Navigate to clue screen 
+                    // (with userDetails, allLocations, allChallenges, whichLocation, and beginTime)
+                    print("user data obtained");
+                    //if game complete
+                    //navigate to end game screen
+                    //else
+                    print("Navigating to Clue Screen ${which + 1}...");
                     Navigator.push(
                       context, 
                       MaterialPageRoute(
-                        builder: (context) => ClueScreen(userDetails: user, allLocations: allLocations, allChallenges: allChallenges, whichLocation: which, beginTime: beginTime)
+                        builder: (context) => ClueScreen(
+                          userDetails: user, 
+                          allLocations: allLocations, 
+                          allChallenges: allChallenges, 
+                          whichLocation: which, 
+                          beginTime: beginTime
+                        )
                       )
                     );
+                  }
+                  
+                  // IF NEW USER
+                  else{
+                    
+                    print("No previous user found.");
+                    print("Navigating to Join Game Screen");
+                    //Navigate to Join Game Screen (with user details)
+                    Navigator.push(
+                        context, 
+                        MaterialPageRoute(
+                          builder: (context) => JoinGameScreen(userDetails: user)
+                        )
+                      );
                   }
                 },
               ),
@@ -308,14 +337,6 @@ class _LoginScreen extends State<LoginScreen> {
                 text: 'Login as Admin', 
                 onPressFunction: _signInAsAdmin, 
                 imageLogo: 'assets/images/google_logo.png'
-              ),
-              // RaisedButton(
-              //   child: Text("Login as Admin"),
-              //   onPressed: () => _signInAsAdmin(context)
-              // ),
-              RaisedButton(
-                child: Text('Join Game'),
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => JoinGameScreen())),
               )
             ]
           )

@@ -59,9 +59,9 @@ class _CreateGameScreen extends State<CreateGameScreen> {
               height: 20,
             ),
             RaisedButton(
-              child: Text('Start Game', style: TextStyle(fontSize: 20)),
+              child: Text('Open Game', style: TextStyle(fontSize: 20)),
               onPressed: () {
-                uploadNewAdmin(widget.user.uid, gameCode);
+                uploadNewAdmin(widget.user.userEmail, gameCode);
                 Navigator.push(
                   context,
                   MaterialPageRoute(

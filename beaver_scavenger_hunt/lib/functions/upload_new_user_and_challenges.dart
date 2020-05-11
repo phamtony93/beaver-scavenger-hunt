@@ -6,11 +6,12 @@ import 'dart:convert';
 import '../models/user_details_model.dart';
 
 
-void uploadNewUserAndChallenges(UserDetails user) async {
+void uploadNewUserAndChallenges(UserDetails user, String gameCode) async {
 
   String json = await rootBundle.loadString("assets/clues_and_challenges.json");
   Map jsonMap = jsonDecode(json);
   jsonMap["uid"] = '${user.uid}';
   jsonMap["email"] = '${user.userEmail}';
-  Firestore.instance.collection('users').document(user.uid).setData(jsonMap);
+  jsonMap["gameCode"] = '${gameCode}';
+  Firestore.instance.collection('users').document(user.userEmail).setData(jsonMap);
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // Screens
 import 'admin_specific_team_screen.dart';
+import 'admin_profile_screen.dart';
 import 'login_screen.dart';
 // Models
 import '../models/challenge_model.dart';
@@ -29,6 +30,11 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
   getUsers() async {
     var doc2 = await Firestore.instance.collection("games").document("${widget.gameID}").get();
     myUsers = doc2.data == null ? null : doc2.data["playerIDs"];
+    /*
+    for (int i = 0; i < myUsers.length; i++){
+      myUsers[i] = myUsers[i] + "_" + widget.gameID;
+    }
+    */
   }
   
   @override
@@ -50,47 +56,108 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
       },
       child: Scaffold(
         appBar: AppBar(
-            title: widget.gameID == null ? Text("Game ID: Loading..."): Text('Game ID: ${widget.gameID}'),
-            centerTitle: true,
+          title: widget.gameID == null ? Text("Game ID: Loading..."): Text('Game ID: ${widget.gameID}'),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.account_circle),
+              onPressed: () { 
+                //Naviage to Profile Screen (with userDetails,
+                // allChallenges, allLocations, and beginTime)
+                print("Navigating to Profile Screen...");
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(
+                    builder: (context) => 
+                    AdminProfileScreen(
+                      userDetails: widget.adminUser,
+                      gameCode: widget.gameID,
+                    )
+                  )
+                );
+              },
+            )
+          ],
         ),
         body: myUsers == null ? 
         Builder(
           builder: (BuildContext scaffoldContext) {
-            return Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Container(
-                  color: Color.fromRGBO(255,117, 26, 1),
-                  height: 80, width: 300,
-                  padding: EdgeInsets.all(8),
+            return Column(
+              children: <Widget> [
+                SizedBox(height:10),
+                Center(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: RaisedButton(
-                      color: Colors.black,
-                      child: Text(
-                        "Check for teams",
-                        style: Styles.whiteBoldDefault
-                      ),
-                      onPressed: (){
-                        if (myUsers == null){
-                          final snackBar = SnackBar(
-                            content: Text(
-                              "There are no teams currently using game ID: ${widget.gameID}",
-                              textAlign: TextAlign.center
-                            )
-                          );
-                          Scaffold.of(scaffoldContext).showSnackBar(snackBar);
-                        }
-                        else{
-                          setState(() {
-                          //
-                          });
-                        }
-                      }
-                    ),
+                    child: Container(
+                      color: Color.fromRGBO(255,117, 26, 1),
+                      height: 80, width: 300,
+                      padding: EdgeInsets.all(8),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: RaisedButton(
+                          color: Colors.black,
+                          child: Text(
+                            "Check for teams",
+                            style: Styles.whiteBoldDefault
+                          ),
+                          onPressed: (){
+                            if (myUsers == null){
+                              final snackBar = SnackBar(
+                                content: Text(
+                                  "There are no teams currently using game ID: ${widget.gameID}",
+                                  textAlign: TextAlign.center
+                                )
+                              );
+                              Scaffold.of(scaffoldContext).showSnackBar(snackBar);
+                            }
+                            else{
+                              setState(() {
+                              //
+                              });
+                            }
+                          }
+                        ),
+                      )
+                    )
+                  ),
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        color: Color.fromRGBO(255,117, 26, 1),
+                        height: 80, width: 300,
+                        padding: EdgeInsets.all(8),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: RaisedButton(
+                            color: Colors.black,
+                            child: Text(
+                              "Close Game",
+                              style: Styles.whiteBoldDefault
+                            ),
+                            onPressed: (){
+                              //mark game as closed
+                              print("Closing game: ${widget.gameID}");
+                              Firestore.instance.collection('games').document(widget.gameID).updateData({'open': false});
+                              //navigate back to login screen
+                              print("Navigaing to login screen...");
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder:  (context) => LoginScreen()
+                                )
+                              );
+                            }
+                          ),
+                        )
+                      )
+                    )
                   )
-                )
-              ),
+                ),
+                SizedBox(height: 10)
+              ]
             );
           }
         )

@@ -26,8 +26,8 @@ class WelcomeScreen extends StatelessWidget {
   WelcomeScreen({this.userDetails, this.gameCode});
 
   //adds user's uid to "games" collection in db
-  void addPlayerToGame(String playerID, String gameID) async {
-    Firestore.instance.collection('games').document("$gameCode").updateData({'playerIDs': FieldValue.arrayUnion([playerID])});
+  void addPlayerToGame(String gameID) async {
+    Firestore.instance.collection('games').document("$gameCode").updateData({'playerIDs': FieldValue.arrayUnion([userDetails.userEmail])});
   }
   
   @override
@@ -104,24 +104,21 @@ class WelcomeScreen extends StatelessWidget {
                               
                               // ADD NEW USER INFO TO DB 
                               //(clues & challenges from JSON, uid, emailAddress)
-                              uploadNewUserAndChallenges(userDetails);
+                              uploadNewUserAndChallenges(userDetails, gameCode);
 
                               //retrieve user info from db
-                              newUser = await get_prev_user(userDetails.uid);
+                              
+                              //newUser = await get_prev_user(userDetails.uid);
+                              newUser = await get_prev_user(userDetails.userEmail);
+
                               //get clue locations and challenges from db
                               Map<String, dynamic> allClueLocationsMap = newUser['clue locations'];
                               Map<String, dynamic> allChallengesMap = newUser['challenges'];
 
                               //create clueLocation object(s) from json map
                               List<ClueLocation> allLocations = [];
-                              //int which = 0;
                               for (int i = 1; i < 11; i++){
                                 ClueLocation loca = ClueLocation.fromJson(allClueLocationsMap["$i"]);
-                                /*
-                                if (loca.available == true && loca.solved == false){
-                                  which = i-1;
-                                }
-                                */
                                 allLocations.add(loca);
                               }
                               
@@ -134,7 +131,7 @@ class WelcomeScreen extends StatelessWidget {
                               
                               //add player's gameCode to "games" collection in db (above)
                               print("Adding new player uid to 'games' collection in db...");
-                              addPlayerToGame(userDetails.uid, gameCode);
+                              addPlayerToGame(gameCode);
                               
                               // add timestamp (now) to database, and store it
                               // here as beginTime
