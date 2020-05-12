@@ -57,47 +57,7 @@ class EndGameScreen extends StatelessWidget {
               ),
             ),
           centerTitle: true,
-          // leading: Builder(
-          //   builder: (BuildContext context) {
-          //     return IconButton(
-          //       icon: Icon(Icons.menu),
-          //       onPressed: () {
-          //         Scaffold.of(context).openDrawer();
-          //       },
-          //       tooltip: "Menu",
-          //     );
-          //   },
-          // ),
-          // actions: [
-          //   IconButton(
-          //     icon: Icon(Icons.account_circle),
-          //     onPressed: () => Navigator.push(
-          //       context, 
-          //       MaterialPageRoute(
-          //         builder: (context) => 
-          //         ProfileScreen(
-          //         userDetails: userDetails, 
-          //         allChallenges: allChallenges, 
-          //         allLocations: allLocations,
-          //         beginTime: beginTime,
-          //         )
-          //       )
-          //     ),
-          //   )
-          // ],
         ),
-        // drawer: Builder(
-        //   builder: (BuildContext cntx) {
-        //     return MenuDrawer(
-        //       context, 
-        //       allLocations, 
-        //       whichLocation, 
-        //       allChallenges, 
-        //       userDetails,
-        //       beginTime
-        //     );
-        //   }
-        // ),
         body: summary(context),
       ),
     );

@@ -100,7 +100,7 @@ class WelcomeScreen extends StatelessWidget {
                               // ADD NEW USER INFO TO DB 
                               //(clues & challenges from JSON, uid, emailAddress)
                               uploadNewUserAndChallenges(userDetails, gameCode);
-
+                          
                               //retrieve user info from db
                               
                               newUser = await get_prev_user(userDetails);
@@ -134,6 +134,10 @@ class WelcomeScreen extends StatelessWidget {
                               
                               print('Hunt and Timer Started!');
                               print("Navigating to Clue Screen...");
+
+                              // add game code to user
+                              userDetails.gameID = gameCode;
+                              print(gameCode);
                               
                               //Go to clue screen
                               // (pass allLocations and 0 index as starting location,
