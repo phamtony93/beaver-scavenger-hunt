@@ -10,7 +10,7 @@ Future<String> is_new_admin(UserDetails userDetails) async {
     return prevUser.data['gameID'];
   }
   else{
-    print("no previous user found");
+    print("No previous Admin user found");
     return 'newAdmin';
   }
 }

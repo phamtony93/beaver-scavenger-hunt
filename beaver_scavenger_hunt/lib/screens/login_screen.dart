@@ -173,6 +173,7 @@ class _LoginScreen extends State<LoginScreen> {
     // IF NEW ADMIN
     if (adminGameCode == 'newAdmin') {
       //Navigate to Create Game Screen
+      print("Navigating to Create Game Screen...");
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -187,7 +188,7 @@ class _LoginScreen extends State<LoginScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => AdminTeamsListScreen(adminUser: user, gameID: adminGameCode,)
+          builder: (context) => AdminTeamsListScreen(adminUser: user, gameCode: adminGameCode,)
         )
       );
     }

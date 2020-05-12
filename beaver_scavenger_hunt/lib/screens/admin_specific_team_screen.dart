@@ -8,11 +8,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'admin_teams_list_screen.dart';
 // Models
 import '../models/challenge_model.dart';
+// Styles
+import '../styles/styles_class.dart';
 
 class AdminSpecificTeamScreen extends StatefulWidget {
 
   final UserDetails adminUser;
-  final String gameID;
+  final String gameCode;
   final String teamID;
   final List<Challenge> completedChallenges;
   final int whichChallenge;
@@ -20,7 +22,7 @@ class AdminSpecificTeamScreen extends StatefulWidget {
   AdminSpecificTeamScreen({
     Key key, 
     this.adminUser,
-    this.gameID,
+    this.gameCode,
     this.teamID, 
     this.completedChallenges, 
     this.whichChallenge
@@ -65,14 +67,14 @@ class _AdminSpecificTeamScreenState extends State<AdminSpecificTeamScreen> with 
         onWillPop: (){
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder:  (context) => AdminTeamsListScreen(adminUser: widget.adminUser, gameID: widget.gameID,)
+              builder:  (context) => AdminTeamsListScreen(adminUser: widget.adminUser, gameCode: widget.gameCode,)
             )
           );
           return Future<bool>.value(false);
         },
         child: Scaffold(
         appBar: AppBar(
-            title: Text('${widget.teamID}'),
+            title: AppBarTextSpan(context, widget.adminUser),
             centerTitle: true,
         ),
         body: Center(
@@ -85,18 +87,18 @@ class _AdminSpecificTeamScreenState extends State<AdminSpecificTeamScreen> with 
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>
                 [
-                  RejectionBar(context, isRejected, widget.completedChallenges, widget.whichChallenge, widget.teamID, setMyState, widget.adminUser, widget.gameID),
+                  RejectionBar(context, isRejected, widget.completedChallenges, widget.whichChallenge, widget.teamID, setMyState, widget.adminUser, widget.gameCode),
                   PhotoSwiperContainer(context, isAccepted, isRejected, transAmount, rotateAmount, widget.whichChallenge, widget.completedChallenges),
-                  AcceptanceBar(context, isAccepted, widget.completedChallenges, widget.whichChallenge, widget.teamID, setMyState, widget.adminUser, widget.gameID)
+                  AcceptanceBar(context, isAccepted, widget.completedChallenges, widget.whichChallenge, widget.teamID, setMyState, widget.adminUser, widget.gameCode)
                 ],
               ),
               SizedBox(height: 20), 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  RejectButton(context, widget.whichChallenge, widget.completedChallenges, widget.teamID, setMyTransState, widget.adminUser, widget.gameID),
+                  RejectButton(context, widget.whichChallenge, widget.completedChallenges, widget.teamID, setMyTransState, widget.adminUser, widget.gameCode),
                   SizedBox(width: 100),
-                  AcceptButton(context, widget.whichChallenge, widget.completedChallenges, widget.teamID, setMyTransState, widget.adminUser, widget.gameID)
+                  AcceptButton(context, widget.whichChallenge, widget.completedChallenges, widget.teamID, setMyTransState, widget.adminUser, widget.gameCode)
                 ],
               )
             ]
@@ -158,7 +160,7 @@ Widget PhotoSwiperContainer(BuildContext context, bool isAccepted, bool isReject
   );
 }
 
-Widget RejectionBar(BuildContext context, bool isRejected, completedChallenges, whichChallenge, teamID, Function(bool isRejectedOrAccepted) setMyState, adminUser, gameID){
+Widget RejectionBar(BuildContext context, bool isRejected, completedChallenges, whichChallenge, teamID, Function(bool isRejectedOrAccepted) setMyState, adminUser, gameCode){
   return Container(
     height: 350,
     width: isRejected ? 300 : 50,
@@ -189,7 +191,7 @@ Widget RejectionBar(BuildContext context, bool isRejected, completedChallenges, 
             MaterialPageRoute(
               builder:  (context) => AdminSpecificTeamScreen(
                 adminUser: adminUser,
-                gameID: gameID,
+                gameCode: gameCode,
                 teamID: teamID, 
                 completedChallenges: completedChallenges, 
                 whichChallenge: whichChallenge + 1
@@ -200,7 +202,7 @@ Widget RejectionBar(BuildContext context, bool isRejected, completedChallenges, 
         else{
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder:  (context) => AdminTeamsListScreen(adminUser: adminUser, gameID: gameID)
+              builder:  (context) => AdminTeamsListScreen(adminUser: adminUser, gameCode: gameCode)
             )
           );
         }
@@ -209,7 +211,7 @@ Widget RejectionBar(BuildContext context, bool isRejected, completedChallenges, 
   );
 }
 
-Widget AcceptanceBar(BuildContext context, bool isAccepted, completedChallenges, whichChallenge, teamID, Function(bool isRejectedOrAccepted) setMyState, adminUser, gameID){
+Widget AcceptanceBar(BuildContext context, bool isAccepted, completedChallenges, whichChallenge, teamID, Function(bool isRejectedOrAccepted) setMyState, adminUser, gameCode){
   return Container(
     height: 350,
     width: isAccepted ? 300 : 50,
@@ -240,7 +242,7 @@ Widget AcceptanceBar(BuildContext context, bool isAccepted, completedChallenges,
             MaterialPageRoute(
               builder:  (context) => AdminSpecificTeamScreen(
                 adminUser: adminUser,
-                gameID: gameID,
+                gameCode: gameCode,
                 teamID: teamID, 
                 completedChallenges: completedChallenges, 
                 whichChallenge: whichChallenge + 1
@@ -251,7 +253,7 @@ Widget AcceptanceBar(BuildContext context, bool isAccepted, completedChallenges,
         else{
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder:  (context) => AdminTeamsListScreen(adminUser: adminUser, gameID: gameID,)
+              builder:  (context) => AdminTeamsListScreen(adminUser: adminUser, gameCode: gameCode,)
             )
           );
         }
@@ -260,7 +262,7 @@ Widget AcceptanceBar(BuildContext context, bool isAccepted, completedChallenges,
   );
 }
 
-Widget RejectButton(BuildContext context, whichChallenge, completedChallenges, teamID, Function(double tAmount, double rAmount) setMyTransState, adminUser, gameID){
+Widget RejectButton(BuildContext context, whichChallenge, completedChallenges, teamID, Function(double tAmount, double rAmount) setMyTransState, adminUser, gameCode){
   return RaisedButton(
     child: Text("Reject"),
     color: Colors.red[50],
@@ -274,7 +276,7 @@ Widget RejectButton(BuildContext context, whichChallenge, completedChallenges, t
           MaterialPageRoute(
             builder:  (context) => AdminSpecificTeamScreen(
               adminUser: adminUser,
-              gameID: gameID,
+              gameCode: gameCode,
               teamID: teamID, 
               completedChallenges: completedChallenges, 
               whichChallenge: whichChallenge + 1
@@ -283,7 +285,7 @@ Widget RejectButton(BuildContext context, whichChallenge, completedChallenges, t
         );
       }
       else{
-        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminTeamsListScreen(adminUser: adminUser, gameID: gameID)));
+        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminTeamsListScreen(adminUser: adminUser, gameCode: gameCode)));
       }
       //
     }
@@ -301,11 +303,28 @@ Widget AcceptButton(BuildContext context, whichChallenge, completedChallenges, t
       Firestore.instance.collection("users").document("$teamID").updateData({'challenges.${completedChallenges[whichChallenge].number}.checked': true});
       Firestore.instance.collection("users").document("$teamID").updateData({'challenges.${completedChallenges[whichChallenge].number}.confirmed': true});
       if (whichChallenge < completedChallenges.length - 1){
-        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminSpecificTeamScreen(teamID: teamID, gameID: gameID, completedChallenges: completedChallenges, whichChallenge: whichChallenge + 1, adminUser: adminUser,) ));
+        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminSpecificTeamScreen(teamID: teamID, gameCode: gameID, completedChallenges: completedChallenges, whichChallenge: whichChallenge + 1, adminUser: adminUser,) ));
       }
       else{
-        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminTeamsListScreen(adminUser: adminUser, gameID: gameID)));
+        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminTeamsListScreen(adminUser: adminUser, gameCode: gameID)));
       }
     }
+  );
+}
+
+Widget AppBarTextSpan(BuildContext context, UserDetails user){
+  return RichText(
+    text: TextSpan(
+      children: <TextSpan>[
+        TextSpan(
+          text: '${user.userName.toString().substring(0, 1)}', 
+          style: Styles.whiteBoldDefault
+        ),
+        TextSpan(
+          text: '${user.userName.toString().substring(1, user.userName.length)}', 
+          style: Styles.orangeNormalDefault
+        )
+      ],
+    ),
   );
 }

@@ -85,10 +85,11 @@ class _CreateGameScreen extends State<CreateGameScreen> {
                     ),
                     onPressed: (){
                       uploadNewAdmin(widget.user, gameCode);
+                      print("Navigating to Admin Teams List Screen...");
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AdminTeamsListScreen(adminUser: widget.user, gameID: gameCode,)
+                          builder: (context) => AdminTeamsListScreen(adminUser: widget.user, gameCode: gameCode,)
                         )
                       );
                     }

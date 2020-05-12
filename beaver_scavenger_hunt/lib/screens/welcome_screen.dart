@@ -18,7 +18,7 @@ import '../styles/styles_class.dart';
 
 class WelcomeScreen extends StatelessWidget {
   
-  UserDetails userDetails;
+  final UserDetails userDetails;
   final String gameCode;
   DateTime beginTime;
    
@@ -103,7 +103,6 @@ class WelcomeScreen extends StatelessWidget {
 
                               //retrieve user info from db
                               
-                              //newUser = await get_prev_user(userDetails.uid);
                               newUser = await get_prev_user(userDetails);
 
                               //get clue locations and challenges from db

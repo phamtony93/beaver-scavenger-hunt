@@ -302,7 +302,7 @@ Widget MenuHuntCompleteWidget(
       else{
         final snackBar = SnackBar(
           content: Text(
-            "This page is not yet available",
+            "This page is available after all clues have been found",
             textAlign: TextAlign.center
           )
         );
