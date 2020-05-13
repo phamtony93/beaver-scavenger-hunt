@@ -15,6 +15,8 @@ import '../models/clue_location_model.dart';
 // Widgets
 import '../widgets/timer_text.dart';
 import '../widgets/control_button.dart';
+// Styles
+import '../styles/styles_class.dart';
 
 class AdminProfileScreen extends StatefulWidget {
   final UserDetails userDetails;
@@ -74,12 +76,29 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
               SizedBox(height: 15.0),
               Text("Email : ${widget.userDetails.userEmail}", style: TextStyle(fontSize: 24),),
               SizedBox(height: 15.0),
+              StreamBuilder(
+                stream: Firestore.instance.collection("games").snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(child: CircularProgressIndicator());
+                  } 
+                  else {
+                    List<DocumentSnapshot> allSnapshots = snapshot.data.documents;
+                    for (int i = 0; i < allSnapshots.length; i++){
+                      if (allSnapshots[i].documentID == widget.gameCode && allSnapshots[i]['open'] == true)
+                        return CloseGameButton(context, widget.gameCode);
+                    }
+                    return OpenGameButton(context, widget.gameCode);
+                  }
+                }
+              ),
               Expanded(
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: ControlButton(
                     context: context,
-                    text: 'Sign Out',
+                    text: 'Sign-Out',
+                    style: Styles.whiteNormalDefault,
                     onPressFunction: _signOut,)
                 )
               ),
@@ -90,4 +109,56 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
       )
     );
   }
+}
+
+Widget CloseGameButton(BuildContext context, String gameCode){
+  return ClipRRect(
+    borderRadius: BorderRadius.circular(10),
+    child: Container(
+      color: Color.fromRGBO(255,117, 26, 1),
+      height: 80, width: 300,
+      padding: EdgeInsets.all(8),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: RaisedButton(
+          color: Colors.black,
+          child: Text(
+            "Close Game: $gameCode",
+            style: Styles.whiteNormalDefault
+          ),
+          onPressed: (){
+            //mark game as closed
+            print("Closing game: $gameCode");
+            Firestore.instance.collection('games').document(gameCode).updateData({'open': false});
+          }
+        ),
+      )
+    )
+  );
+}
+
+Widget OpenGameButton(BuildContext context, String gameCode){
+  return ClipRRect(
+    borderRadius: BorderRadius.circular(10),
+    child: Container(
+      color: Color.fromRGBO(255,117, 26, 1),
+      height: 80, width: 300,
+      padding: EdgeInsets.all(8),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: RaisedButton(
+          color: Colors.black,
+          child: Text(
+            "Open Game: $gameCode",
+            style: Styles.whiteBoldDefault
+          ),
+          onPressed: (){
+            //mark game as closed
+            print("Opening game: $gameCode");
+            Firestore.instance.collection('games').document(gameCode).updateData({'open': true});
+          }
+        ),
+      )
+    )
+  );
 }

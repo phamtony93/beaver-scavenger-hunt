@@ -96,28 +96,28 @@ class RulesScreen extends StatelessWidget {
               title: Text('1. This is a timed hunt - your time begins as soon as you hit the "Start Time & Begin Hunt" button.'),
             ),
             ListTile(
-              title: Text('2. There are 10 scavenger clues that need to be answered to complete the hunt, each worth 10 points.'),
+              title: Text('2. There are 10 scavenger hunt clues that need to be answered to complete the hunt - each worth 10 points.'),
             ),
             ListTile(
-              title: Text('3. Each correct answer will unlock a new GPS location which will lead you to your next clue.'),
+              title: Text('3. Each correct answer will unlock a new GPS location, which will lead you to your next clue.'),
             ),
             ListTile(
-              title: Text('4. In order to receive the next clue, you will need to be within 50 feet of the GPS location.'),
+              title: Text('4. In order to receive the next clue, you will need to get within 50 feet of the GPS location.'),
             ),
             ListTile(
-              title: Text('5. For each incorrect guess to answering the clues, you will lose 5 points - so answer carefully!'),
+              title: Text('5. For each incorrect guess of a clue location, you will lose 5 points - so answer carefully!'),
             ),            
             ListTile(
-              title: Text('6. Along with the clues, there are 10 challenges to complete each worth 5 points. You must complete at least 5 challenges to complete the hunt.'),
+              title: Text('6. Along with the clues, there are 10 challenges to complete - each worth 5 points. You must complete at least 5 challenges to finish the hunt.'),
             ),
             ListTile(
-              title: Text('7. You will be able to complete the game and stop the timer after your 10th clue is answered and have at least 5 challenges completed.'),
+              title: Text('7. You will be able to complete the hunt and stop the timer after your 10th clue is reached, and at least 5 challenges are completed.'),
             ),
             ListTile(
-              title: Text('8. Every team that finishes will win a prize, and the team with the most points will win a grand prize!'),
+              title: Text('8. Every team that finishes will win a prize, but the team with the most points will win the grand prize!'),
             ),
             ListTile(
-              title: Text('9. You may view rules or previous answered clues at any time.'),
+              title: Text('9. You may view rules or previously answered clues at any time.'),
             ),
             ListTile(
               title: Text('10. Good luck and have fun!'),

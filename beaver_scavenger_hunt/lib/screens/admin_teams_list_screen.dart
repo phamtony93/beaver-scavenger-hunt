@@ -30,17 +30,19 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
   getUsers() async {
     var doc2 = await Firestore.instance.collection("games").document("${widget.gameCode}").get();
     myUsers = doc2.data == null ? null : doc2.data["playerIDs"];
-    /*
-    for (int i = 0; i < myUsers.length; i++){
-      myUsers[i] = myUsers[i] + "_" + widget.gameID;
+    if (myUsers != null){
+      for (int i = 0; i < myUsers.length; i++){
+        myUsers[i] = myUsers[i] + "_" + widget.gameCode;
+        print(myUsers[i]);
+      }
     }
-    */
+    
   }
   
   @override
   void initState() {
     super.initState();
-    getUsers();
+    getUsers(); 
   }
 
   @override
@@ -58,7 +60,8 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
         appBar: AppBar(
           title: widget.gameCode == null ? 
           Text("Game ID: Loading...")
-          : AppBarTextSpan(context, widget.gameCode),
+          : 
+          AppBarTextSpan(context, widget.gameCode),
           centerTitle: true,
           actions: [
             IconButton(
@@ -81,250 +84,171 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
             )
           ],
         ),
-        body: Column(
-          children: <Widget>[
-            SizedBox(height: 10),
-            myUsers == null ? 
-            Builder(
-              builder: (BuildContext scaffoldContext) {
-                return Center(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Container(
-                          color: Color.fromRGBO(255,117, 26, 1),
-                          height: 80, width: 300,
-                          padding: EdgeInsets.all(8),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: RaisedButton(
-                              color: Colors.black,
-                              child: Text(
-                                "Check for teams",
-                                style: Styles.whiteBoldDefault
-                              ),
-                              onPressed: (){
-                                if (myUsers == null){
-                                  final snackBar = SnackBar(
-                                    content: Text(
-                                      "There are no teams currently using game ID: ${widget.gameCode}",
-                                      textAlign: TextAlign.center
-                                    )
-                                  );
-                                  Scaffold.of(scaffoldContext).showSnackBar(snackBar);
-                                }
-                                else{
-                                  setState(() {
-                                  //
-                                  });
-                                }
-                              }
-                            ),
-                          )
-                        )
+        body: myUsers == null ? 
+        Builder(
+          builder: (BuildContext scaffoldContext) {
+            return Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  color: Color.fromRGBO(255,117, 26, 1),
+                  height: 80, width: 300,
+                  padding: EdgeInsets.all(8),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: RaisedButton(
+                      color: Colors.black,
+                      child: Text(
+                        "Check for teams",
+                        style: Styles.whiteBoldDefault
                       ),
-                    );
+                      onPressed: (){
+                        if (myUsers == null){
+                          final snackBar = SnackBar(
+                            content: Text(
+                              "There are no teams currently using game ID: ${widget.gameCode}",
+                              textAlign: TextAlign.center
+                            )
+                          );
+                          Scaffold.of(scaffoldContext).showSnackBar(snackBar);
+                        }
+                        else{
+                          setState(() {
+                          //
+                          });
+                        }
+                      }
+                    ),
+                  )
+                )
+              ),
+            );
+          }
+        )
+        : 
+        SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height*0.7,
+            child:StreamBuilder(
+              stream: Firestore.instance.collection("leaderboard").where("uid", whereIn: myUsers).snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                } else {
+                  return ListView.builder(
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (context, index) {
+                      int checked = 0;
+                      int confirmed = 0;
+                      int completed = 0;
+                      for (int i = 1; i < snapshot.data.documents[index]["challenges"].length + 1; i++){
+                        if (snapshot.data.documents[index]["challenges"]["$i"]["checked"] == true){
+                          checked++;
+                        }
+                        if (snapshot.data.documents[index]["challenges"]["$i"]["confirmed"] == true){
+                          confirmed++;
+                        }
+                        if (snapshot.data.documents[index]["challenges"]["$i"]["completed"] == true){
+                          completed++;
+                        }
+                      }
+                      var document = snapshot.data.documents[index];
+                      int needToCheck = completed - checked;
+                      return ListTile(
+                        leading: completed == 0 ? Text("") 
+                        : checked == 10 ? Icon(Icons.check_circle, 
+                        color: confirmed < checked ? 
+                        Colors.red : Colors.green) 
+                        : needToCheck > 0 ? Icon(Icons.add_circle)
+                        : Icon(Icons.check),
+                        title: Text("${document["uid"]}"),
+                        trailing: RichText(
+                          text: TextSpan(
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Colors.black,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: '$checked/$completed checked\n', 
+                                style: TextStyle(
+                                  color: confirmed == 10 ? 
+                                  Colors.green : Colors.black
+                                )
+                              ),
+                              TextSpan(
+                                text: '$confirmed confirmed\n', 
+                                style: TextStyle(
+                                  color: confirmed == 10 ? 
+                                  Colors.green: Colors.black
+                                )
+                              ),
+                              TextSpan(
+                                text: '${checked - confirmed} denied', 
+                                style: TextStyle(
+                                  color: checked - confirmed > 0 ? 
+                                  Colors.red : Colors.green
+                                )
+                              )
+                            ],
+                          ),
+                        ),
+                        onTap: (){
+                          Map<String, dynamic> allChallengesMap = document['challenges'];
+                          //create challenge object(s) from json map
+                          List<Challenge> completedChallenges = [];
+                          for (int i = 1; i < 11; i++){
+                            Challenge chall = Challenge.fromJson(allChallengesMap["$i"]);
+                            //if challenge is completed but unchecked
+                            if (chall.completed == true && chall.checked == false){
+                              //add it to list
+                              completedChallenges.add(chall);
+                            }
+                          }
+                          //push to specific team -> pass challenge object
+                          if(checked == 10){
+                            final snackBar = SnackBar(
+                              content: Text(
+                                "This team has already been checked",
+                                textAlign: TextAlign.center
+                              )
+                            );
+                            Scaffold.of(context).showSnackBar(snackBar);
+                          }
+                          else if (completedChallenges.length < 1){
+                            final snackBar = SnackBar(
+                              content: Text(
+                                "There are no more completed challenges to check at this time",
+                                textAlign: TextAlign.center
+                              )
+                            );
+                            Scaffold.of(context).showSnackBar(snackBar);
+                          }
+                          else{
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder:  (context) => AdminSpecificTeamScreen(
+                                  adminUser: widget.adminUser,
+                                  gameCode: widget.gameCode,
+                                  teamID: document["uid"], 
+                                  completedChallenges: completedChallenges, 
+                                  whichChallenge: 0
+                                )
+                              )
+                            );
+                          }
+                        },
+                      );
+                    },
+                  );
+                }
               }
             )
-            : 
-            SingleChildScrollView(
-              child: Container(
-                height: MediaQuery.of(context).size.height*0.7,
-                child:StreamBuilder(
-                stream: Firestore.instance.collection("users").where("uid", whereIn: myUsers).snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(child: CircularProgressIndicator());
-                  } else {
-                    return ListView.builder(
-                      itemCount: snapshot.data.documents.length,
-                      itemBuilder: (context, index) {
-                        int checked = 0;
-                        int confirmed = 0;
-                        int completed = 0;
-                        for (int i = 1; i < snapshot.data.documents[index]["challenges"].length + 1; i++){
-                          if (snapshot.data.documents[index]["challenges"]["$i"]["checked"] == true){
-                            checked++;
-                          }
-                          if (snapshot.data.documents[index]["challenges"]["$i"]["confirmed"] == true){
-                            confirmed++;
-                          }
-                          if (snapshot.data.documents[index]["challenges"]["$i"]["completed"] == true){
-                            completed++;
-                          }
-                        }
-                        var document = snapshot.data.documents[index];
-                        int needToCheck = completed - checked;
-                        return ListTile(
-                          leading: completed == 0 ? Text("") 
-                          : checked == 10 ? Icon(Icons.check_circle, 
-                          color: confirmed < checked ? 
-                          Colors.red : Colors.green) 
-                          : needToCheck > 0 ? Icon(Icons.add_circle)
-                          : Icon(Icons.check),
-                          title: Text("${document["uid"]}"),
-                          trailing: RichText(
-                            text: TextSpan(
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                color: Colors.black,
-                              ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: '$checked/$completed checked\n', 
-                                  style: TextStyle(
-                                    color: confirmed == 10 ? 
-                                    Colors.green : Colors.black
-                                  )
-                                ),
-                                TextSpan(
-                                  text: '$confirmed confirmed\n', 
-                                  style: TextStyle(
-                                    color: confirmed == 10 ? 
-                                    Colors.green: Colors.black
-                                  )
-                                ),
-                                TextSpan(
-                                  text: '${checked - confirmed} denied', 
-                                  style: TextStyle(
-                                    color: checked - confirmed > 0 ? 
-                                    Colors.red : Colors.green
-                                  )
-                                )
-                              ],
-                            ),
-                          ),
-                          onTap: (){
-                            Map<String, dynamic> allChallengesMap = document['challenges'];
-                            //create challenge object(s) from json map
-                            List<Challenge> completedChallenges = [];
-                            for (int i = 1; i < 11; i++){
-                              Challenge chall = Challenge.fromJson(allChallengesMap["$i"]);
-                              //if challenge is completed but unchecked
-                              if (chall.completed == true && chall.checked == false){
-                                //add it to list
-                                completedChallenges.add(chall);
-                              }
-                            }
-                            //push to specific team -> pass challenge object
-                            if(checked == 10){
-                              final snackBar = SnackBar(
-                                content: Text(
-                                  "This team has already been checked",
-                                  textAlign: TextAlign.center
-                                )
-                              );
-                              Scaffold.of(context).showSnackBar(snackBar);
-                            }
-                            else if (completedChallenges.length < 1){
-                              final snackBar = SnackBar(
-                                content: Text(
-                                  "There are no more completed challenges to check at this time",
-                                  textAlign: TextAlign.center
-                                )
-                              );
-                              Scaffold.of(context).showSnackBar(snackBar);
-                            }
-                            else{
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder:  (context) => AdminSpecificTeamScreen(
-                                    adminUser: widget.adminUser,
-                                    gameCode: widget.gameCode,
-                                    teamID: document["uid"], 
-                                    completedChallenges: completedChallenges, 
-                                    whichChallenge: 0
-                                  )
-                                )
-                              );
-                            }
-                          },
-                        );
-                      },
-                    );
-                  }
-                }
-              )
-            ),
           ),
-          Expanded(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: StreamBuilder(
-                stream: Firestore.instance.collection("games").snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(child: CircularProgressIndicator());
-                  } 
-                  else {
-                    List<DocumentSnapshot> allSnapshots = snapshot.data.documents;
-                    for (int i = 0; i < allSnapshots.length; i++){
-                      if (allSnapshots[i].documentID == widget.gameCode && allSnapshots[i]['open'] == true)
-                        return CloseGameButton(context, widget.gameCode);
-                    }
-                    return OpenGameButton(context, widget.gameCode);
-                  }
-                }
-              ),
-            )
-          ),
-          SizedBox(height: 10)
-          ]
         ),
-      )
+      ),
     );
   }
-}
-
-Widget CloseGameButton(BuildContext context, String gameID){
-  return ClipRRect(
-    borderRadius: BorderRadius.circular(10),
-    child: Container(
-      color: Color.fromRGBO(255,117, 26, 1),
-      height: 80, width: 300,
-      padding: EdgeInsets.all(8),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: RaisedButton(
-          color: Colors.black,
-          child: Text(
-            "Close Game",
-            style: Styles.whiteBoldDefault
-          ),
-          onPressed: (){
-            //mark game as closed
-            print("Closing game: $gameID");
-            Firestore.instance.collection('games').document(gameID).updateData({'open': false});
-          }
-        ),
-      )
-    )
-  );
-}
-
-Widget OpenGameButton(BuildContext context, String gameID){
-  return ClipRRect(
-    borderRadius: BorderRadius.circular(10),
-    child: Container(
-      color: Color.fromRGBO(255,117, 26, 1),
-      height: 80, width: 300,
-      padding: EdgeInsets.all(8),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: RaisedButton(
-          color: Colors.black,
-          child: Text(
-            "Open Game",
-            style: Styles.whiteBoldDefault
-          ),
-          onPressed: (){
-            //mark game as closed
-            print("Opening game: $gameID");
-            Firestore.instance.collection('games').document(gameID).updateData({'open': true});
-          }
-        ),
-      )
-    )
-  );
 }
 
 Widget AppBarTextSpan(BuildContext context, String gameCode){

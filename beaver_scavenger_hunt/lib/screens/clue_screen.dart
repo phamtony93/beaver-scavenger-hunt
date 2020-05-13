@@ -57,7 +57,7 @@ class _ClueScreenState extends State<ClueScreen> {
     //NEED TO UPDATE TO NEW RULES
     _myLocationResult = 
       "Guess carefully !!" 
-      + "\nEach incorrect guess will add 5 minutes\nto your hunt timer";
+      + "\nEach incorrect guess will cost you 5 points";
     _incorrect = false;
     _guessNumber = 0;
     
@@ -97,7 +97,7 @@ class _ClueScreenState extends State<ClueScreen> {
         _guessNumber ++;
         _myLocationResult = 
         "Uh oh. Guess number $_guessNumber is incorrect.\n" 
-        + "5 minutes have been added to your timer.\n\nTry again.";
+        + "5 points have been deducted from your score.\n\nTry again.";
       });
     }
     // If correct solution is selected
@@ -315,7 +315,7 @@ Widget ClueScreenWidget(
                 color: Colors.black,
                 child: Text(
                   'Go To Map',
-                  style: Styles.whiteBoldDefault
+                  style: Styles.whiteNormalDefault
                 ),
                 onPressed: (){
                   //Navigate to Correct Solution Screen
@@ -436,7 +436,7 @@ Widget DropdownForm(
                     color: Colors.black,
                     child: Text(
                       'Enter Guess',
-                      style: Styles.whiteBoldDefault
+                      style: Styles.whiteNormalDefault
                     ),
                     onPressed: _saveForm
                   ),

@@ -300,7 +300,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                     child: RaisedButton(
                       color: Colors.black,
                       child: widget.whichLocation < 9 ? 
-                      Text('Next Clue',style: Styles.whiteBoldDefault) : Text('Check Progress', style: Styles.whiteBoldDefault),
+                      Text('Next Clue',style: Styles.whiteNormalDefault) : Text('Check Progress', style: Styles.whiteNormalDefault),
                       onPressed: (){
                         if (widget.whichLocation < 9){
                           print("Navigating to Clue Screen...");
@@ -376,9 +376,11 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                     Navigator.push(
                       context, MaterialPageRoute(
                         builder: (context) => HuntCompleteScreen(
-                          userDetails: widget.userDetails, 
-                          allLocations: widget.allLocations, 
-                          allChallenges: widget.allChallenges
+                          allLocations: widget.allLocations,
+                          whichLocation: widget.whichLocation, 
+                          allChallenges: widget.allChallenges,
+                          userDetails: widget.userDetails,
+                          beginTime: widget.beginTime,
                         )
                       )
                     );

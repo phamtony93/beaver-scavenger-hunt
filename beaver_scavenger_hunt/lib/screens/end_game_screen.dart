@@ -90,7 +90,7 @@ class EndGameScreen extends StatelessWidget {
                   onPressFunction: _signOut,),
             SizedBox(height: 25.0),
             Text("LEADERBOARD", style: Styles.blackBoldDefault),
-            Text('Ranking/Team/Points'),
+            Text('Ranking/Team/Game/Points'),
             SizedBox(height: 15.0),
             Expanded(child:leaderboard()),
           ],
@@ -140,7 +140,21 @@ class EndGameScreen extends StatelessWidget {
                 return ListTile(
                   dense: true,
                   leading: Text((index+1).toString(), style: TextStyle(fontSize: 16)),
-                  title: Text(allSnapshots[index].documentID),
+                  title: RichText(
+              text: TextSpan(
+                children: <TextSpan>[
+                  TextSpan(
+                    text: '${allSnapshots[index].documentID.toString().substring(0, allSnapshots[index].documentID.length - 5)}',
+                    style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold)
+                  ),
+                  TextSpan(
+                    text: '     ${allSnapshots[index].documentID.toString().substring(allSnapshots[index].documentID.length - 4, allSnapshots[index].documentID.length)}',
+                    style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold)
+                  )
+                ],
+              ),
+            ),
+                  //Text(allSnapshots[index].documentID),
                   trailing: Text(doc['totalPoints'].toString(), style: Styles.blackBoldSmall),
                 );
               },

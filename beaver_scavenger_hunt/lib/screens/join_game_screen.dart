@@ -132,8 +132,8 @@ class _JoinGameScreen extends State<JoinGameScreen> {
                               child: RaisedButton(
                                 color: Colors.black,
                                 child: Text(
-                                  "Join",
-                                  style: Styles.whiteBoldDefault
+                                  "Join Game",
+                                  style: Styles.whiteNormalDefault
                                 ),
                                 onPressed: (){
                                   _submitForm(_formKey);

@@ -14,6 +14,8 @@ import '../models/clue_location_model.dart';
 // Widgets
 import '../widgets/timer_text.dart';
 import '../widgets/control_button.dart';
+// Styles
+import '../styles/styles_class.dart';
 
 class ProfileScreen extends StatefulWidget {
   final UserDetails userDetails;
@@ -107,7 +109,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(height: 25.0),
                 ControlButton(
                   context: context,
-                  text: 'Sign Out',
+                  text: 'Sign-Out',
+                  style: Styles.whiteNormalDefault,
                   onPressFunction: _signOut,)
               ]
             )

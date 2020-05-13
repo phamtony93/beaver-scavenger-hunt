@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 // Styles
 import '../styles/styles_class.dart';
 
-Widget ControlButton({BuildContext context, String text, String imageLogo, Function onPressFunction}){
+Widget ControlButton({BuildContext context, String text, TextStyle style, String imageLogo, Function onPressFunction}){
   if (imageLogo == null) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -17,7 +17,7 @@ Widget ControlButton({BuildContext context, String text, String imageLogo, Funct
             color: Colors.black,
             child: Text(
               text,
-              style: Styles.whiteNormalSmall
+              style: style
             ),
             onPressed: (){
               onPressFunction(context);

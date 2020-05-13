@@ -20,6 +20,8 @@ import '../functions/get_prev_user.dart';
 import '../functions/get_begin_time.dart';
 //Widgets
 import '../widgets/control_button.dart';
+// Styles
+import '../styles/styles_class.dart';
 
 class LoginScreen extends StatefulWidget{
   @override
@@ -240,13 +242,15 @@ class _LoginScreen extends State<LoginScreen> {
               ControlButton(
                 context: context,
                 text: 'Login as Player',
+                style: Styles.whiteNormalDefault,
                 onPressFunction: _signInAsPlayer,
                 imageLogo: 'assets/images/google_logo.png',
               ),
               SizedBox(height: 15),
               ControlButton(
                 context: context, 
-                text: 'Login as Admin', 
+                text: 'Login as Admin',
+                style: Styles.whiteNormalDefault, 
                 onPressFunction: _signInAsAdmin, 
                 imageLogo: 'assets/images/google_logo.png'
               ),

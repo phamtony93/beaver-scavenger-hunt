@@ -64,7 +64,7 @@ class WelcomeScreen extends StatelessWidget {
                             color: Colors.black,
                             child: Text(
                               'Hunt Rules',
-                              style: Styles.whiteBoldSmall
+                              style: Styles.whiteNormalDefault
                             ),
                             onPressed: (){
                               Navigator.push(
