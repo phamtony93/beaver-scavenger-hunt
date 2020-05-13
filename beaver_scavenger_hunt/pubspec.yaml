@@ -53,6 +53,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
    - assets/clues_and_challenges.json
+   - assets/challenges.json
    - assets/images/osu_logo.png
    - assets/images/google_logo.png
 

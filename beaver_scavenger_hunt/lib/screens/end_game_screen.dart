@@ -22,10 +22,11 @@ class EndGameScreen extends StatelessWidget {
   final List<Challenge> allChallenges;
   final int whichLocation;
   final DateTime beginTime;
-  final DateTime endTime;
-  int totalPoints;
+  // final DateTime endTime;
+  final String time;
+  final int totalPoints;
 
-  EndGameScreen({Key key, this.userDetails, this.allLocations, this.allChallenges, this.whichLocation, this.beginTime, this.endTime}) : super(key: key);
+  EndGameScreen({Key key, this.userDetails, this.allLocations, this.allChallenges, this.whichLocation, this.beginTime, this.totalPoints, this.time}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -75,10 +76,10 @@ class EndGameScreen extends StatelessWidget {
             Text('Your Final Time and Score', style: Styles.blackBoldDefault),
             SizedBox(height: 25.0),
             Text('Finish Time:', style: Styles.orangeBoldDefault),
-            getTime(),
+            Text(time, style: Styles.blackNormalDefault, textAlign: TextAlign.center,),
             SizedBox(height: 15.0),
             Text('Points:', style: Styles.orangeBoldDefault,),
-            points(),
+            Text(totalPoints.toString(), style: Styles.blackNormalDefault, textAlign: TextAlign.center,),
             SizedBox(height: 25.0),
             Text('If you would like to play again,', textAlign: TextAlign.center),
             Text('sign out and join a new game.', textAlign: TextAlign.center),
@@ -97,24 +98,24 @@ class EndGameScreen extends StatelessWidget {
     );
   }
 
-  Widget getTime()  {
-    Duration difference;
-    difference = endTime.difference(beginTime);
+  // Widget getTime()  {
+  //   Duration difference;
+  //   difference = endTime.difference(beginTime);
 
-    return Text((difference.inHours).toString().padLeft(2, '0') + 
-        ':' + (difference.inMinutes%60).toString().padLeft(2, '0') + 
-        ':' + (difference.inSeconds%60).toString().padLeft(2, '0'),
-        style: Styles.blackNormalDefault, textAlign: TextAlign.center,);
-  }
+  //   return Text((difference.inHours).toString().padLeft(2, '0') + 
+  //       ':' + (difference.inMinutes%60).toString().padLeft(2, '0') + 
+  //       ':' + (difference.inSeconds%60).toString().padLeft(2, '0'),
+  //       style: Styles.blackNormalDefault, textAlign: TextAlign.center,);
+  // }
 
-  Widget points() {
-    totalPoints = calculatePoints(allLocations, allChallenges);
-    addPoints(userDetails, totalPoints);
-    return Text(
-      totalPoints.toString(), 
-      style: Styles.blackNormalDefault,
-      textAlign: TextAlign.center,);
-  }
+  // Widget points() {
+  //   totalPoints = calculatePoints(allLocations, allChallenges);
+  //   addPoints(userDetails, totalPoints);
+  //   return Text(
+  //     totalPoints.toString(), 
+  //     style: Styles.blackNormalDefault,
+  //     textAlign: TextAlign.center,);
+  // }
 
   void _signOut(BuildContext context) {
     FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -124,11 +125,13 @@ class EndGameScreen extends StatelessWidget {
 
   Widget leaderboard() {
     return StreamBuilder(
-        stream: Firestore.instance.collection("users").orderBy('points', descending: true).snapshots(),
+        stream: Firestore.instance.collection("leaderboard").orderBy('totalPoints', descending: true).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting || snapshot.data.documents.length == 0) {
             return CircularProgressIndicator();
-          } else {
+          } 
+          else {
+            List<DocumentSnapshot> allSnapshots = snapshot.data.documents;
           return 
           ListView.builder(
             itemCount: snapshot.data.documents.length,
@@ -137,8 +140,8 @@ class EndGameScreen extends StatelessWidget {
                 return ListTile(
                   dense: true,
                   leading: Text((index+1).toString(), style: TextStyle(fontSize: 16)),
-                  title: Text(doc['email'].toString(),  style: TextStyle(fontSize: 16)),
-                  trailing: Text(doc['points'].toString(), style: Styles.blackBoldSmall),
+                  title: Text(allSnapshots[index].documentID),
+                  trailing: Text(doc['totalPoints'].toString(), style: Styles.blackBoldSmall),
                 );
               },
             );

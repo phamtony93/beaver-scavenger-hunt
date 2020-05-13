@@ -157,7 +157,8 @@ class HuntCompleteScreen extends StatelessWidget {
                               userDetails: userDetails,
                               whichLocation: whichLocation,
                               beginTime: beginTime,
-                              endTime: endTime,
+                              totalPoints: finalPts,
+                              time: finalTime,
                             )
                           )
                         );

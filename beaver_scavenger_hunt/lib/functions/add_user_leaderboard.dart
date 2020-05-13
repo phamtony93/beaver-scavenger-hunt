@@ -17,7 +17,7 @@ Future<void> addUserLeaderboard(UserDetails user, String time, int points, List<
   String userName = user.userEmail + '_' + gameID;
   print('does not get here');
   print(userName);
-  String json = await rootBundle.loadString("assets/clues_and_challenges.json");
+  String json = await rootBundle.loadString("assets/challenges.json");
   Map jsonMap = jsonDecode(json);
   jsonMap["totalTime"] = time;
   jsonMap["totalPoints"] = points;

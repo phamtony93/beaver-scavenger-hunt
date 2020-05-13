@@ -1,0 +1,84 @@
+{
+  "challenges": {
+      "1": {
+          "number": 1,
+          "completed": false,
+          "description": "Read a Book! Photograph the team reading a book in the library",
+          "photoUrl": null,
+          "confirmed": false,
+          "checked": false
+      },
+      "2": {
+          "number": 2,
+          "completed": false,
+          "description": "Instagram Pic! Take an artsy insta-pic under the Irish-Bend Covered Bridge.",
+          "photoUrl": null,
+          "confirmed": false,
+          "checked": false
+      },
+      "3": {
+          "number": 3,
+          "completed": false,
+          "description": "Campus Brochure! Photograph a human pyramid of the team in front of OSU's iconic Weatherford Hall.",
+          "photoUrl": null,
+          "confirmed": false,
+          "checked": false
+      },
+      "4": {
+          "number": 4,
+          "completed": false,
+          "description": "Obstacle Course! Complete the whole USMC obstacle training course. Get video evidence.",
+          "photoUrl": null,
+          "confirmed": false,
+          "checked": false
+      },
+      "5": {
+          "number": 5,
+          "completed": false,
+          "description": "Travel Abroad! Learn a non-English greeting from a student at the International Living Learning Center. Take a video saying the word.",
+          "photoUrl": null,
+          "confirmed": false,
+          "checked": false
+      },
+      "6": {
+          "number": 6,
+          "completed": false,
+          "description": "Go Greek! Find the most frequent greek letter on Greek row. Take a picture of the letter.",
+          "photoUrl": null,
+          "confirmed": false,
+          "checked": false
+      },
+      "7": {
+          "number": 7,
+          "completed": false,
+          "description": "Night Life! Photograph the team with an employee at Clodfelters.",
+          "photoUrl": null,
+          "confirmed": false,
+          "checked": false
+      },
+      "8": {
+          "number": 8,
+          "completed": false,
+          "description": "School Spirit! Photograph the team trying something on from the Beaver Store.",
+          "photoUrl": null,
+          "confirmed": false,
+          "checked": false
+      },
+      "9": {
+          "number": 9,
+          "completed": false,
+          "description": "Make a Friend! Video a secret handshake with a stranger.",
+          "photoUrl": null,
+          "confirmed": false,
+          "checked": false
+      },
+      "10": {
+          "number": 10,
+          "completed": false,
+          "description": "Stay Safe! Pick-up a free contraceptive from Student Health Services. Make sure to capture the moment.",
+          "photoUrl": null,
+          "confirmed": false,
+          "checked": false
+      }
+  }        
+}
