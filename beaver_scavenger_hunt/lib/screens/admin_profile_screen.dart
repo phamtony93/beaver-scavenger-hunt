@@ -8,6 +8,7 @@ import 'login_screen.dart';
 import '../functions/calculate_points.dart';
 import '../functions/completed_clues_count.dart';
 import '../functions/completed_challenges_count.dart';
+import '../functions/check_game_is_active.dart';
 // Models
 import '../models/user_details_model.dart';
 import '../models/challenge_model.dart';
@@ -30,13 +31,21 @@ class AdminProfileScreen extends StatefulWidget {
 
 class _AdminProfileScreenState extends State<AdminProfileScreen> {
 
-  void _signOut(BuildContext context) {
-    //close game
+  void _endGame(BuildContext context) {
     print("Closing game: ${widget.gameCode}");
     Firestore.instance.collection('games').document(widget.gameCode).updateData({'open': false});
     //remove admin from "admins" collection
-    print("Removing admin: ${widget.userDetails.uid} from 'admins' collection");
+    print("Removing: ${widget.userDetails.uid} from 'admins' collection");
     Firestore.instance.collection('admins').document(widget.userDetails.uid).delete();
+  }
+
+  void _signOut(BuildContext context) {
+    // //close game
+    // print("Closing game: ${widget.gameCode}");
+    // Firestore.instance.collection('games').document(widget.gameCode).updateData({'open': false});
+    // //remove admin from "admins" collection
+    // print("Removing admin: ${widget.userDetails.uid} from 'admins' collection");
+    // Firestore.instance.collection('admins').document(widget.userDetails.uid).delete();
     //log-out
     FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
     _firebaseAuth.signOut();
@@ -76,32 +85,66 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
               SizedBox(height: 15.0),
               Text("Email : ${widget.userDetails.userEmail}", style: TextStyle(fontSize: 24),),
               SizedBox(height: 15.0),
-              StreamBuilder(
-                stream: Firestore.instance.collection("games").snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(child: CircularProgressIndicator());
-                  } 
-                  else {
-                    List<DocumentSnapshot> allSnapshots = snapshot.data.documents;
-                    for (int i = 0; i < allSnapshots.length; i++){
-                      if (allSnapshots[i].documentID == widget.gameCode && allSnapshots[i]['open'] == true)
-                        return CloseGameButton(context, widget.gameCode);
-                    }
-                    return OpenGameButton(context, widget.gameCode);
-                  }
-                }
-              ),
+              // StreamBuilder(
+              //   stream: Firestore.instance.collection("games").snapshots(),
+              //   builder: (context, snapshot) {
+              //     if (!snapshot.hasData) {
+              //       return Center(child: CircularProgressIndicator());
+              //     } 
+              //     else {
+              //       List<DocumentSnapshot> allSnapshots = snapshot.data.documents;
+              //       for (int i = 0; i < allSnapshots.length; i++){
+              //         if (allSnapshots[i].documentID == widget.gameCode && allSnapshots[i]['open'] == true)
+              //           return CloseGameButton(context, widget.gameCode);
+              //       }
+              //       return OpenGameButton(context, widget.gameCode, widget.userDetails);
+              //     }
+              //   }
+              // ),
               Expanded(
                 child: Align(
                   alignment: Alignment.bottomCenter,
-                  child: ControlButton(
-                    context: context,
-                    text: 'Sign-Out',
-                    style: Styles.whiteNormalDefault,
-                    onPressFunction: _signOut,)
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      StreamBuilder(
+                        stream: Firestore.instance.collection("games").snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(child: CircularProgressIndicator());
+                          } 
+                          else {
+                            List<DocumentSnapshot> allSnapshots = snapshot.data.documents;
+                            for (int i = 0; i < allSnapshots.length; i++){
+                              if (allSnapshots[i].documentID == widget.gameCode && allSnapshots[i]['open'] == true)
+                                return CloseGameButton(context, widget.gameCode);
+                            }
+                            return OpenGameButton(context, widget.gameCode, widget.userDetails);
+                          }
+                        }
+                      ),
+                      SizedBox(height: 15,),
+                      ControlButton(
+                        context: context,
+                        text: 'End Game',
+                        style: Styles.whiteNormalDefault,
+                        onPressFunction: _endGame
+                      ),
+                      SizedBox(height: 15,),
+                      ControlButton(
+                        context: context,
+                        text: 'Sign Out',
+                        style: Styles.whiteNormalDefault,
+                        onPressFunction: _signOut
+                      ),
+                    ]
+                  ) 
                 )
               ),
+              // ControlButton(
+              //   context: context,
+              //   text: 'Hello world'
+              // ),
               SizedBox(height: 10.0),
             ]
           )
@@ -123,7 +166,7 @@ Widget CloseGameButton(BuildContext context, String gameCode){
         child: RaisedButton(
           color: Colors.black,
           child: Text(
-            "Close Game: $gameCode",
+            "Close Game $gameCode",
             style: Styles.whiteNormalDefault
           ),
           onPressed: (){
@@ -137,7 +180,7 @@ Widget CloseGameButton(BuildContext context, String gameCode){
   );
 }
 
-Widget OpenGameButton(BuildContext context, String gameCode){
+Widget OpenGameButton(BuildContext context, String gameID, UserDetails user){
   return ClipRRect(
     borderRadius: BorderRadius.circular(10),
     child: Container(
@@ -149,13 +192,21 @@ Widget OpenGameButton(BuildContext context, String gameCode){
         child: RaisedButton(
           color: Colors.black,
           child: Text(
-            "Open Game: $gameCode",
+            "Open Game",
             style: Styles.whiteBoldDefault
           ),
-          onPressed: (){
-            //mark game as closed
-            print("Opening game: $gameCode");
-            Firestore.instance.collection('games').document(gameCode).updateData({'open': true});
+          onPressed: () async {
+            bool gameIsActive = await checkAdminGameIsActive(user);
+            if (gameIsActive == false) {
+              final snackBar = SnackBar(
+                content: Text('Game has already ended.')
+              );
+              Scaffold.of(context).showSnackBar(snackBar);
+            } else {
+              //mark game as closed
+              print("Opening game: $gameID");
+              Firestore.instance.collection('games').document(gameID).updateData({'open': true});
+            }
           }
         ),
       )
