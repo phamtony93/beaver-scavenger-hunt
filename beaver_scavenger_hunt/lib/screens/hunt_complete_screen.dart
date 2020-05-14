@@ -1,5 +1,6 @@
 // Packages
 import 'package:beaver_scavenger_hunt/functions/delete_user_document.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 // Screens
 import 'profile_screen.dart';
@@ -48,18 +49,26 @@ class HuntCompleteScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.account_circle),
-            onPressed: () => Navigator.push(
-              context, 
-              MaterialPageRoute(
-                builder: (context) => 
-                ProfileScreen(
-                userDetails: userDetails, 
-                allChallenges: allChallenges, 
-                allLocations: allLocations,
-                beginTime: beginTime,
+            onPressed: () async {
+              
+              var ds = await Firestore.instance.collection("users").document("${userDetails.uid}").get();
+              int incorrectClues = ds.data['incorrectClues'];
+              int points = calculatePoints(allLocations, allChallenges, incorrectClues);
+              
+              Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => 
+                  ProfileScreen(
+                    userDetails: userDetails, 
+                    allChallenges: allChallenges, 
+                    allLocations: allLocations,
+                    beginTime: beginTime,
+                    points: points,
+                  )
                 )
-              )
-            ),
+              );
+            }
           )
         ],
       ),
@@ -143,7 +152,7 @@ class HuntCompleteScreen extends StatelessWidget {
                         //final endTime = addEndTime(userDetails);
                         final endTime = DateTime.now();
                         final finalTime = getTime(endTime);  // calculate final time
-                        final finalPts = points();  // calculate points
+                        final finalPts = await getTotalPoints(endTime);  // calculate points
                         await addUserLeaderboard(userDetails, finalTime, finalPts, allChallenges);
                         await deleteUserDocument(userDetails);
                         // copy all challenge data, points, and time to leaderboard
@@ -203,8 +212,16 @@ String getTime(DateTime endTime)  {
     return time;
   }
   
-  int points() {
-    return calculatePoints(allLocations, allChallenges);
+  Future<int> getTotalPoints(DateTime endTime) async {
+    Duration difference;
+    difference = endTime.difference(beginTime);
+    
+    var ds = await Firestore.instance.collection("users").document("${userDetails.uid}").get();
+    int incorrectClues = ds.data['incorrectClues']; 
+    int pointsNotFromTime = calculatePoints(allLocations, allChallenges, 160);
+    int totalPoints = pointsNotFromTime - difference.inMinutes;
+
+    return totalPoints;
     //addPoints(userDetails, totalPoints);
   }
 

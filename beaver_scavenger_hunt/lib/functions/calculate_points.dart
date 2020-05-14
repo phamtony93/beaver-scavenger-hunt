@@ -5,14 +5,14 @@ import '../functions/completed_challenges_count.dart';
 import '../models/challenge_model.dart';
 import '../models/clue_location_model.dart';
 
-int calculatePoints(List<ClueLocation> allLocations, List<Challenge> allChallenges) {
+int calculatePoints(List<ClueLocation> allLocations, List<Challenge> allChallenges, int incorrectClues) {
     int cluePoints = 10;
     int challengePoints = 5;
-    int timerDeduction = -1;
-
+    int cluePointDeduction = 5;
+    
     int cluePointsEarned = cluePoints * completedCluesCount(allLocations);
     int challengePointsEarned = challengePoints * completedChallengesCount(allChallenges);
-    int timerPointsDeducted = 2 * timerDeduction;
+    int cluePointsDeducted = incorrectClues * cluePointDeduction;
 
-    return (cluePointsEarned + challengePointsEarned + timerPointsDeducted);
+    return (cluePointsEarned + challengePointsEarned - cluePointsDeducted);
   }

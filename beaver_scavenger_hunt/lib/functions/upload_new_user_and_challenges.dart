@@ -13,5 +13,6 @@ void uploadNewUserAndChallenges(UserDetails user, String gameCode) async {
   jsonMap["uid"] = '${user.uid}';
   jsonMap["email"] = '${user.userEmail}';
   jsonMap["gameCode"] = '${gameCode}';
+  jsonMap["incorrectClues"] = 0;
   Firestore.instance.collection('users').document(user.uid).setData(jsonMap);
 }

@@ -1,4 +1,5 @@
 // Packages
+import 'package:beaver_scavenger_hunt/models/clue_location_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // Screens
@@ -16,8 +17,11 @@ class VideoUploading extends StatefulWidget {
   final int challengeNum;
   final UserDetails userDetails;
   final List<Challenge> allChallenges;
+  final List<ClueLocation> allLocations;
+  final int whichLocation;
+  final DateTime beginTime;
 
-  VideoUploading({Key key, this.path, this.fileName, this.userDetails, this.challengeNum, this.allChallenges}) : super(key: key);
+  VideoUploading({Key key, this.path, this.fileName, this.userDetails, this.challengeNum, this.allChallenges, this.allLocations, this.whichLocation, this.beginTime}) : super(key: key);
 
   @override
   _VideoUploadingState createState() => _VideoUploadingState();
@@ -76,7 +80,16 @@ class _VideoUploadingState extends State<VideoUploading> {
       Navigator.pop(context);
       Navigator.pop(context);
       Navigator.pop(context);
-      Navigator.of(context).push(MaterialPageRoute(builder:  (context) => ChallengeScreen(allChallenges: widget.allChallenges, userDetails: widget.userDetails) ));
+      Navigator.of(context).push(MaterialPageRoute(
+        builder:  (context) => 
+          ChallengeScreen(
+            allChallenges: widget.allChallenges,
+            allLocations: widget.allLocations,
+            whichLocation: widget.whichLocation,
+            beginTime: widget.beginTime, 
+            userDetails: widget.userDetails
+          )
+      ));
     });
   }
 

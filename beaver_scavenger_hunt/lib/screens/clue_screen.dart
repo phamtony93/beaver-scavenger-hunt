@@ -1,4 +1,5 @@
 // Packages
+import 'package:beaver_scavenger_hunt/functions/calculate_points.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_formfield/dropdown_formfield.dart';
@@ -84,7 +85,7 @@ class _ClueScreenState extends State<ClueScreen> {
   }
 
   //SAVE FORM FUNCTION
-  void _saveForm() {
+  void _saveForm() async {
     var form = formKey.currentState;
     if (_myLocation == ""){
       setState(() {
@@ -92,6 +93,11 @@ class _ClueScreenState extends State<ClueScreen> {
       });
     }
     else if (_myLocation != widget.allLocations[widget.whichLocation].solution) {
+      //add incorrectClue to db
+      var ds = await Firestore.instance.collection("users").document(widget.userDetails.uid).get();
+      int incorrectClues = ds.data['incorrectClues'];
+      Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'incorrectClues': incorrectClues + 1});
+      
       setState(() {
         _incorrect = true;
         _guessNumber ++;
@@ -181,7 +187,12 @@ class _ClueScreenState extends State<ClueScreen> {
           actions: [
             IconButton(
               icon: Icon(Icons.account_circle),
-              onPressed: () { 
+              onPressed: () async { 
+                
+                var ds = await Firestore.instance.collection("users").document("${widget.userDetails.uid}").get();
+                int incorrectClues = ds.data['incorrectClues'];
+                int points = calculatePoints(widget.allLocations, widget.allChallenges, incorrectClues);
+                
                 //Naviage to Profile Screen (with userDetails,
                 // allChallenges, allLocations, and beginTime)
                 print("Navigating to Profile Screen...");
@@ -194,6 +205,7 @@ class _ClueScreenState extends State<ClueScreen> {
                     allChallenges: widget.allChallenges, 
                     allLocations: widget.allLocations,
                     beginTime: widget.beginTime,
+                    points: points,
                     )
                   )
                 );

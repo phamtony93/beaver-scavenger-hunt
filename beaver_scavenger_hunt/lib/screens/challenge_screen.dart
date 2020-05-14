@@ -8,6 +8,8 @@ import 'profile_screen.dart';
 import '../models/clue_location_model.dart';
 import '../models/user_details_model.dart';
 import '../models/challenge_model.dart';
+// Functions
+import '../functions/calculate_points.dart';
 // Widgets
 import '../widgets/menu_drawer.dart';
 
@@ -61,7 +63,18 @@ class _ChallengeScreen extends State<ChallengeScreen> {
           color: Colors.orange,
               tooltip: 'Take Video',
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraScreen(userDetails: widget.userDetails, challengeNum: index, allChallenges: widget.allChallenges) ));
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder:  (context) => CameraScreen(
+                      userDetails: widget.userDetails, 
+                      challengeNum: index, 
+                      allChallenges: widget.allChallenges,
+                      allLocations: widget.allLocations,
+                      whichLocation: widget.whichLocation,
+                      beginTime: widget.beginTime
+                    )
+                  )
+                );
               }
       );
       }
@@ -70,7 +83,18 @@ class _ChallengeScreen extends State<ChallengeScreen> {
           color: Colors.orange,
               tooltip: 'Take Photo',
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraScreen(userDetails: widget.userDetails, challengeNum: index, allChallenges: widget.allChallenges) ));
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder:  (context) => CameraScreen(
+                      userDetails: widget.userDetails, 
+                      challengeNum: index, 
+                      allChallenges: widget.allChallenges,
+                      allLocations: widget.allLocations,
+                      whichLocation: widget.whichLocation,
+                      beginTime: widget.beginTime
+                    )
+                  )
+                );
               }
       );
       }
@@ -102,18 +126,26 @@ class _ChallengeScreen extends State<ChallengeScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.account_circle),
-            onPressed: () => Navigator.push(
-              context, 
-              MaterialPageRoute(
-                builder: (context) => 
-                ProfileScreen(
-                userDetails: widget.userDetails, 
-                allChallenges: widget.allChallenges, 
-                allLocations: widget.allLocations,
-                beginTime: widget.beginTime,
+            onPressed: () async {
+              
+              var ds = await Firestore.instance.collection("users").document("${widget.userDetails.uid}").get();
+              int incorrectClues = ds.data['incorrectClues'];
+              int points = calculatePoints(widget.allLocations, widget.allChallenges, incorrectClues);
+              
+              Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => 
+                  ProfileScreen(
+                    userDetails: widget.userDetails, 
+                    allChallenges: widget.allChallenges, 
+                    allLocations: widget.allLocations,
+                    beginTime: widget.beginTime,
+                    points: points,
+                  )
                 )
-              )
-            ),
+              );
+            }
           )
         ],
       ),

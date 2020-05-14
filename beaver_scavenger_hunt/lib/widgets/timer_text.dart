@@ -19,10 +19,11 @@ class _TimerTextState extends State<TimerText> {
   Timer timer;
  
   @override
-  Widget build(BuildContext context) {
-    return Text(((widget.stopWatch.elapsed.inHours) + widget.difference.inHours).toString().padLeft(2, '0') + 
-        ':' + ((widget.stopWatch.elapsed.inMinutes%60) + (widget.difference.inMinutes%60)).toString().padLeft(2, '0') + 
-        ':' + ((widget.stopWatch.elapsed.inSeconds%60) + (widget.difference.inSeconds%60)).toString().padLeft(2, '0'),
+  Widget build(BuildContext context) {  
+    
+    return Text((((widget.stopWatch.elapsed.inSeconds) + (widget.difference.inSeconds))/3600).floor().toString().padLeft(2, '0') + 
+        ':' + ((((widget.stopWatch.elapsed.inSeconds) + (widget.difference.inSeconds))/60).floor()%60).toString().padLeft(2, '0') + 
+        ':' + (((widget.stopWatch.elapsed.inSeconds) + (widget.difference.inSeconds))%60).toString().padLeft(2, '0'),
         style: TextStyle(fontSize: 24));
   }
 

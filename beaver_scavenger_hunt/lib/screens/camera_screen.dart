@@ -1,4 +1,5 @@
 // Packages
+import 'package:beaver_scavenger_hunt/models/clue_location_model.dart';
 import 'package:flutter/material.dart';
 // Models
 import '../models/user_details_model.dart';
@@ -10,8 +11,11 @@ class CameraScreen extends StatelessWidget {
   final UserDetails userDetails;
   final int challengeNum;
   final List<Challenge> allChallenges;
+  final List<ClueLocation> allLocations;
+  final int whichLocation;
+  final DateTime beginTime;
 
-  CameraScreen({Key key, this.userDetails, this.challengeNum, this.allChallenges}) : super(key: key);
+  CameraScreen({Key key, this.userDetails, this.challengeNum, this.allChallenges, this.allLocations, this.whichLocation, this.beginTime}) : super(key: key);
 
   @override
   Widget build (BuildContext context) {
@@ -31,7 +35,14 @@ class CameraScreen extends StatelessWidget {
           ),
           centerTitle: true,
         ),
-      body: Camera(userDetails: userDetails, challengeNum: challengeNum, allChallenges: allChallenges)
+      body: Camera(
+        userDetails: userDetails, 
+        challengeNum: challengeNum, 
+        allChallenges: allChallenges, 
+        allLocations: allLocations, 
+        whichLocation: whichLocation, 
+        beginTime: beginTime
+      )
     );
   }
 }

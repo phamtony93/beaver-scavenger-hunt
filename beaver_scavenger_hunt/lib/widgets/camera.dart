@@ -1,4 +1,5 @@
 // Packages
+import 'package:beaver_scavenger_hunt/models/clue_location_model.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
@@ -14,8 +15,11 @@ class Camera extends StatefulWidget {
   final UserDetails userDetails;
   final int challengeNum;
   final List<Challenge> allChallenges;
+  final List<ClueLocation> allLocations;
+  final int whichLocation;
+  final DateTime beginTime;
 
-  Camera({Key key, this.userDetails, this.challengeNum, this.allChallenges}) : super(key: key);
+  Camera({Key key, this.userDetails, this.challengeNum, this.allChallenges, this.allLocations, this.whichLocation, this.beginTime}) : super(key: key);
 
   @override
   _CameraState createState() => _CameraState();
@@ -147,8 +151,20 @@ class _CameraState extends State<Camera> {
       print(pathImage);
       if (pathImage != null ) {
          Navigator.of(context).push(
-           MaterialPageRoute(builder:  (context) => CameraReviewScreen(
-             path: pathImage, isImage: true, fileName: fileName, userDetails: widget.userDetails, challengeNum: widget.challengeNum, allChallenges: widget.allChallenges,) ));
+           MaterialPageRoute(builder:  (context) => 
+           CameraReviewScreen(
+             path: pathImage, 
+             isImage: true, 
+             fileName: fileName, 
+             userDetails: widget.userDetails, 
+             challengeNum: widget.challengeNum, 
+             allChallenges: widget.allChallenges,
+             allLocations: widget.allLocations,
+             whichLocation: widget.whichLocation,
+             beginTime: widget.beginTime
+            )
+          )
+        );
       }
     }
     catch (e) {
@@ -196,8 +212,21 @@ class _CameraState extends State<Camera> {
       await _controller.stopVideoRecording();
       print('video stopped');
       if (pathVideo != null ) {
-        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => CameraReviewScreen(
-          path: pathVideo, isImage: false, fileName: fileName, userDetails: widget.userDetails, challengeNum: widget.challengeNum, allChallenges: widget.allChallenges,) ));
+        Navigator.of(context).push(
+           MaterialPageRoute(builder:  (context) => 
+           CameraReviewScreen(
+             path: pathVideo, 
+             isImage: false, 
+             fileName: fileName, 
+             userDetails: widget.userDetails, 
+             challengeNum: widget.challengeNum, 
+             allChallenges: widget.allChallenges,
+             allLocations: widget.allLocations,
+             whichLocation: widget.whichLocation,
+             beginTime: widget.beginTime
+            )
+          )
+        );
       }
     }
     catch (e) {

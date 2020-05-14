@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // Models
 import '../models/user_details_model.dart';
 import '../models/challenge_model.dart';
+import '../models/clue_location_model.dart';
 // Widgets
 import '../widgets/camera_review.dart';
 
@@ -13,8 +14,12 @@ class CameraReviewScreen extends StatelessWidget {
    final int challengeNum;
    final UserDetails userDetails;
    final List<Challenge> allChallenges;
+   final List<ClueLocation> allLocations;
+   final int whichLocation;
+   final DateTime beginTime;
 
-  CameraReviewScreen({Key key, this.path, this.isImage, this.fileName, this.userDetails, this.challengeNum, this.allChallenges}) : super(key: key);
+
+  CameraReviewScreen({Key key, this.path, this.isImage, this.fileName, this.userDetails, this.challengeNum, this.allLocations, this.whichLocation, this.beginTime, this.allChallenges}) : super(key: key);
 
   @override
   Widget build (BuildContext context) {
@@ -34,7 +39,17 @@ class CameraReviewScreen extends StatelessWidget {
           ),
           centerTitle: true,
         ),
-      body: CameraReview(path: path, isImage: isImage, fileName: fileName, userDetails: userDetails, challengeNum: challengeNum, allChallenges:allChallenges),
+      body: CameraReview(
+        path: path, 
+        isImage: isImage, 
+        fileName: fileName, 
+        userDetails: userDetails, 
+        allLocations: allLocations, 
+        whichLocation: whichLocation, 
+        challengeNum: challengeNum, 
+        allChallenges: allChallenges,
+        beginTime: beginTime
+      ),
     );
   }
 }

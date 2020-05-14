@@ -1,6 +1,7 @@
 // Packages
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 // Screens
 import 'login_screen.dart';
 // Functions
@@ -14,6 +15,7 @@ import '../models/clue_location_model.dart';
 // Widgets
 import '../widgets/timer_text.dart';
 import '../widgets/control_button.dart';
+import '../widgets/points_text.dart';
 // Styles
 import '../styles/styles_class.dart';
 
@@ -22,8 +24,9 @@ class ProfileScreen extends StatefulWidget {
   final List<Challenge> allChallenges;
   final List<ClueLocation> allLocations;
   final beginTime;
+  final points;
 
-  ProfileScreen({Key key, this.userDetails, this.allChallenges, this.allLocations, this.beginTime}) : super(key: key);
+  ProfileScreen({Key key, this.userDetails, this.allChallenges, this.allLocations, this.beginTime, this.points}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -67,14 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       onWillPop: () => _onBackPress(),
       child: Scaffold(
         appBar: AppBar(
-          title: RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(text: 'P', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
-                TextSpan(text: 'rofile', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1)))
-              ]
-            )
-          ),
+          title: AppBarTextSpan(context),
           centerTitle: true,
         ),
         body: Center(
@@ -105,7 +101,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 //Text("Current Time: xx", style: TextStyle(fontSize: 24),),
                 SizedBox(height: 15.0),
-                Text("Preliminary Points Earned: ${calculatePoints(widget.allLocations, widget.allChallenges)}", style: TextStyle(fontSize: 24),),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text("Total Points: ", style: TextStyle(fontSize: 24),),
+                    PointsText(points: widget.points, stopWatch: stopWatch, onScreen: onScreen, difference: getTime()),
+                  ],
+                ),
                 SizedBox(height: 25.0),
                 ControlButton(
                   context: context,
@@ -133,21 +135,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
     DateTime formattedBeginTime;
     Duration difference;
     final currTime = DateTime.now();
-    print(currTime);
-    print(widget.beginTime);
+    //print(currTime);
+    //print(widget.beginTime);
     if (widget.beginTime is! DateTime) {
       formattedBeginTime = DateTime.parse(widget.beginTime.toDate().toString());
-      print(formattedBeginTime);
+      //print(formattedBeginTime);
       difference = currTime.difference(formattedBeginTime);
     }
     else {
       difference = currTime.difference(widget.beginTime);
     }
-    print(difference);
-    print(difference.inHours);
-    print(difference.inMinutes%60);
-    print(difference.inSeconds.remainder(60));
+    //print(difference);
+    //print(difference.inHours);
+    //print(difference.inMinutes%60);
+    //print(difference.inSeconds.remainder(60));
     return difference;
   }
 
+}
+
+Widget AppBarTextSpan(BuildContext context){
+  return RichText(
+    text: TextSpan(
+      children: [
+        TextSpan(text: 'P', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
+        TextSpan(text: 'layer', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
+        TextSpan(text: ' P', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
+        TextSpan(text: 'rofile', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1)))
+      ]
+    )
+  );
 }

@@ -1,4 +1,5 @@
 // Packages
+import 'package:beaver_scavenger_hunt/models/clue_location_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery_saver/gallery_saver.dart';
@@ -18,11 +19,14 @@ class CameraReview extends StatefulWidget {
   final String path;
   final bool isImage;
   final String fileName;
+  final int whichLocation;
   final int challengeNum;
   final UserDetails userDetails;
+  final List<ClueLocation> allLocations;
   final List<Challenge> allChallenges;
+  final DateTime beginTime;
 
-  CameraReview({Key key, this.path, this.isImage, this.fileName, this.userDetails, this.challengeNum, this.allChallenges}) : super(key: key);
+  CameraReview({Key key, this.path, this.isImage, this.whichLocation, this.fileName, this.userDetails, this.challengeNum, this.allLocations, this.allChallenges, this.beginTime}) : super(key: key);
 
   @override
   _CameraReviewState createState() => _CameraReviewState();
@@ -83,8 +87,20 @@ class _CameraReviewState extends State<CameraReview> {
                 else {
                   saveVideo();
                   //uploadVideo();
-                  Navigator.of(context).push(MaterialPageRoute(builder:  (context) => VideoUploading(
-                    path: widget.path, fileName: widget.fileName, userDetails: widget.userDetails, challengeNum: widget.challengeNum, allChallenges: widget.allChallenges) ));
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder:  (context) => 
+                    VideoUploading(
+                      path: widget.path, 
+                      fileName: widget.fileName, 
+                      userDetails: widget.userDetails, 
+                      challengeNum: widget.challengeNum, 
+                      allChallenges: widget.allChallenges,
+                      allLocations: widget.allLocations,
+                      whichLocation: widget.whichLocation,
+                      beginTime: widget.beginTime,
+                    )
+                  )
+                );
               }
             }
           ),),
@@ -192,7 +208,17 @@ class _CameraReviewState extends State<CameraReview> {
       Navigator.pop(context);
       Navigator.pop(context);
       Navigator.pop(context);
-      Navigator.of(context).push(MaterialPageRoute(builder:  (context) => ChallengeScreen(allChallenges: widget.allChallenges, userDetails: widget.userDetails) ));
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder:  (context) => ChallengeScreen(
+            allLocations: widget.allLocations,
+            whichLocation: widget.whichLocation,
+            allChallenges: widget.allChallenges, 
+            userDetails: widget.userDetails,
+            beginTime: widget.beginTime,
+          )
+        )
+      );
     });
   }
 

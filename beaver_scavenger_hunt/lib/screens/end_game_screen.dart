@@ -87,6 +87,7 @@ class EndGameScreen extends StatelessWidget {
             ControlButton(
                   context: context,
                   text: 'Sign Out',
+                  style: Styles.whiteNormalDefault,
                   onPressFunction: _signOut,),
             SizedBox(height: 25.0),
             Text("LEADERBOARD", style: Styles.blackBoldDefault),

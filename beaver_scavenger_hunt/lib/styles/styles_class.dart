@@ -44,11 +44,25 @@ class Styles {
     fontSize: defaultFontSize
   );
 
+  static final orangeNormalSmall = TextStyle(
+    color: osuOrange,
+    fontFamily: _defaultText,
+    fontWeight: FontWeight.normal,
+    fontSize: 20
+  );
+
   static final orangeBoldDefault = TextStyle(
     color: osuOrange,
     fontFamily: _defaultText,
     fontWeight: FontWeight.bold,
     fontSize: defaultFontSize
+  );
+
+  static final orangeBoldSmall = TextStyle(
+    color: osuOrange,
+    fontFamily: _defaultText,
+    fontWeight: FontWeight.bold,
+    fontSize: 20
   );
 
   static final whiteNormalDefault = TextStyle(
