@@ -9,10 +9,14 @@ int calculatePoints(List<ClueLocation> allLocations, List<Challenge> allChalleng
     int cluePoints = 10;
     int challengePoints = 5;
     int cluePointDeduction = 5;
-    
+    print("Calculating challenge and clue points...");
     int cluePointsEarned = cluePoints * completedCluesCount(allLocations);
+    print("Points from clues: $cluePointsEarned");
     int challengePointsEarned = challengePoints * completedChallengesCount(allChallenges);
+    print("Points from challenges: $challengePointsEarned");
     int cluePointsDeducted = incorrectClues * cluePointDeduction;
+    print("Points lost from incorrect clue guesses: $cluePointsDeducted");
+    print("Total from challenges and clues: ${cluePointsEarned + challengePointsEarned - cluePointsDeducted}");
 
     return (cluePointsEarned + challengePointsEarned - cluePointsDeducted);
   }

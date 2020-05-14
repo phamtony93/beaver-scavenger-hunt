@@ -5,8 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 // Screens
 import 'login_screen.dart';
 // Functions
-import '../functions/add_points.dart';
-import '../functions/calculate_points.dart';
+
 // Models
 import '../models/clue_location_model.dart';
 import '../models/user_details_model.dart';
@@ -22,7 +21,7 @@ class EndGameScreen extends StatelessWidget {
   final List<Challenge> allChallenges;
   final int whichLocation;
   final DateTime beginTime;
-  // final DateTime endTime;
+  
   final String time;
   final int totalPoints;
 

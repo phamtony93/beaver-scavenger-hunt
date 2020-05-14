@@ -17,6 +17,7 @@ import '../functions/calculate_points.dart';
 import '../functions/completed_challenges_count.dart';
 import '../functions/completed_clues_count.dart';
 import '../functions/delete_user_document.dart';
+import '../functions/get_final_time.dart';
 // Styles
 import '../styles/styles_class.dart';
 
@@ -51,10 +52,13 @@ class HuntCompleteScreen extends StatelessWidget {
             icon: Icon(Icons.account_circle),
             onPressed: () async {
               
+              //get # of incorrect clues from db 
               var ds = await Firestore.instance.collection("users").document("${userDetails.uid}").get();
               int incorrectClues = ds.data['incorrectClues'];
               int points = calculatePoints(allLocations, allChallenges, incorrectClues);
               
+              //navigate to profile screen
+              print("Navigating to Profile Screen...");
               Navigator.push(
                 context, 
                 MaterialPageRoute(
@@ -151,7 +155,7 @@ class HuntCompleteScreen extends StatelessWidget {
                         print('End Game');
                         //final endTime = addEndTime(userDetails);
                         final endTime = DateTime.now();
-                        final finalTime = getTime(endTime);  // calculate final time
+                        final finalTime = getFinalTime(beginTime, endTime);  // calculate final time
                         final finalPts = await getTotalPoints(endTime);  // calculate points
                         await addUserLeaderboard(userDetails, finalTime, finalPts, allChallenges);
                         await deleteUserDocument(userDetails);
@@ -201,28 +205,21 @@ class HuntCompleteScreen extends StatelessWidget {
         ],),
     );
   }
-
-String getTime(DateTime endTime)  {
-    Duration difference;
-    difference = endTime.difference(beginTime);
-
-    String time = (difference.inHours).toString().padLeft(2, '0') + 
-        ':' + (difference.inMinutes%60).toString().padLeft(2, '0') + 
-        ':' + (difference.inSeconds%60).toString().padLeft(2, '0');
-    return time;
-  }
   
   Future<int> getTotalPoints(DateTime endTime) async {
+    
+    print("Calculating total points...");
     Duration difference;
     difference = endTime.difference(beginTime);
-    
     var ds = await Firestore.instance.collection("users").document("${userDetails.uid}").get();
-    int incorrectClues = ds.data['incorrectClues']; 
-    int pointsNotFromTime = calculatePoints(allLocations, allChallenges, 160);
+    int incorrectClues = ds.data['incorrectClues'];
+    int pointsNotFromTime = calculatePoints(allLocations, allChallenges, incorrectClues);
+    print("calculating time points lost...");
+    print("Points lost from ${difference.inMinutes} minutes: ${difference.inMinutes}");  
     int totalPoints = pointsNotFromTime - difference.inMinutes;
+    print("total points: $totalPoints");
 
     return totalPoints;
-    //addPoints(userDetails, totalPoints);
   }
 
 }
