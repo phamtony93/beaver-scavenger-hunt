@@ -28,15 +28,9 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
   List<dynamic> myUsers;
   
   getUsers() async {
-    var doc2 = await Firestore.instance.collection("games").document("${widget.gameCode}").get();
-    myUsers = doc2.data == null ? null : doc2.data["playerIDs"];
-    if (myUsers != null){
-      for (int i = 0; i < myUsers.length; i++){
-        myUsers[i] = myUsers[i] + "_" + widget.gameCode;
-        print(myUsers[i]);
-      }
-    }
-    
+    var doc1 = await Firestore.instance.collection("games").document("${widget.gameCode}").get();
+    myUsers = doc1.data == null ? null : doc1.data["playerIDs"];
+    print("From game: ${widget.gameCode} grabbed users: $myUsers");
   }
   
   @override
@@ -135,6 +129,7 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
                 } else {
+                  print(snapshot.data.documents.length);
                   return ListView.builder(
                     itemCount: snapshot.data.documents.length,
                     itemBuilder: (context, index) {
@@ -230,7 +225,7 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
                                 builder:  (context) => AdminSpecificTeamScreen(
                                   adminUser: widget.adminUser,
                                   gameCode: widget.gameCode,
-                                  teamID: document["uid"], 
+                                  teamID: document.documentID.substring(0, document.documentID.length - 5), 
                                   completedChallenges: completedChallenges, 
                                   whichChallenge: 0
                                 )

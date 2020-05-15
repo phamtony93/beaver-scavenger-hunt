@@ -131,6 +131,7 @@ class WelcomeScreen extends StatelessWidget {
                               // here as beginTime
                               print("Adding beginTime to player's data in db...");
                               beginTime = addBeginTime(userDetails);
+                              print("Jake - beginTime initial load: $beginTime");
                               
                               print('Hunt and Timer Started!');
                               print("Navigating to Clue Screen...");

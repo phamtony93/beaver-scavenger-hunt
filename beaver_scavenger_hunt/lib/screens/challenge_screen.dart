@@ -132,16 +132,17 @@ class _ChallengeScreen extends State<ChallengeScreen> {
               int incorrectClues = ds.data['incorrectClues'];
               int points = calculatePoints(widget.allLocations, widget.allChallenges, incorrectClues);
               
+              print("Navigating to Profile Screen...");
               Navigator.push(
                 context, 
                 MaterialPageRoute(
                   builder: (context) => 
                   ProfileScreen(
-                    userDetails: widget.userDetails, 
-                    allChallenges: widget.allChallenges, 
-                    allLocations: widget.allLocations,
-                    beginTime: widget.beginTime,
-                    points: points,
+                  userDetails: widget.userDetails, 
+                  allChallenges: widget.allChallenges, 
+                  allLocations: widget.allLocations,
+                  beginTime: widget.beginTime,
+                  points: points,
                   )
                 )
               );

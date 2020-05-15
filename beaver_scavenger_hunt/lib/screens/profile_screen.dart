@@ -1,11 +1,9 @@
 // Packages
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 // Screens
 import 'login_screen.dart';
 // Functions
-import '../functions/calculate_points.dart';
 import '../functions/completed_clues_count.dart';
 import '../functions/completed_challenges_count.dart';
 // Models
@@ -23,8 +21,8 @@ class ProfileScreen extends StatefulWidget {
   final UserDetails userDetails;
   final List<Challenge> allChallenges;
   final List<ClueLocation> allLocations;
-  final beginTime;
-  final points;
+  final DateTime beginTime;
+  final int points;
 
   ProfileScreen({Key key, this.userDetails, this.allChallenges, this.allLocations, this.beginTime, this.points}) : super(key: key);
 
@@ -84,19 +82,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   radius: 75.0,
                 ),
                 SizedBox(height: 25.0),
-                Text("Name : ${widget.userDetails.userName}", style: TextStyle(fontSize: 24),),
+                widget.userDetails != null ? Text("Name : ${widget.userDetails.userName}", style: TextStyle(fontSize: 24),): Text("User load error"),
                 SizedBox(height: 15.0),
-                Text("Email : ${widget.userDetails.userEmail}", style: TextStyle(fontSize: 24),),
+                widget.allLocations != null ? Text("Email : ${widget.userDetails.userEmail}", style: TextStyle(fontSize: 24),): Text("User load error"),
                 SizedBox(height: 15.0),
-                Text("Clues Completed: ${completedCluesCount(widget.allLocations)}", style: TextStyle(fontSize: 24),),
+                widget.allLocations != null ? Text("Clues Completed: ${completedCluesCount(widget.allLocations)}", style: TextStyle(fontSize: 24),) : Text("Clue load error"),
                 SizedBox(height: 15.0),
-                Text("Challenges Completed: ${completedChallengesCount(widget.allChallenges)}", style: TextStyle(fontSize: 24),),
+                widget.allChallenges != null ? Text("Challenges Completed: ${completedChallengesCount(widget.allChallenges)}", style: TextStyle(fontSize: 24),) : Text("Challenge load error"),
                 SizedBox(height: 15.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text("Time Elapsed: ", style: TextStyle(fontSize: 24),),
-                    TimerText(stopWatch: stopWatch, onScreen: onScreen, difference: getTime()),
+                    widget.beginTime != null ? TimerText(stopWatch: stopWatch, onScreen: onScreen, difference: getTime())
+                    :
+                    Text("Loading..."),
                   ],
                 ),
                 //Text("Current Time: xx", style: TextStyle(fontSize: 24),),
@@ -105,7 +105,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text("Total Points: ", style: TextStyle(fontSize: 24),),
-                    PointsText(points: widget.points, stopWatch: stopWatch, onScreen: onScreen, difference: getTime()),
+                    widget.points != null ? PointsText(points: widget.points, stopWatch: stopWatch, onScreen: onScreen, difference: getTime())
+                    :
+                    Text("Loading..."),
                   ],
                 ),
                 SizedBox(height: 25.0),
@@ -138,7 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     //print(currTime);
     //print(widget.beginTime);
     if (widget.beginTime is! DateTime) {
-      formattedBeginTime = DateTime.parse(widget.beginTime.toDate().toString());
+      formattedBeginTime = DateTime.parse(widget.beginTime.toString());
       //print(formattedBeginTime);
       difference = currTime.difference(formattedBeginTime);
     }

@@ -5,13 +5,12 @@ class ClueLocation{
   double longitude;
   String clue;
   String solution;
-  String photoURL;
   bool found = false;
   bool solved = false;
   bool available = false;
 
 
-  ClueLocation(this.number, this.latitude, this.longitude, this.clue, this.solution, this.photoURL);
+  ClueLocation(this.number, this.latitude, this.longitude, this.clue, this.solution);
 
   ClueLocation.fromJson(Map<String, dynamic> json)
       : number = json['number'],
@@ -20,7 +19,6 @@ class ClueLocation{
         clue = json['clue'],
         solution = json['solution'],
         found = json['found'],
-        photoURL = json['photoURL'],
         solved = json['solved'],
         available = json['available'];
   
@@ -32,7 +30,6 @@ class ClueLocation{
     'clue': this.clue,
     'solution': this.solution,
     'found': this.found,
-    'photoURL': this.photoURL,
     'solved': this.solved,
     'available': this.available
   };

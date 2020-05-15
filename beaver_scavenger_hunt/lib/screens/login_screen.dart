@@ -18,6 +18,7 @@ import '../functions/is_new_user.dart';
 import '../functions/is_new_admin.dart';
 import '../functions/get_prev_user.dart';
 import '../functions/get_begin_time.dart';
+import '../functions/calculate_points.dart';
 //Widgets
 import '../widgets/control_button.dart';
 // Styles
@@ -35,6 +36,22 @@ class _LoginScreen extends State<LoginScreen> {
   String name;
   String email;
   String photoUrl;
+
+  Future<int> getTotalPoints(UserDetails userDetails, DateTime beginTime, DateTime endTime, allLocations, allChallenges) async {
+    
+    print("Calculating total points...");
+    Duration difference;
+    difference = endTime.difference(beginTime);
+    var ds = await Firestore.instance.collection("users").document("${userDetails.uid}").get();
+    int incorrectClues = ds.data['incorrectClues'];
+    int pointsNotFromTime = calculatePoints(allLocations, allChallenges, incorrectClues);
+    print("calculating time points lost...");
+    print("Points lost from ${difference.inMinutes} minutes: ${difference.inMinutes}");  
+    int totalPoints = pointsNotFromTime - difference.inMinutes;
+    print("total points: $totalPoints");
+
+    return totalPoints;
+  }
 
   // SIGN IN AS PLAYER FUNCTION:
   Future<AuthResult> _signInAsPlayer(BuildContext context) async {
@@ -100,18 +117,16 @@ class _LoginScreen extends State<LoginScreen> {
         Challenge chall = Challenge.fromJson(allChallengesMap["$i"]);
         allChallenges.add(chall);
       }
+      print("user data obtained");
 
       //get beginTime timeStamp from db
       print("Getting startTime from database...");
       Timestamp begin = await getBeginTime(user);
-      DateTime beginTime = DateTime.parse(begin.toDate().toString());
+      DateTime beginTime = begin.toDate();
+      print("startTime data obtained");
       
-      //Navigate to clue screen 
+      // Navigate to clue screen 
       // (with userDetails, allLocations, allChallenges, whichLocation, and beginTime)
-      print("user data obtained");
-      //if game complete
-      //navigate to end game screen
-      //else
       print("Navigating to Clue Screen ${which + 1}...");
       Navigator.push(
         context, 
@@ -125,6 +140,7 @@ class _LoginScreen extends State<LoginScreen> {
           )
         )
       );
+      
     }
     
     // IF NEW USER
@@ -222,7 +238,6 @@ class _LoginScreen extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> prevUser;
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
@@ -232,7 +247,8 @@ class _LoginScreen extends State<LoginScreen> {
               Image(
                 height: 275,
                 width: 275,
-                image: AssetImage('assets/images/osu_logo.png')),
+                image: AssetImage('assets/images/osu_logo.png')
+              ),
               Text('Scavenger', style: TextStyle(fontSize: 60)),
               Text('Hunt', style: TextStyle(fontSize: 60)),
               SizedBox(

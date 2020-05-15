@@ -57,18 +57,17 @@ class HuntCompleteScreen extends StatelessWidget {
               int incorrectClues = ds.data['incorrectClues'];
               int points = calculatePoints(allLocations, allChallenges, incorrectClues);
               
-              //navigate to profile screen
               print("Navigating to Profile Screen...");
               Navigator.push(
                 context, 
                 MaterialPageRoute(
                   builder: (context) => 
                   ProfileScreen(
-                    userDetails: userDetails, 
-                    allChallenges: allChallenges, 
-                    allLocations: allLocations,
-                    beginTime: beginTime,
-                    points: points,
+                  userDetails: userDetails, 
+                  allChallenges: allChallenges, 
+                  allLocations: allLocations,
+                  beginTime: beginTime,
+                  points: points,
                   )
                 )
               );

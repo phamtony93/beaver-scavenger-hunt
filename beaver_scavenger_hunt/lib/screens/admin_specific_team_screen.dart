@@ -180,10 +180,24 @@ Widget RejectionBar(BuildContext context, bool isRejected, completedChallenges, 
       onWillAccept: (data){
         return true;
       },
-      onAccept: (data){
+      onAccept: (data) async {
+        
+        print("Challenge ${whichChallenge + 1} denied by admin");
         setMyState(isRejected);
         completedChallenges[whichChallenge].checked = true;
-        Firestore.instance.collection("users").document("$teamID").updateData({'challenges.${completedChallenges[whichChallenge].number}.checked': true});
+        //get leaderboard document
+        var ds = await Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").get();
+        //get # of challenges denied
+        int deniedChallenges = ds.data['deniedChallenges'];
+        //get # of points
+        int points = ds.data['totalPoints'];
+        //add 1 to # of challenges denied
+        print("Adding denied challenge to leaderboard");
+        Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'deniedChallenges': deniedChallenges + 1});
+        //subtract 5 points from total score
+        print("Subtracting 5 points from $teamID" + "_" + "$gameCode's totalScore in leaderboard");
+        Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'points': points - 5});
+
         if (whichChallenge < completedChallenges.length - 1){
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -231,10 +245,15 @@ Widget AcceptanceBar(BuildContext context, bool isAccepted, completedChallenges,
       onWillAccept: (data){
         return true;
       },
-      onAccept: (data){
+      onAccept: (data) async {
+        print("Challenge ${whichChallenge + 1} accepted by admin");
         setMyState(isAccepted);
         completedChallenges[whichChallenge].checked = true;
-        Firestore.instance.collection("users").document("$teamID").updateData({'challenges.${completedChallenges[whichChallenge].number}.checked': true});
+        //Firestore.instance.collection("users").document("$teamID").updateData({'challenges.${completedChallenges[whichChallenge].number}.checked': true});
+        var ds = await Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").get();
+        int confirmedChallenges = ds.data['confirmedChallenges'];
+        print("Adding confirmed challenge to leaderboard");
+        Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'confirmedChallenges': confirmedChallenges + 1});
         if (whichChallenge < completedChallenges.length - 1){
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -264,11 +283,26 @@ Widget RejectButton(BuildContext context, whichChallenge, completedChallenges, t
   return RaisedButton(
     child: Text("Reject"),
     color: Colors.red[50],
-    onPressed: (){
-      //
+    onPressed: () async {
+      
+      print("Challenge ${whichChallenge + 1} denied by admin");
       setMyTransState(-100.0, 0.0);
       completedChallenges[whichChallenge].checked = true;
-      Firestore.instance.collection("users").document("$teamID").updateData({'challenges.${completedChallenges[whichChallenge].number}.checked': true});
+      //get leaderboard document
+      print("Getting leaderboardID: $teamID" + "_" + "$gameCode");
+      var ds = await Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").get();
+      //get # of challenges denied
+      int deniedChallenges = ds.data['deniedChallenges'];
+      //get # of points
+      int points = ds.data['totalPoints'];
+      //add 1 to # of challenges denied
+      print("Adding denied challenge to leaderboard");
+      Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'deniedChallenges': deniedChallenges + 1});
+      //subtract 5 points from total score
+      print("Subtracting 5 points from $teamID" + "_" + "$gameCode's totalScore in leaderboard");
+      Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'points': points - 5});
+      
+      print("Navigating to Admin Specific Team Screen");
       if (whichChallenge < completedChallenges.length - 1){
         Navigator.of(context).push(
           MaterialPageRoute(
@@ -290,21 +324,27 @@ Widget RejectButton(BuildContext context, whichChallenge, completedChallenges, t
   );
 }
 
-Widget AcceptButton(BuildContext context, whichChallenge, completedChallenges, teamID, Function(double tAmount, double rAmount) setMyTransState, adminUser, gameID){
+Widget AcceptButton(BuildContext context, whichChallenge, completedChallenges, teamID, Function(double tAmount, double rAmount) setMyTransState, adminUser, gameCode){
   return RaisedButton(
     child: Text("Accept"),
     color: Colors.green[50],
-    onPressed: (){
+    onPressed: () async {
+      
+      print("Challenge ${whichChallenge + 1} accepted by admin");
       setMyTransState(100.0, 0.0);
       completedChallenges[whichChallenge].checked = true;
       completedChallenges[whichChallenge].confirmed = true;
-      Firestore.instance.collection("users").document("$teamID").updateData({'challenges.${completedChallenges[whichChallenge].number}.checked': true});
-      Firestore.instance.collection("users").document("$teamID").updateData({'challenges.${completedChallenges[whichChallenge].number}.confirmed': true});
+      //Firestore.instance.collection("users").document("$teamID").updateData({'challenges.${completedChallenges[whichChallenge].number}.checked': true});
+      var ds = await Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").get();
+      int confirmedChallenges = ds.data['confirmedChallenges'];
+      print("Adding confirmed challenge to leaderboard");
+      Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'confirmedChallenges': confirmedChallenges + 1});
+      
       if (whichChallenge < completedChallenges.length - 1){
-        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminSpecificTeamScreen(teamID: teamID, gameCode: gameID, completedChallenges: completedChallenges, whichChallenge: whichChallenge + 1, adminUser: adminUser,) ));
+        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminSpecificTeamScreen(teamID: teamID, gameCode: gameCode, completedChallenges: completedChallenges, whichChallenge: whichChallenge + 1, adminUser: adminUser,) ));
       }
       else{
-        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminTeamsListScreen(adminUser: adminUser, gameCode: gameID)));
+        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminTeamsListScreen(adminUser: adminUser, gameCode: gameCode)));
       }
     }
   );

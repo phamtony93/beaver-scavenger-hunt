@@ -21,8 +21,17 @@ Future<void> addUserLeaderboard(UserDetails user, String time, int points, List<
   Map jsonMap = jsonDecode(json);
   jsonMap["totalTime"] = time;
   jsonMap["totalPoints"] = points;
-  jsonMap["completedChallenges"] = null;
-  jsonMap["confirmedChallenges"] = null;
+  
+  int count = 0;
+  for (int i = 0; i < allChallenges.length; i++){
+    if (allChallenges[i].completed == true)
+    count ++;
+  }
+  jsonMap["completedChallenges"] = count;
+  jsonMap["confirmedChallenges"] = 0;
+  jsonMap["deniedChallenges"] = 0;
+  jsonMap["uid"] = user.uid;
+  
   Firestore.instance.collection('leaderboard').document(userName).setData(jsonMap);
 
   for (int i = 0; i < 11; i++) {

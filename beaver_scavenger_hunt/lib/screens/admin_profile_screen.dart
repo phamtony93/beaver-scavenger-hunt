@@ -5,17 +5,14 @@ import 'package:flutter/material.dart';
 // Screens
 import 'login_screen.dart';
 // Functions
-import '../functions/calculate_points.dart';
-import '../functions/completed_clues_count.dart';
-import '../functions/completed_challenges_count.dart';
 import '../functions/check_game_is_active.dart';
 // Models
 import '../models/user_details_model.dart';
-import '../models/challenge_model.dart';
-import '../models/clue_location_model.dart';
 // Widgets
-import '../widgets/timer_text.dart';
 import '../widgets/control_button.dart';
+import '../widgets/open_game_button.dart';
+import '../widgets/close_game_button.dart';
+
 // Styles
 import '../styles/styles_class.dart';
 
@@ -81,26 +78,35 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                 radius: 75.0,
               ),
               SizedBox(height: 25.0),
-              Text("Name : ${widget.userDetails.userName}", style: TextStyle(fontSize: 24),),
+              RichText(
+                text: TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: 'Name: ', 
+                      style: Styles.orangeBoldSmall
+                    ),
+                    TextSpan(
+                      text: '${widget.userDetails.userName}', 
+                      style: Styles.blackNormalDefault
+                    )
+                  ],
+                ),
+              ),
               SizedBox(height: 15.0),
-              Text("Email : ${widget.userDetails.userEmail}", style: TextStyle(fontSize: 24),),
-              SizedBox(height: 15.0),
-              // StreamBuilder(
-              //   stream: Firestore.instance.collection("games").snapshots(),
-              //   builder: (context, snapshot) {
-              //     if (!snapshot.hasData) {
-              //       return Center(child: CircularProgressIndicator());
-              //     } 
-              //     else {
-              //       List<DocumentSnapshot> allSnapshots = snapshot.data.documents;
-              //       for (int i = 0; i < allSnapshots.length; i++){
-              //         if (allSnapshots[i].documentID == widget.gameCode && allSnapshots[i]['open'] == true)
-              //           return CloseGameButton(context, widget.gameCode);
-              //       }
-              //       return OpenGameButton(context, widget.gameCode, widget.userDetails);
-              //     }
-              //   }
-              // ),
+              RichText(
+                text: TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: 'Email: ', 
+                      style: Styles.orangeBoldSmall
+                    ),
+                    TextSpan(
+                      text: '${widget.userDetails.userEmail}', 
+                      style: Styles.blackNormalSmall
+                    )
+                  ],
+                ),
+              ),
               Expanded(
                 child: Align(
                   alignment: Alignment.bottomCenter,
@@ -117,18 +123,49 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                             List<DocumentSnapshot> allSnapshots = snapshot.data.documents;
                             for (int i = 0; i < allSnapshots.length; i++){
                               if (allSnapshots[i].documentID == widget.gameCode && allSnapshots[i]['open'] == true)
-                                return CloseGameButton(context, widget.gameCode);
+                                return CloseGameButton(context, widget.gameCode, widget.userDetails);
                             }
                             return OpenGameButton(context, widget.gameCode, widget.userDetails);
                           }
                         }
                       ),
                       SizedBox(height: 15,),
-                      ControlButton(
-                        context: context,
-                        text: 'End Game',
-                        style: Styles.whiteNormalDefault,
-                        onPressFunction: _endGame
+                      Builder(
+                        builder: (BuildContext cntx){
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Container(
+                              color: Color.fromRGBO(255,117, 26, 1),
+                              height: 80, width: 300,
+                              padding: EdgeInsets.all(8),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: RaisedButton(
+                                  color: Colors.black,
+                                  child: Text(
+                                    "End Game",
+                                    style: Styles.whiteNormalDefault
+                                  ),
+                                  onPressed: () async {
+                                    bool gameIsActive = await checkAdminGameIsActive(widget.userDetails);
+                                    if (gameIsActive == false) {
+                                      final snackBar = SnackBar(
+                                        content: Text('Game has already ended.', textAlign: TextAlign.center,)
+                                      );
+                                      Scaffold.of(cntx).showSnackBar(snackBar);
+                                    } else {
+                                      final snackBar = SnackBar(
+                                        content: Text('Game: ${widget.gameCode} ended.', textAlign: TextAlign.center,)
+                                      );
+                                      Scaffold.of(cntx).showSnackBar(snackBar);
+                                      _endGame(cntx);
+                                    }
+                                  }
+                                ),
+                              )
+                            )
+                          );
+                        }
                       ),
                       SizedBox(height: 15,),
                       ControlButton(
@@ -141,10 +178,6 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                   ) 
                 )
               ),
-              // ControlButton(
-              //   context: context,
-              //   text: 'Hello world'
-              // ),
               SizedBox(height: 10.0),
             ]
           )
@@ -152,64 +185,4 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
       )
     );
   }
-}
-
-Widget CloseGameButton(BuildContext context, String gameCode){
-  return ClipRRect(
-    borderRadius: BorderRadius.circular(10),
-    child: Container(
-      color: Color.fromRGBO(255,117, 26, 1),
-      height: 80, width: 300,
-      padding: EdgeInsets.all(8),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: RaisedButton(
-          color: Colors.black,
-          child: Text(
-            "Close Game $gameCode",
-            style: Styles.whiteNormalDefault
-          ),
-          onPressed: (){
-            //mark game as closed
-            print("Closing game: $gameCode");
-            Firestore.instance.collection('games').document(gameCode).updateData({'open': false});
-          }
-        ),
-      )
-    )
-  );
-}
-
-Widget OpenGameButton(BuildContext context, String gameID, UserDetails user){
-  return ClipRRect(
-    borderRadius: BorderRadius.circular(10),
-    child: Container(
-      color: Color.fromRGBO(255,117, 26, 1),
-      height: 80, width: 300,
-      padding: EdgeInsets.all(8),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: RaisedButton(
-          color: Colors.black,
-          child: Text(
-            "Open Game",
-            style: Styles.whiteBoldDefault
-          ),
-          onPressed: () async {
-            bool gameIsActive = await checkAdminGameIsActive(user);
-            if (gameIsActive == false) {
-              final snackBar = SnackBar(
-                content: Text('Game has already ended.')
-              );
-              Scaffold.of(context).showSnackBar(snackBar);
-            } else {
-              //mark game as closed
-              print("Opening game: $gameID");
-              Firestore.instance.collection('games').document(gameID).updateData({'open': true});
-            }
-          }
-        ),
-      )
-    )
-  );
 }
