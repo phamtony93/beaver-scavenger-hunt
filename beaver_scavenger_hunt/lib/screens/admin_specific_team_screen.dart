@@ -213,7 +213,7 @@ Widget RejectionBar(
         Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'deniedChallenges': deniedChallenges + 1});
         //subtract 5 points from total score
         print("Subtracting 5 points from $teamID" + "_" + "$gameCode's totalScore in leaderboard");
-        Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'points': points - 5});
+        Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'totalPoints': points - 5});
 
         // if more challenges to check
         if (whichChallenge < completedChallenges.length - 1){
@@ -344,7 +344,7 @@ Widget RejectButton(
       Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'deniedChallenges': deniedChallenges + 1});
       //subtract 5 points from total score
       print("Subtracting 5 points from $teamID" + "_" + "$gameCode's totalScore in leaderboard");
-      Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'points': points - 5});
+      Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'totalPoints': points - 5});
       
       print("Navigating to same screen, next challenge...");
       if (whichChallenge < completedChallenges.length - 1){
