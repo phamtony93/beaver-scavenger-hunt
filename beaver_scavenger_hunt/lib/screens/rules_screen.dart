@@ -113,9 +113,10 @@ class RulesScreen extends StatelessWidget {
             ListTileWidget(context, '5.  For each incorrect guess of a clue location, you will lose 5 points - so answer carefully!', Styles.whiteNormalSmall),
             ListTileWidget(context, '6.  Along with the clues, there are 10 challenges to complete - each worth 5 points. You must complete at least 5 challenges to finish the hunt.', Styles.orangeNormalSmall),
             ListTileWidget(context, '7.  You will be able to complete the hunt and stop the timer after your 10th clue is reached, and at least 5 challenges are completed.', Styles.whiteNormalSmall),
-            ListTileWidget(context, '8.  Every team that finishes will win a prize, but the team with the most points will win the grand prize!', Styles.orangeNormalSmall),
-            ListTileWidget(context, '9.  You may view rules or previously answered clues at any time.', Styles.whiteNormalSmall),
-            ListTileWidget(context, '10.  Good luck and have fun!', Styles.orangeNormalSmall)         
+            ListTileWidget(context, '8.  Keep track of the time! You will lose 1 point for every minute you take to complete the hunt.', Styles.orangeNormalSmall),
+            ListTileWidget(context, '9.  Every team that finishes will win a prize, but the team with the most points will win the grand prize!', Styles.whiteNormalSmall),
+            ListTileWidget(context, '10.  You may view rules or previously answered clues at any time.', Styles.orangeNormalSmall),
+            ListTileWidget(context, '11.  Good luck and have fun!', Styles.whiteNormalSmall)         
           ]
         )
       )
