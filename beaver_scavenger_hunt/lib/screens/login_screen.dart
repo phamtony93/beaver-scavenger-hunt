@@ -238,6 +238,8 @@ class _LoginScreen extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var screen_width = MediaQuery.of(context).size.width;
+    var screen_height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
@@ -245,14 +247,17 @@ class _LoginScreen extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image(
-                height: 275,
-                width: 275,
+                height: screen_height*0.45,
+                width: screen_width,
                 image: AssetImage('assets/images/osu_logo.png')
               ),
-              Text('Scavenger', style: TextStyle(fontSize: 60)),
-              Text('Hunt', style: TextStyle(fontSize: 60)),
+              Text(
+                'Scavenger\nHunt', 
+                style: TextStyle(fontSize: 60),
+                textAlign: TextAlign.center,
+              ),
               SizedBox(
-                height: 50,
+                height: screen_height*0.05,
               ),
               // googleSignInButton(context),
               ControlButton(
@@ -262,7 +267,7 @@ class _LoginScreen extends State<LoginScreen> {
                 onPressFunction: _signInAsPlayer,
                 imageLogo: 'assets/images/google_logo.png',
               ),
-              SizedBox(height: 15),
+              SizedBox(height: screen_height*0.025),
               ControlButton(
                 context: context, 
                 text: 'Login as Admin',
@@ -271,6 +276,7 @@ class _LoginScreen extends State<LoginScreen> {
                 imageLogo: 'assets/images/google_logo.png'
               ),
               //TEMP LOGIN BUTTON
+              /*
               RaisedButton(
                 child: Text('Temp Login'),
                 onPressed: ()  async {
@@ -359,7 +365,7 @@ class _LoginScreen extends State<LoginScreen> {
                       );
                   }
                 },
-              )
+              )*/
             ]
           )
         )
