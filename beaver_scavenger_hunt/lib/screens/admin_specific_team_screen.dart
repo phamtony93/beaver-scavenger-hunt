@@ -65,7 +65,10 @@ class _AdminSpecificTeamScreenState extends State<AdminSpecificTeamScreen> with 
         onWillPop: (){
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder:  (context) => AdminTeamsListScreen(adminUser: widget.adminUser, gameCode: widget.gameCode,)
+              builder:  (context) => AdminTeamsListScreen(
+                adminUser: widget.adminUser, 
+                gameCode: widget.gameCode
+              )
             )
           );
           return Future<bool>.value(false);
@@ -127,6 +130,7 @@ Widget PhotoSwiperContainer(
   whichChallenge, 
   completedChallenges
 ){
+  print("Checking challenge #${completedChallenges[whichChallenge].number}...");
   return AnimatedContainer(
     duration: Duration(seconds: 1),
     curve: Curves.elasticOut,
@@ -201,7 +205,9 @@ Widget RejectionBar(
         
         print("Challenge ${whichChallenge + 1} denied by admin");
         setMyState(isRejected);
-        completedChallenges[whichChallenge].checked = true;
+        //Mark challenge as checked, both in object and db
+        completedChallenges[whichChallenge].checked = true; 
+        Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'challenges.${completedChallenges[whichChallenge].number}.checked': true});
         //get leaderboard document
         var ds = await Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").get();
         //get # of challenges denied
@@ -277,8 +283,14 @@ Widget AcceptanceBar(
       onAccept: (data) async {
         print("Challenge ${whichChallenge + 1} accepted by admin");
         setMyState(isAccepted);
-        completedChallenges[whichChallenge].checked = true;
         
+        //Mark challenge as checked and confirmed, both in object and db
+        completedChallenges[whichChallenge].checked = true;
+        completedChallenges[whichChallenge].confirmed = true;
+        Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'challenges.${completedChallenges[whichChallenge].number}.checked': true});
+        Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'challenges.${completedChallenges[whichChallenge].number}.confirmed': true});
+        
+        //update confirmed challenges
         var ds = await Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").get();
         int confirmedChallenges = ds.data['confirmedChallenges'];
         print("Adding confirmed challenge to leaderboard");
@@ -331,7 +343,9 @@ Widget RejectButton(
       
       print("Challenge ${whichChallenge + 1} denied by admin");
       setMyTransState(-100.0, 0.0);
-      completedChallenges[whichChallenge].checked = true;
+      //Mark challenge as checked, both in object and db
+      completedChallenges[whichChallenge].checked = true; 
+      Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'challenges.${completedChallenges[whichChallenge].number}.checked': true});
       //get leaderboard document
       print("Getting leaderboardID: $teamID" + "_" + "$gameCode");
       var ds = await Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").get();
@@ -393,9 +407,13 @@ Widget AcceptButton(
       
       print("Challenge ${whichChallenge + 1} accepted by admin");
       setMyTransState(100.0, 0.0);
+      //Mark challenge as checked and confirmed, both in object and db
       completedChallenges[whichChallenge].checked = true;
       completedChallenges[whichChallenge].confirmed = true;
-      //
+      Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'challenges.${completedChallenges[whichChallenge].number}.checked': true});
+      Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'challenges.${completedChallenges[whichChallenge].number}.confirmed': true});
+      
+      //update confirmed challenges
       var ds = await Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").get();
       int confirmedChallenges = ds.data['confirmedChallenges'];
       print("Adding confirmed challenge to leaderboard");

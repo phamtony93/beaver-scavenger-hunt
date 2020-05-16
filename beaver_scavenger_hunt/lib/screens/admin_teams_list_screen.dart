@@ -135,7 +135,6 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
                 } else {
-                  print(snapshot.data.documents.length);
                   return ListView.builder(
                     itemCount: snapshot.data.documents.length,
                     itemBuilder: (context, index) {
