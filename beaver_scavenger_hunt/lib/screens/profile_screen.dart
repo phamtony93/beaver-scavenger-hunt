@@ -24,7 +24,14 @@ class ProfileScreen extends StatefulWidget {
   final DateTime beginTime;
   final int points;
 
-  ProfileScreen({Key key, this.userDetails, this.allChallenges, this.allLocations, this.beginTime, this.points}) : super(key: key);
+  ProfileScreen({
+    Key key, 
+    this.userDetails, 
+    this.allChallenges, 
+    this.allLocations, 
+    this.beginTime, 
+    this.points
+  }) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -44,7 +51,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState((){
       stopWatch.start();
     });
-    //startTimer();
   }
 
   void stopStopWatch() {
@@ -53,17 +59,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  // Function for signing user out of account
   void _signOut(BuildContext context) {
     FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
     _firebaseAuth.signOut();
     Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 
+  Future<bool> _onBackPress() {
+    setState( () {
+      onScreen = false;
+      stopStopWatch();
+    });
+    //Navigator.pop(context);
+    return Future<bool>.value(true);
+  }
+
+  //get difference between current time and begin time
+  Duration getTime()  {
+    DateTime formattedBeginTime;
+    Duration difference;
+    final currTime = DateTime.now();
+    if (widget.beginTime is! DateTime) {
+      formattedBeginTime = DateTime.parse(widget.beginTime.toString());
+      difference = currTime.difference(formattedBeginTime);
+    }
+    else {
+      difference = currTime.difference(widget.beginTime);
+    }
+    return difference;
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    // final GoogleSignIn _googleSignIn = GoogleSignIn();
-  
     return WillPopScope(
       onWillPop: () => _onBackPress(),
       child: Scaffold(
@@ -73,7 +102,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         body: Center(
           child: Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * .05),
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).size.height * .05
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -82,32 +113,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   radius: 75.0,
                 ),
                 SizedBox(height: 25.0),
-                widget.userDetails != null ? Text("Name : ${widget.userDetails.userName}", style: TextStyle(fontSize: 24),): Text("User load error"),
+                widget.userDetails != null ? 
+                Text("Name : ${widget.userDetails.userName}", style: TextStyle(fontSize: 24),)
+                : Text("User load error"),
                 SizedBox(height: 15.0),
-                widget.allLocations != null ? Text("Email : ${widget.userDetails.userEmail}", style: TextStyle(fontSize: 24),): Text("User load error"),
+                widget.allLocations != null ? 
+                Text("Email : ${widget.userDetails.userEmail}", style: TextStyle(fontSize: 24),)
+                : Text("User load error"),
                 SizedBox(height: 15.0),
-                widget.allLocations != null ? Text("Clues Completed: ${completedCluesCount(widget.allLocations)}", style: TextStyle(fontSize: 24),) : Text("Clue load error"),
+                widget.allLocations != null ? 
+                Text("Clues Completed: ${completedCluesCount(widget.allLocations)}", style: TextStyle(fontSize: 24),)
+                : Text("Clue load error"),
                 SizedBox(height: 15.0),
-                widget.allChallenges != null ? Text("Challenges Completed: ${completedChallengesCount(widget.allChallenges)}", style: TextStyle(fontSize: 24),) : Text("Challenge load error"),
+                widget.allChallenges != null ? 
+                Text("Challenges Completed: ${completedChallengesCount(widget.allChallenges)}", style: TextStyle(fontSize: 24),)
+                : Text("Challenge load error"),
                 SizedBox(height: 15.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text("Time Elapsed: ", style: TextStyle(fontSize: 24),),
-                    widget.beginTime != null ? TimerText(stopWatch: stopWatch, onScreen: onScreen, difference: getTime())
-                    :
-                    Text("Loading..."),
+                    
+                    widget.beginTime != null && widget.points != null ? 
+                    TimerText(stopWatch: stopWatch, onScreen: onScreen, difference: getTime())
+                    : Text("Loading..."),
                   ],
                 ),
-                //Text("Current Time: xx", style: TextStyle(fontSize: 24),),
                 SizedBox(height: 15.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text("Total Points: ", style: TextStyle(fontSize: 24),),
-                    widget.points != null ? PointsText(points: widget.points, stopWatch: stopWatch, onScreen: onScreen, difference: getTime())
-                    :
-                    Text("Loading..."),
+                    
+                    widget.beginTime != null && widget.points != null ? PointsText(points: widget.points, stopWatch: stopWatch, onScreen: onScreen, difference: getTime())
+                    : Text("Loading..."),
                   ],
                 ),
                 SizedBox(height: 25.0),
@@ -123,39 +162,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-
-  Future<bool> _onBackPress() {
-    setState( () {
-      onScreen = false;
-      stopStopWatch();
-    });
-    //Navigator.pop(context);
-    return Future<bool>.value(true);
-  }
-
-  Duration getTime()  {
-    DateTime formattedBeginTime;
-    Duration difference;
-    final currTime = DateTime.now();
-    //print(currTime);
-    //print(widget.beginTime);
-    if (widget.beginTime is! DateTime) {
-      formattedBeginTime = DateTime.parse(widget.beginTime.toString());
-      //print(formattedBeginTime);
-      difference = currTime.difference(formattedBeginTime);
-    }
-    else {
-      difference = currTime.difference(widget.beginTime);
-    }
-    //print(difference);
-    //print(difference.inHours);
-    //print(difference.inMinutes%60);
-    //print(difference.inSeconds.remainder(60));
-    return difference;
-  }
-
 }
-
+ // Test span for app bar
 Widget AppBarTextSpan(BuildContext context){
   return RichText(
     text: TextSpan(

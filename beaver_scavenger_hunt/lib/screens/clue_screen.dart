@@ -3,6 +3,7 @@ import 'package:beaver_scavenger_hunt/functions/calculate_points.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_formfield/dropdown_formfield.dart';
+import 'dart:io';
 // Screens
 import 'correct_solution_screen.dart';
 import 'profile_screen.dart';
@@ -53,9 +54,9 @@ class _ClueScreenState extends State<ClueScreen> {
   @override
   void initState() {
     super.initState();
-    _myLocation = "";
     
-    //NEED TO UPDATE TO NEW RULES
+    // Initialize location text
+    _myLocation = "";
     _myLocationResult = 
       "Guess carefully !!" 
       + "\nEach incorrect guess will cost you 5 points";
@@ -87,17 +88,21 @@ class _ClueScreenState extends State<ClueScreen> {
   //SAVE FORM FUNCTION
   void _saveForm() async {
     var form = formKey.currentState;
+    
+    // If no location is selected from dropdown
     if (_myLocation == ""){
       setState(() {
         _myLocationResult = "Please select a location";
       });
     }
+    // If guess is incorrect
     else if (_myLocation != widget.allLocations[widget.whichLocation].solution) {
-      //add incorrectClue to db
+      //increment incorrectClue var in db
       var ds = await Firestore.instance.collection("users").document(widget.userDetails.uid).get();
       int incorrectClues = ds.data['incorrectClues'];
       Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'incorrectClues': incorrectClues + 1});
       
+      // Update guess # and display text
       setState(() {
         _incorrect = true;
         _guessNumber ++;
@@ -110,35 +115,30 @@ class _ClueScreenState extends State<ClueScreen> {
     else if (form.validate()) {
       _incorrect = false;
       form.save();
-      // mark clue as solved
+      // mark clue object as solved
       widget.allLocations[widget.whichLocation].solved = true;
       // remove clue from dropdown list
       removeDropdownItem(_myLocation, dropdownDataList);
+      //mark clue as solved in database
+      Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 1}.solved': true});
       
-      //for first 9 clues
-      //if (widget.whichLocation < 10){
-        
-        //mark clue as solved in database
-        Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 1}.solved': true});
-        
-        //Navigate to Correct Solution Screen
-        // (with allLocations, whichLocation, allChallenges
-        // userDetails, and beginTime)
-        print("Navigating to Correct Solution Screen...");
-        Navigator.push(
-          context, 
-          MaterialPageRoute(
-            builder: (context) => 
-            CorrectSolutionScreen(
-            allLocations: widget.allLocations, 
-            whichLocation: widget.whichLocation, 
-            allChallenges: widget.allChallenges, 
-            userDetails: widget.userDetails, 
-            beginTime: widget.beginTime
-            )
+      //Navigate to Correct Solution Screen
+      // (with allLocations, whichLocation, allChallenges
+      // userDetails, and beginTime)
+      print("Navigating to Correct Solution Screen...");
+      Navigator.push(
+        context, 
+        MaterialPageRoute(
+          builder: (context) => 
+          CorrectSolutionScreen(
+          allLocations: widget.allLocations, 
+          whichLocation: widget.whichLocation, 
+          allChallenges: widget.allChallenges, 
+          userDetails: widget.userDetails, 
+          beginTime: widget.beginTime
           )
-        );
-      //}
+        )
+      );
     }
   }
 
@@ -149,28 +149,7 @@ class _ClueScreenState extends State<ClueScreen> {
         child: Scaffold(
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
-          title: RichText(
-            text: TextSpan(
-              children: <TextSpan>[
-                TextSpan(
-                  text: 'C', 
-                  style: Styles.whiteBoldDefault
-                ),
-                TextSpan(
-                  text: 'lue ', 
-                  style: Styles.orangeNormalDefault
-                ),
-                TextSpan(
-                  text: '${widget.allLocations[widget.whichLocation].number}', 
-                  style: Styles.whiteBoldDefault
-                ),
-                TextSpan(
-                  text: '/10 ', 
-                  style: Styles.orangeNormalDefault
-                ),
-              ],
-            ),
-          ),
+          title: AppBarTextSpan(context, widget.allLocations, widget.whichLocation),
           centerTitle: true,
           leading: Builder(
             builder: (BuildContext context) {
@@ -183,15 +162,17 @@ class _ClueScreenState extends State<ClueScreen> {
               );
             },
           ),
-          // Profile Icon on right side of appbar
+          // Profile Icon in top-right of appbar
           actions: [
             IconButton(
               icon: Icon(Icons.account_circle),
               onPressed: () async { 
                 
+                //get # of incorrectClues to pass to calculate points function
                 var ds = await Firestore.instance.collection("users").document("${widget.userDetails.uid}").get();
                 int incorrectClues = ds.data['incorrectClues'];
                 int points = calculatePoints(widget.allLocations, widget.allChallenges, incorrectClues);
+                sleep(const Duration(seconds:1));
                 
                 //Naviage to Profile Screen (with userDetails,
                 // allChallenges, allLocations, and beginTime)
@@ -215,7 +196,7 @@ class _ClueScreenState extends State<ClueScreen> {
         ),
         drawer: Builder(
           builder: (BuildContext cntx) {
-            //Menu Drawer Widget
+            //Menu Drawer Widget (widgets folder)
             return MenuDrawer(
               context, 
               widget.allLocations, 
@@ -295,7 +276,6 @@ Widget ClueScreenWidget(
         //if clue is not yet solved,
         //show dropdown
         allLocations[whichLocation].solved == false ?
-        //DROPDOWNFORM CURRENTLY IN USE (COMMENT OUT LINE BELOW TO USE GUESSFORM)
         DropdownForm(
           context, formKey, 
           setMyState, _saveForm, 
@@ -303,16 +283,16 @@ Widget ClueScreenWidget(
           _incorrect, allLocations, 
           dropdownDataList
         )
-        //GUESSFORM CURRENTLY NOT IN USE (UNCOMMENT THIS LINE AND WIDGETS BELOW TO USE)
-        //GuessForm(context, formKey, allLocations, whichLocation, userDetails)
-        : Text(
+        :
+        //otherwise, show "solved" text
+        Text(
           "This clue has been solved",
           style: Styles.blackNormalDefault,
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 100),
         
-        //if clue is not yet solved,
+        //if clue is already solved,
         //show go to map button
         allLocations[whichLocation].solved == true ?
         ClipRRect(
@@ -330,6 +310,7 @@ Widget ClueScreenWidget(
                   style: Styles.whiteNormalDefault
                 ),
                 onPressed: (){
+                  
                   //Navigate to Correct Solution Screen
                   // (with allLocations, whichLocation, userDetails
                   // allChallenges, and beginTime)
@@ -351,12 +332,15 @@ Widget ClueScreenWidget(
             )
           )
         )
-        : SizedBox(height: 0)
+        :
+        //Otherwise, show nothing
+        SizedBox(height: 0)
       ]
     ),
   );
 }
 
+// This container widget holds the clue text
 Widget ClueContainer(
   BuildContext context, 
   String clue, 
@@ -366,16 +350,18 @@ Widget ClueContainer(
     child: ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child:SizedBox(
+        //expand to 30% of screen height
         height: screen_height*0.3,
+        //expand to 95% of screen widget
         width: screen_width*0.95,
         child: Container(
-          color: Colors.black,
+          color: Colors.black, //black background
           child: Padding(
             padding: EdgeInsets.all(10),
             child: Center(child: 
               Wrap(children: <Widget> [
                 Text(
-                  "$clue", 
+                  "$clue", //clue description
                   style: Styles.whiteNormalDefault,
                   textAlign: TextAlign.center,
                 )
@@ -388,8 +374,7 @@ Widget ClueContainer(
   );
 }
 
-//CURRENTLY IN USE (COMMENT OUT WHEN NOT IN USE)
-
+// Dropdown Form for solutions to clues
 Widget DropdownForm(
   BuildContext context, formKey, 
   void Function(String) setMyState, 
@@ -411,7 +396,7 @@ Widget DropdownForm(
                 required: true,
                 errorText: "Please select a location",
                 titleText: 'Location',
-                hintText: 'Please select one',
+                hintText: 'Select a location',
                 value: _myLocation,
                 onSaved: (value) {
                   setMyState(value);
@@ -436,6 +421,7 @@ Widget DropdownForm(
                 textAlign: TextAlign.center,
               ),
             ),
+            //button for entering guess
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Container(
@@ -451,6 +437,7 @@ Widget DropdownForm(
                       style: Styles.whiteNormalDefault
                     ),
                     onPressed: _saveForm
+                    // saveForm function above
                   ),
                 )
               )
@@ -462,81 +449,28 @@ Widget DropdownForm(
   );
 }
 
-//CURRENTLY NOT IT USE (UNCOMMENT TO USE)
-
-/*
-Widget GuessForm(BuildContext context, formKey, List<ClueLocation> allLocations, int whichLocation, UserDetails userDetails){
-  return Padding(
-    padding: EdgeInsets.all(10),
-    child: Form( 
-      key: formKey,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          GuessInputBox(context, allLocations, whichLocation),
-          SizedBox(height: 10),
-          Text(
-            "Guess carefully.\n"
-          +"Each incorrect guess will add 5 minutes to your overall time.",
-            textAlign: TextAlign.center
-          ),
-          Divider(height: 30, thickness: 5, indent: 25, endIndent: 25,),
-          EnterGuessButton(context, "Enter Guess", formKey, allLocations, whichLocation, userDetails)
-        ]
-      )
-    )
-  );
-}
-
-Widget GuessInputBox(BuildContext context, List<ClueLocation> allLocations, int whichLocation){
-  return TextFormField(
-    autofocus: true,
-    style: TextStyle(fontSize: 20),
-    decoration: InputDecoration(
-      hintText: 'Guess the next location',
-      labelText: 'Location', 
-      border: OutlineInputBorder(borderSide: BorderSide(color: Colors.white),),
-    ),
-    validator: (value) {
-      if (value.isEmpty) {
-        return 'Please enter a guess';
-      }
-      else if(value != allLocations[whichLocation].solution){
-        return 'Incorrect. Try again';
-      }
-      else {
-        return null;
-      }
-    },
-  );
-}
-
-
-Widget EnterGuessButton(BuildContext context, String label, formKey, List<ClueLocation> allLocations, int whichLocation, UserDetails userDetails){
-  return SizedBox(
-    height: 80,
-    width: 200,
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: RaisedButton(
-        color: Colors.black,
-        child: Text(
-          label,
-          style: TextStyle(color: Color.fromRGBO(255,117, 26, 1), fontSize: 25),
-          textAlign: TextAlign.center,
-          ),
-        onPressed: () async {
-          if (formKey.currentState.validate()){
-            formKey.currentState.save();
-            //still need to push this change to database
-            allLocations[whichLocation].solved = true;
-            Firestore.instance.collection("users").document(userDetails.uid).updateData({'clue locations.${whichLocation + 1}.solved': true});
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CorrectSolutionScreen(allLocations: allLocations, whichLocation: whichLocation, userDetails: userDetails)));
-          }
-        },
-        splashColor: Color.fromRGBO(255,117, 26, 1),
-      ),
+//Text span for appbar
+Widget AppBarTextSpan(BuildContext context, List<ClueLocation> allLocations, int whichLocation){
+  return RichText(
+    text: TextSpan(
+      children: <TextSpan>[
+        TextSpan(
+          text: 'C', 
+          style: Styles.whiteBoldDefault
+        ),
+        TextSpan(
+          text: 'lue ', 
+          style: Styles.orangeNormalDefault
+        ),
+        TextSpan(
+          text: '${allLocations[whichLocation].number}', 
+          style: Styles.whiteBoldDefault
+        ),
+        TextSpan(
+          text: '/10 ', 
+          style: Styles.orangeNormalDefault
+        ),
+      ],
     ),
   );
 }
-*/

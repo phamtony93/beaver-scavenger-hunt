@@ -75,7 +75,9 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
     myMarkers.add(OSU);
   }
 
+  // Function for updating the GPS location of device
   void updateDeviceLocation() async {
+    // request location services
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
@@ -83,7 +85,6 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
       return;
       }
     }
-
     _permissionGranted = await location.hasPermission();
     if (_permissionGranted == PermissionStatus.denied) {
       _permissionGranted = await location.requestPermission();
@@ -91,10 +92,12 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
       return;
       }
     }
-
     _locationData = await location.getLocation();
 
+    // this function listens for a change in location,
+    // and runs when that happens
     location.onLocationChanged.listen((LocationData currentLocation) {
+      //device lat and long are updated
       setState(() {
         myDeviceLat = currentLocation.latitude;
         myDeviceLong = currentLocation.longitude;
@@ -114,14 +117,13 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
         
         //for first 9 clues
         if (widget.whichLocation < widget.allLocations.length - 1){
-          
           //update object
           widget.allLocations[widget.whichLocation + 1].available = true;
           //update db
           Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 1}.found': true});
           Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 2}.available': true});
-          
           //return to clue screen (next clue available)
+          print("Navigating to next clue #${widget.whichLocation + 2} screen...");
           Navigator.push(
             context, MaterialPageRoute(
               builder: (context) => ClueScreen(
@@ -136,9 +138,11 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
         }
         //for last (10th clue)
         else{
+          //update db
           addEndTime(widget.userDetails);
           Firestore.instance.collection("users").document(widget.userDetails.uid).updateData({'clue locations.${widget.whichLocation + 1}.found': true});
           //Nav to Hunt Complete Screen
+          print("Navigating to Hunt Complete Screen...");
           Navigator.push(
             context, MaterialPageRoute(
               builder: (context) => HuntCompleteScreen(
@@ -153,6 +157,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
     }); 
   }
 
+  // This function gets lat and long and sets device lat and long
   void retrieveLocation() async {
     var locationService = Location();
     locationData = await locationService.getLocation();
@@ -162,6 +167,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
     });
   }
 
+  // This function is used by the zoomIn map button
   Future<void> zoomIn(double newZoomAmount, double newLat, double newLong) async {
     GoogleMapController controller = await _controller.future;
     setState(() {
@@ -178,7 +184,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
       screenLong = newLong;
     });
   }
-
+  // This function is used by the zoomIn map button
   Future<void> zoomOut(double newZoomAmount, double newLat, double newLong) async {
     GoogleMapController controller = await _controller.future;
     setState(() {
@@ -196,6 +202,8 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
     });
   }
 
+  // This function gets the new lat and long on
+  // the map screen after dragging the map
   void _updatePosition(CameraPosition _position) {
     setState(() {
       screenLat = _position.target.latitude;
@@ -203,6 +211,8 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
     });
   }
 
+  // This functions calculates the distance
+  // between two GPS coordinates (Lat, Long)
   double calculateDistance(
     double lat1, double long1, 
     double lat2, double long2
@@ -236,23 +246,31 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-              SizedBox(height: 20),
+              SizedBox(height: screen_height*0.01),
               TextWidget(context, "Congratulations!!", Styles.blackNormalBig, false),
-              SizedBox(height: 5),
+              SizedBox(height: screen_height*0.01),
               TextWidget(context, "You solved the clue.", Styles.blackNormalSmall, true),
-              SizedBox(height: 5),
+              SizedBox(height: screen_height*0.01),
+              // If the user has not yet reached/found the clue
+              // Display instructions
               widget.allLocations[widget.whichLocation].found == false ?
               TextWidget(context, "Get within 50 meters of", Styles.blackNormalSmall, true)
               : SizedBox(height: 0),
+              // Show location to reach
               TextWidget(context, "${widget.allLocations[widget.whichLocation].solution}", Styles.orangeNormalDefault, true),
-              SizedBox(height: 5),
+              SizedBox(height: screen_height*0.01),
               widget.allLocations[widget.whichLocation].found == false ?
               widget.whichLocation == 9 ?
+              //for clues 1-9
               TextWidget(context, "to complete your hunt.", Styles.blackNormalSmall, true)
+              //for clue 10
               :TextWidget(context, "to unlock the next clue.", Styles.blackNormalSmall, true)
               : SizedBox(height: 0),
-              SizedBox(height: 20),
+              SizedBox(height: screen_height*0.01),
+              //This box holds the google maps API
               SizedBox(
+                // Expands map container to 35% of screen height, and
+                // 90% of screen width
                 height: screen_height*0.35, width: screen_width*0.9,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
@@ -278,17 +296,21 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                   ),
                 )
               ),
-              SizedBox(height:20),
+              SizedBox(height: screen_height*0.01),
               distanceAway == null ? SizedBox(height:0)
+              //If distance away has been calculated
+              // display it here
               : TextWidget(
                 context, 
                 "${distanceAway.toStringAsFixed(distanceAway.truncateToDouble() == distanceAway ? 0 : 0)} meters away", 
                 Styles.blackBoldSmall, 
                 false
               ),
-              Divider(thickness: 5, height: 50, indent: 50, endIndent: 50,),
-              widget.allLocations[widget.whichLocation].found == true ? 
+              Divider(thickness: screen_height*0.005, height: screen_height*0.05, indent: screen_width*0.2, endIndent: screen_width*0.2,),
               
+              // If this clue location has already been reached/found
+              // Display button to allow user to go to next clue
+              widget.allLocations[widget.whichLocation].found == true ? 
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Container(
@@ -302,8 +324,9 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                       child: widget.whichLocation < 9 ? 
                       Text('Next Clue',style: Styles.whiteNormalDefault) : Text('Check Progress', style: Styles.whiteNormalDefault),
                       onPressed: (){
+                        //for first 9 clues
                         if (widget.whichLocation < 9){
-                          print("Navigating to Clue Screen...");
+                          print("Navigating to Clue ${widget.whichLocation + 2} Screen...");
                           Navigator.push(
                             context, MaterialPageRoute(
                               builder: (context) => ClueScreen(
@@ -315,8 +338,8 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                             )
                           );
                         }
+                        //last clue, hunt complete
                         else{
-                          //Change to hunt complete screen
                           print("Navigating to Hunt Complete Screen...");
                           Navigator.push(
                             context, MaterialPageRoute(
@@ -335,6 +358,9 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                   )
                 )
               )
+              
+              // THIS BUTTON WILL BE REMOVED AFTER TESTING
+
               : RaisedButton(
                 color: Color.fromRGBO(255,117, 26, 1),
                 child: Text(
@@ -387,7 +413,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                   }
                 }
               ),
-              SizedBox(height: 20),
+              SizedBox(height: screen_height*0.1),
             ]
           )
         )
