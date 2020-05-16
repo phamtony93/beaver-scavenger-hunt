@@ -27,6 +27,8 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
 
   List<dynamic> myUsers;
   
+  // This function gets all userIDs associated with
+  // this admin's gameCode
   getUsers() async {
     var doc1 = await Firestore.instance.collection("games").document("${widget.gameCode}").get();
     myUsers = doc1.data == null ? null : doc1.data["playerIDs"];
@@ -78,7 +80,9 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
             )
           ],
         ),
+        // If users have not yet been obtained from function
         body: myUsers == null ? 
+        // Display "Check for Teams" button, which sets State
         Builder(
           builder: (BuildContext scaffoldContext) {
             return Center(
@@ -119,7 +123,9 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
             );
           }
         )
-        : 
+        :
+        // Once myUsers have been retreived
+        // Display list of myUsers 
         SingleChildScrollView(
           child: Container(
             height: MediaQuery.of(context).size.height*0.7,
@@ -220,6 +226,7 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
                             Scaffold.of(context).showSnackBar(snackBar);
                           }
                           else{
+                            print("Navigating to Admin Specific Team Screen...");
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder:  (context) => AdminSpecificTeamScreen(

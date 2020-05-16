@@ -9,13 +9,6 @@ class Styles {
   static const _textSizeDefault = 16.0;
   static const _textSizeSmall = 14.0;
 
-  // static final bubbles = TextStyle (
-  //   fontSize: _textSizeMedium,
-  //   color: _textColorWhite,
-  //   fontFamily: _defaultText,
-  //   fontWeight: FontWeight.w800
-  // );
-
   static final titles = TextStyle (
     fontSize: _textSizeLarge,
     fontFamily: _defaultText,
@@ -33,8 +26,6 @@ class Styles {
     fontSize: _textSizeMedium,
   );
 
-
-  //JAKE
   static const defaultFontSize = 30.0;
 
   static final orangeNormalDefault = TextStyle(

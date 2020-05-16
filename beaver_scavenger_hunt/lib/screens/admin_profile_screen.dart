@@ -12,7 +12,6 @@ import '../models/user_details_model.dart';
 import '../widgets/control_button.dart';
 import '../widgets/open_game_button.dart';
 import '../widgets/close_game_button.dart';
-
 // Styles
 import '../styles/styles_class.dart';
 
@@ -48,7 +47,11 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
     _firebaseAuth.signOut();
     //navigate back to login screen
     print("Navigating to login screen...");
-    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+    Navigator.push(
+      context, MaterialPageRoute(
+        builder: (context) => LoginScreen()
+      )
+    );
   }
 
   @override

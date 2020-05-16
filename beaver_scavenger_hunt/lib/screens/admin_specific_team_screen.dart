@@ -118,7 +118,15 @@ Widget PhotoDescription(BuildContext context, String description){
   );
 }
 
-Widget PhotoSwiperContainer(BuildContext context, bool isAccepted, bool isRejected, double transAmount, double rotateAmount, whichChallenge, completedChallenges){
+Widget PhotoSwiperContainer(
+  BuildContext context, 
+  bool isAccepted, 
+  bool isRejected, 
+  double transAmount, 
+  double rotateAmount, 
+  whichChallenge, 
+  completedChallenges
+){
   return AnimatedContainer(
     duration: Duration(seconds: 1),
     curve: Curves.elasticOut,
@@ -158,7 +166,16 @@ Widget PhotoSwiperContainer(BuildContext context, bool isAccepted, bool isReject
   );
 }
 
-Widget RejectionBar(BuildContext context, bool isRejected, completedChallenges, whichChallenge, teamID, Function(bool isRejectedOrAccepted) setMyState, adminUser, gameCode){
+Widget RejectionBar(
+  BuildContext context, 
+  bool isRejected, 
+  completedChallenges, 
+  whichChallenge, 
+  teamID, 
+  Function(bool isRejectedOrAccepted) setMyState, 
+  adminUser, 
+  gameCode
+){
   return Container(
     height: 350,
     width: isRejected ? 300 : 50,
@@ -198,7 +215,9 @@ Widget RejectionBar(BuildContext context, bool isRejected, completedChallenges, 
         print("Subtracting 5 points from $teamID" + "_" + "$gameCode's totalScore in leaderboard");
         Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'points': points - 5});
 
+        // if more challenges to check
         if (whichChallenge < completedChallenges.length - 1){
+          print("Navigating to same screen, next challenge...");
           Navigator.of(context).push(
             MaterialPageRoute(
               builder:  (context) => AdminSpecificTeamScreen(
@@ -212,6 +231,7 @@ Widget RejectionBar(BuildContext context, bool isRejected, completedChallenges, 
           );
         }
         else{
+          print("Navigating to same screen, no more challenges...");
           Navigator.of(context).push(
             MaterialPageRoute(
               builder:  (context) => AdminTeamsListScreen(adminUser: adminUser, gameCode: gameCode)
@@ -223,7 +243,16 @@ Widget RejectionBar(BuildContext context, bool isRejected, completedChallenges, 
   );
 }
 
-Widget AcceptanceBar(BuildContext context, bool isAccepted, completedChallenges, whichChallenge, teamID, Function(bool isRejectedOrAccepted) setMyState, adminUser, gameCode){
+Widget AcceptanceBar(
+  BuildContext context, 
+  bool isAccepted, 
+  completedChallenges, 
+  whichChallenge, 
+  teamID, 
+  Function(bool isRejectedOrAccepted) setMyState, 
+  adminUser, 
+  gameCode
+){
   return Container(
     height: 350,
     width: isAccepted ? 300 : 50,
@@ -249,12 +278,15 @@ Widget AcceptanceBar(BuildContext context, bool isAccepted, completedChallenges,
         print("Challenge ${whichChallenge + 1} accepted by admin");
         setMyState(isAccepted);
         completedChallenges[whichChallenge].checked = true;
-        //Firestore.instance.collection("users").document("$teamID").updateData({'challenges.${completedChallenges[whichChallenge].number}.checked': true});
+        
         var ds = await Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").get();
         int confirmedChallenges = ds.data['confirmedChallenges'];
         print("Adding confirmed challenge to leaderboard");
         Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'confirmedChallenges': confirmedChallenges + 1});
+        
+        // if more challenges to check
         if (whichChallenge < completedChallenges.length - 1){
+          print("Navigating to same screen, next challenge...");
           Navigator.of(context).push(
             MaterialPageRoute(
               builder:  (context) => AdminSpecificTeamScreen(
@@ -268,9 +300,13 @@ Widget AcceptanceBar(BuildContext context, bool isAccepted, completedChallenges,
           );
         }
         else{
+          print("Navigating to same screen, no more challenges...");
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder:  (context) => AdminTeamsListScreen(adminUser: adminUser, gameCode: gameCode,)
+              builder:  (context) => AdminTeamsListScreen(
+                adminUser: adminUser, 
+                gameCode: gameCode
+              )
             )
           );
         }
@@ -279,7 +315,15 @@ Widget AcceptanceBar(BuildContext context, bool isAccepted, completedChallenges,
   );
 }
 
-Widget RejectButton(BuildContext context, whichChallenge, completedChallenges, teamID, Function(double tAmount, double rAmount) setMyTransState, adminUser, gameCode){
+Widget RejectButton(
+  BuildContext context, 
+  whichChallenge, 
+  completedChallenges, 
+  teamID, 
+  Function(double tAmount, double rAmount) setMyTransState, 
+  adminUser, 
+  gameCode
+){
   return RaisedButton(
     child: Text("Reject"),
     color: Colors.red[50],
@@ -302,7 +346,7 @@ Widget RejectButton(BuildContext context, whichChallenge, completedChallenges, t
       print("Subtracting 5 points from $teamID" + "_" + "$gameCode's totalScore in leaderboard");
       Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'points': points - 5});
       
-      print("Navigating to Admin Specific Team Screen");
+      print("Navigating to same screen, next challenge...");
       if (whichChallenge < completedChallenges.length - 1){
         Navigator.of(context).push(
           MaterialPageRoute(
@@ -317,14 +361,31 @@ Widget RejectButton(BuildContext context, whichChallenge, completedChallenges, t
         );
       }
       else{
-        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminTeamsListScreen(adminUser: adminUser, gameCode: gameCode)));
+        print("Navigating to same screen, no more challenges...");
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder:  (context) => 
+            AdminTeamsListScreen(
+              adminUser: adminUser, 
+              gameCode: gameCode
+            )
+          )
+        );
       }
       //
     }
   );
 }
 
-Widget AcceptButton(BuildContext context, whichChallenge, completedChallenges, teamID, Function(double tAmount, double rAmount) setMyTransState, adminUser, gameCode){
+Widget AcceptButton(
+  BuildContext context, 
+  whichChallenge, 
+  completedChallenges, 
+  teamID, 
+  Function(double tAmount, double rAmount) setMyTransState, 
+  adminUser, 
+  gameCode
+){
   return RaisedButton(
     child: Text("Accept"),
     color: Colors.green[50],
@@ -334,17 +395,37 @@ Widget AcceptButton(BuildContext context, whichChallenge, completedChallenges, t
       setMyTransState(100.0, 0.0);
       completedChallenges[whichChallenge].checked = true;
       completedChallenges[whichChallenge].confirmed = true;
-      //Firestore.instance.collection("users").document("$teamID").updateData({'challenges.${completedChallenges[whichChallenge].number}.checked': true});
+      //
       var ds = await Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").get();
       int confirmedChallenges = ds.data['confirmedChallenges'];
       print("Adding confirmed challenge to leaderboard");
       Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'confirmedChallenges': confirmedChallenges + 1});
       
+      // If more challenges to check
       if (whichChallenge < completedChallenges.length - 1){
-        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminSpecificTeamScreen(teamID: teamID, gameCode: gameCode, completedChallenges: completedChallenges, whichChallenge: whichChallenge + 1, adminUser: adminUser,) ));
+        print("Navigating to same screen, next challenge...");
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder:  (context) => AdminSpecificTeamScreen(
+              teamID: teamID, 
+              gameCode: gameCode, 
+              completedChallenges: completedChallenges, 
+              whichChallenge: whichChallenge + 1, 
+              adminUser: adminUser
+            )
+          )
+        );
       }
       else{
-        Navigator.of(context).push(MaterialPageRoute(builder:  (context) => AdminTeamsListScreen(adminUser: adminUser, gameCode: gameCode)));
+        print("Navigating to same screen, no more challenges...");
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder:  (context) => AdminTeamsListScreen(
+              adminUser: adminUser, 
+              gameCode: gameCode
+            )
+          )
+        );
       }
     }
   );
