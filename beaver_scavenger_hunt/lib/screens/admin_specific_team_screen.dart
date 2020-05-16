@@ -61,6 +61,8 @@ class _AdminSpecificTeamScreenState extends State<AdminSpecificTeamScreen> with 
 
   @override
   Widget build (BuildContext context) {
+    var screen_height = MediaQuery.of(context).size.height;
+    var screen_width = MediaQuery.of(context).size.width;
     return WillPopScope(
         onWillPop: (){
           Navigator.of(context).push(
@@ -81,27 +83,32 @@ class _AdminSpecificTeamScreenState extends State<AdminSpecificTeamScreen> with 
         body: Center(
           child: Column(
             children: <Widget> [
-              SizedBox(height: 30),
+              SizedBox(height: screen_height*0.025),
               PhotoDescription(context, widget.completedChallenges[widget.whichChallenge].description),
-              SizedBox(height: 50),
+              SizedBox(height:screen_height*0.05),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>
                 [
-                  RejectionBar(context, isRejected, widget.completedChallenges, widget.whichChallenge, widget.teamID, setMyState, widget.adminUser, widget.gameCode),
-                  PhotoSwiperContainer(context, isAccepted, isRejected, transAmount, rotateAmount, widget.whichChallenge, widget.completedChallenges),
-                  AcceptanceBar(context, isAccepted, widget.completedChallenges, widget.whichChallenge, widget.teamID, setMyState, widget.adminUser, widget.gameCode)
+                  RejectionBar(context, isRejected, widget.completedChallenges, widget.whichChallenge, widget.teamID, setMyState, widget.adminUser, widget.gameCode, screen_height, screen_width),
+                  PhotoSwiperContainer(context, isAccepted, isRejected, transAmount, rotateAmount, widget.whichChallenge, widget.completedChallenges, screen_height, screen_width),
+                  AcceptanceBar(context, isAccepted, widget.completedChallenges, widget.whichChallenge, widget.teamID, setMyState, widget.adminUser, widget.gameCode, screen_height, screen_width)
                 ],
+              ), 
+              Expanded(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      RejectButton(context, widget.whichChallenge, widget.completedChallenges, widget.teamID, setMyTransState, widget.adminUser, widget.gameCode),
+                      SizedBox(width: 100),
+                      AcceptButton(context, widget.whichChallenge, widget.completedChallenges, widget.teamID, setMyTransState, widget.adminUser, widget.gameCode)
+                    ],
+                  )
+                )
               ),
-              SizedBox(height: 20), 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  RejectButton(context, widget.whichChallenge, widget.completedChallenges, widget.teamID, setMyTransState, widget.adminUser, widget.gameCode),
-                  SizedBox(width: 100),
-                  AcceptButton(context, widget.whichChallenge, widget.completedChallenges, widget.teamID, setMyTransState, widget.adminUser, widget.gameCode)
-                ],
-              )
+              SizedBox(height: screen_height*0.01)
             ]
           )
         )
@@ -115,7 +122,7 @@ Widget PhotoDescription(BuildContext context, String description){
     padding: EdgeInsets.all(5),
     child: Text(
       "$description",
-      style: TextStyle(fontSize: 20),
+      style: TextStyle(fontSize: 25),
       textAlign: TextAlign.center,
       ),
   );
@@ -128,7 +135,8 @@ Widget PhotoSwiperContainer(
   double transAmount, 
   double rotateAmount, 
   whichChallenge, 
-  completedChallenges
+  completedChallenges,
+  screen_height, screen_width
 ){
   print("Checking challenge #${completedChallenges[whichChallenge].number}...");
   return AnimatedContainer(
@@ -139,7 +147,7 @@ Widget PhotoSwiperContainer(
     Draggable(
       data: "${completedChallenges[whichChallenge].photoUrl}",
       feedback: SizedBox(
-        height: 300, width: 300,
+        height: screen_height*0.5, width: screen_width*0.7,
         child: Container(
           child: Center(
             child: ClipRRect(
@@ -151,9 +159,9 @@ Widget PhotoSwiperContainer(
           )
         )
       ),
-      childWhenDragging: Container(width:300),
+      childWhenDragging: Container(width: screen_width*0.7),
       child: SizedBox(
-        height: 300, width: 300,
+        height: screen_height*0.5, width: screen_width*0.7,
         child: Container(
           child: Center(
             child: ClipRRect(
@@ -166,7 +174,7 @@ Widget PhotoSwiperContainer(
         )
       ),
     ):
-    Container(width: 50),
+    Container(width: screen_width*0.7),
   );
 }
 
@@ -178,11 +186,13 @@ Widget RejectionBar(
   teamID, 
   Function(bool isRejectedOrAccepted) setMyState, 
   adminUser, 
-  gameCode
+  gameCode,
+  screen_height,
+  screen_width
 ){
   return Container(
-    height: 350,
-    width: isRejected ? 300 : 50,
+    height: screen_height*0.55,
+    width: isRejected ? screen_width*0.7 : screen_width*0.14,
     child:DragTarget(
       builder: (context, List<String> candidateData, rejectedData) {
         return isRejected == false ? 
@@ -195,7 +205,7 @@ Widget RejectionBar(
         ) : 
         Container(
           color:Colors.red[200],
-          width: 400,
+          width: screen_width*0.8,
         );
       },
       onWillAccept: (data){
@@ -257,11 +267,13 @@ Widget AcceptanceBar(
   teamID, 
   Function(bool isRejectedOrAccepted) setMyState, 
   adminUser, 
-  gameCode
+  gameCode,
+  screen_height,
+  screen_width
 ){
   return Container(
-    height: 350,
-    width: isAccepted ? 300 : 50,
+    height: screen_height*0.55,
+    width: isAccepted ? screen_width*0.7 : screen_width*0.14,
     child:DragTarget(
       builder: (context, List<String> candidateData, rejectedData) {
         return isAccepted == false ? 
@@ -274,7 +286,7 @@ Widget AcceptanceBar(
         ) : 
         Container(
           color:Colors.green[200],
-          width: 400,
+          width: screen_width*0.8,
         );
       },
       onWillAccept: (data){
