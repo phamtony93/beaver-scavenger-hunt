@@ -8,7 +8,6 @@ import '../models/user_details_model.dart';
 
 
 Future<void> addUserLeaderboard(UserDetails user, String time, int points, List<Challenge> allChallenges) async {
-  int num = 1;
 
   DocumentSnapshot temp =  await Firestore.instance.collection("users").document(user.uid).get();
   String gameID =  temp.data['gameCode'];
@@ -35,9 +34,9 @@ Future<void> addUserLeaderboard(UserDetails user, String time, int points, List<
   Firestore.instance.collection('leaderboard').document(userName).setData(jsonMap);
 
   for (int i = 0; i < 10; i++) {
-    Firestore.instance.collection('leaderboard').document(userName).updateData({
-      'challenges.${num+1}.photoUrl': allChallenges[num].photoUrl, 
-      'challenges.${num+1}.completed' : allChallenges[num].completed,
+    await Firestore.instance.collection('leaderboard').document(userName).updateData({
+      'challenges.${i+1}.photoUrl': allChallenges[i].photoUrl, 
+      'challenges.${i+1}.completed' : allChallenges[i].completed,
     });
   }
 
