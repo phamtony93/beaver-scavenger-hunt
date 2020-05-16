@@ -40,6 +40,8 @@ class _CameraReviewState extends State<CameraReview> {
 
   @override
   void initState() {
+    print('challenge number:');
+    print(widget.challengeNum);
     if(!widget.isImage) {
       _videoController = VideoPlayerController.file(File(widget.path));
       _initializeVideoPlayerFuture = _videoController.initialize();
