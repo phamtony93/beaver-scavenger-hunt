@@ -116,11 +116,7 @@ class RulesScreen extends StatelessWidget {
             ListTileWidget(context, '8.  Keep track of the time! You will lose 1 point for every minute you take to complete the hunt.', Styles.orangeNormalSmall),
             ListTileWidget(context, '9.  Every team that finishes will win a prize, but the team with the most points will win the grand prize!', Styles.whiteNormalSmall),
             ListTileWidget(context, '10.  You may view rules or previously answered clues at any time.', Styles.orangeNormalSmall),
-<<<<<<< HEAD
-            ListTileWidget(context, '11.  Good luck and have fun!', Styles.whiteNormalSmall)         
-=======
-            ListTileWidget(context, '11.  Good luck and have fun. And GO BEAVS!!', Styles.whiteNormalSmall)         
->>>>>>> seawellj_branch
+            ListTileWidget(context, '11.  Good luck and have fun. And GO BEAVS!!', Styles.whiteNormalSmall)
           ]
         )
       )
