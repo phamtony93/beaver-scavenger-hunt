@@ -34,10 +34,10 @@ Future<void> addUserLeaderboard(UserDetails user, String time, int points, List<
   
   Firestore.instance.collection('leaderboard').document(userName).setData(jsonMap);
 
-  for (int i = 0; i < 11; i++) {
+  for (int i = 0; i < 10; i++) {
     Firestore.instance.collection('leaderboard').document(userName).updateData({
-      'challenges.$num.photoUrl': allChallenges[num-1].photoUrl, 
-      'challenges.$num.completed' : allChallenges[num-1].completed,
+      'challenges.${num+1}.photoUrl': allChallenges[num].photoUrl, 
+      'challenges.${num+1}.completed' : allChallenges[num].completed,
     });
   }
 
