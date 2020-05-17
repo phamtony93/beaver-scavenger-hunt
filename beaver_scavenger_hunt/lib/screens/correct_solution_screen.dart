@@ -257,6 +257,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
               TextWidget(context, "Get within 50 meters of", Styles.blackNormalSmall, true)
               : SizedBox(height: 0),
               // Show location to reach
+              SizedBox(height: screen_height*0.01),
               TextWidget(context, "${widget.allLocations[widget.whichLocation].solution}", Styles.orangeNormalDefault, true),
               SizedBox(height: screen_height*0.01),
               widget.allLocations[widget.whichLocation].found == false ?
