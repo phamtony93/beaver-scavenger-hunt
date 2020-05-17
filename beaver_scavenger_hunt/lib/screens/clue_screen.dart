@@ -50,6 +50,7 @@ class _ClueScreenState extends State<ClueScreen> {
   bool _incorrect;
   int _guessNumber;
   List<Map> dropdownDataList = [];
+  int points = 0;
 
   @override
   void initState() {
@@ -76,6 +77,14 @@ class _ClueScreenState extends State<ClueScreen> {
         break;
       }
     }
+    getPoints();
+  }
+
+  void getPoints() async {
+    //get # of incorrectClues to pass to calculate points function
+    var ds = await Firestore.instance.collection("users").document("${widget.userDetails.uid}").get();
+    int incorrectClues = ds.data['incorrectClues'];
+    points = calculatePoints(widget.allLocations, widget.allChallenges, incorrectClues);
   }
 
   //SET MY STATE FUNCTION
@@ -166,13 +175,7 @@ class _ClueScreenState extends State<ClueScreen> {
           actions: [
             IconButton(
               icon: Icon(Icons.account_circle),
-              onPressed: () async { 
-                
-                //get # of incorrectClues to pass to calculate points function
-                var ds = await Firestore.instance.collection("users").document("${widget.userDetails.uid}").get();
-                int incorrectClues = ds.data['incorrectClues'];
-                int points = calculatePoints(widget.allLocations, widget.allChallenges, incorrectClues);
-                sleep(const Duration(seconds:1));
+              onPressed: () {
                 
                 //Naviage to Profile Screen (with userDetails,
                 // allChallenges, allLocations, and beginTime)
