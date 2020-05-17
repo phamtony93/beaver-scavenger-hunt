@@ -27,15 +27,16 @@ class _JoinGameScreen extends State<JoinGameScreen> {
   String _validateGameCode(String gameCode, List<String> possibleGameCodes) {
     print("Validating game code...");
     //validate whether gamecode is in db
-    bool isValid = false; 
+    bool isValid = false;
+    String gameCodeUpper = gameCode.toUpperCase(); 
     for (int i = 0; i < possibleGameCodes.length; i++){
-      if (gameCode == possibleGameCodes[i]){
+      if (gameCodeUpper == possibleGameCodes[i]){
         isValid = true;
       }
     }
     if (isValid == false){
       print("Game code invalid");
-      return 'That is not a valid game code.\n(Reminder: Game codes are case-sensitive)';
+      return 'That is not a valid game code.';
     }
     if (gameCode.isEmpty) {
       print("Game code invalid");
@@ -113,7 +114,7 @@ class _JoinGameScreen extends State<JoinGameScreen> {
                           //Call _validateGameCode Function (above)
                           validator: (value) => _validateGameCode(value, allGameCodes),
                           onSaved: (value) {
-                            gameCode = value;
+                            gameCode = value.toUpperCase();
                           },
                         ),
                       ),
