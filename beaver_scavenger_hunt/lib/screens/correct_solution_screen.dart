@@ -451,8 +451,10 @@ Widget _googleMap(
       zoomGesturesEnabled: true,
       myLocationButtonEnabled: true,
       myLocationEnabled: true,
-      onMapCreated: (GoogleMapController controller) async {
-        _controller.complete(controller);
+      onMapCreated: (GoogleMapController controller) async{
+        if (!_controller.isCompleted) {
+          _controller.complete(controller);
+        }
       },
       markers: myMarkers,
       onCameraMove: ((_position) => _updatePosition(_position)),
