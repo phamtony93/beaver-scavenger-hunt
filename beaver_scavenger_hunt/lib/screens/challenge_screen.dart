@@ -30,6 +30,8 @@ class ChallengeScreen extends StatefulWidget {
 
 class _ChallengeScreen extends State<ChallengeScreen> {
   
+  int points = 0;
+  
   Widget isChallengeCompleted(bool isCompleted) {
     if (isCompleted) {
       return Icon(
@@ -54,10 +56,6 @@ class _ChallengeScreen extends State<ChallengeScreen> {
         return Image.network(photoUrl);
       }
     } else {
-      // return Icon(
-      //   Icons.photo_camera,
-      //   size: 35,
-      // );
       if (index == 3 || index == 4 || index == 8) { 
         return IconButton(icon: Icon(Icons.videocam, size: 35),
           color: Colors.orange,
@@ -100,6 +98,20 @@ class _ChallengeScreen extends State<ChallengeScreen> {
       }
     }
   }
+
+  void getPoints() async {
+    //get # of incorrectClues to pass to calculate points function
+    var ds = await Firestore.instance.collection("users").document("${widget.userDetails.uid}").get();
+    int incorrectClues = ds.data['incorrectClues'];
+    points = calculatePoints(widget.allLocations, widget.allChallenges, incorrectClues);
+  }
+
+  @override
+  void initState() {
+    getPoints();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,11 +138,7 @@ class _ChallengeScreen extends State<ChallengeScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.account_circle),
-            onPressed: () async {
-              
-              var ds = await Firestore.instance.collection("users").document("${widget.userDetails.uid}").get();
-              int incorrectClues = ds.data['incorrectClues'];
-              int points = calculatePoints(widget.allLocations, widget.allChallenges, incorrectClues);
+            onPressed: () {
               
               print("Navigating to Profile Screen...");
               Navigator.push(

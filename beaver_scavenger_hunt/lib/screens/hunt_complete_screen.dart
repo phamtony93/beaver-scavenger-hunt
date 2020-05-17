@@ -28,7 +28,7 @@ class HuntCompleteScreen extends StatelessWidget {
   final int whichLocation;
   final DateTime beginTime;
 
-   HuntCompleteScreen({Key key, this.userDetails, this.allLocations, this.allChallenges, this.whichLocation, this.beginTime}) : super(key: key);
+  HuntCompleteScreen({Key key, this.userDetails, this.allLocations, this.allChallenges, this.whichLocation, this.beginTime}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
