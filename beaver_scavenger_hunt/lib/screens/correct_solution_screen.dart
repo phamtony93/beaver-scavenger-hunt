@@ -332,6 +332,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                           Navigator.push(
                             context, MaterialPageRoute(
                               builder: (context) => ClueScreen(
+                                allChallenges: widget.allChallenges,
                                 allLocations: widget.allLocations, 
                                 whichLocation: widget.whichLocation + 1, 
                                 userDetails: widget.userDetails, 
