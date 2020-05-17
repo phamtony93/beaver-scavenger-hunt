@@ -10,6 +10,8 @@ import '../main.dart';
 // Models
 import '../models/user_details_model.dart';
 import '../models/challenge_model.dart';
+// Styles
+import '../styles/styles_class.dart';
 
 class Camera extends StatefulWidget {
   final UserDetails userDetails;
@@ -115,23 +117,31 @@ class _CameraState extends State<Camera> {
 
 
   Widget preview() {
-    return FutureBuilder<void> (
-      future: _initializeControllerFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return RotatedBox(
-              quarterTurns: MediaQuery.of(context).orientation == Orientation.landscape ? 3 : 0,
-              child: AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                  child: CameraPreview(_controller)
-              ),
-          );
+    // if(!_controller.value.isInitialized || _controller == null) {
+    //   return Text('Camera Error: Please accept camera permissions.', style: Styles.bold, textAlign: TextAlign.center,);
+    // }
+    // else {
+      return FutureBuilder<void> (
+        future: _initializeControllerFuture,
+        builder: (context, snapshot) {
+          if(!_controller.value.isInitialized || _controller == null) {
+            return Text('Camera Error: Please accept camera permissions.', style: Styles.bold, textAlign: TextAlign.center,);
+          }
+          else if (snapshot.connectionState == ConnectionState.done) {
+            return RotatedBox(
+                quarterTurns: MediaQuery.of(context).orientation == Orientation.landscape ? 3 : 0,
+                child: AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
+                    child: CameraPreview(_controller)
+                ),
+            );
+          }
+          else {
+            return Center(child: CircularProgressIndicator());
+          }
         }
-        else {
-          return Center(child: CircularProgressIndicator());
-        }
-      }
-    );
+      );
+    // }
   }
 
   Future<void> takePhoto() async {
