@@ -77,6 +77,9 @@ class HuntCompleteScreen extends StatelessWidget {
       ),
       drawer: Builder(
         builder: (BuildContext cntx) {
+          print("begin time: ");
+          print (beginTime);
+          print (userDetails);
           return MenuDrawer(
             context, 
             allLocations, 

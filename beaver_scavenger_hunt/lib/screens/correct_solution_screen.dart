@@ -148,7 +148,9 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
               builder: (context) => HuntCompleteScreen(
                 userDetails: widget.userDetails, 
                 allLocations: widget.allLocations, 
-                allChallenges: widget.allChallenges
+                allChallenges: widget.allChallenges,
+                whichLocation: widget.whichLocation,
+                beginTime: widget.beginTime,
               )
             )
           );
