@@ -169,6 +169,9 @@ class _CameraState extends State<Camera> {
     }
     catch (e) {
       print(e);
+      Scaffold.of(context).showSnackBar(
+        SnackBar(content: Text('Camera Error'))
+      );
     }
 
     setState(() {});
@@ -200,6 +203,9 @@ class _CameraState extends State<Camera> {
     }
     catch (e) {
       print(e);
+      Scaffold.of(context).showSnackBar(
+        SnackBar(content: Text('Camera Error'))
+      );
     }
   }
 
@@ -231,6 +237,9 @@ class _CameraState extends State<Camera> {
     }
     catch (e) {
       print(e);
+      Scaffold.of(context).showSnackBar(
+        SnackBar(content: Text('Camera Error'))
+      );
     }
   }
 
