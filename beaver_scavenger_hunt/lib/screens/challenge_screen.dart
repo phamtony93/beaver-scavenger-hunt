@@ -57,44 +57,10 @@ class _ChallengeScreen extends State<ChallengeScreen> {
       }
     } else {
       if (index == 3 || index == 4 || index == 8) { 
-        return IconButton(icon: Icon(Icons.videocam, size: 35),
-          color: Colors.orange,
-              tooltip: 'Take Video',
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder:  (context) => CameraScreen(
-                      userDetails: widget.userDetails, 
-                      challengeNum: index, 
-                      allChallenges: widget.allChallenges,
-                      allLocations: widget.allLocations,
-                      whichLocation: widget.whichLocation,
-                      beginTime: widget.beginTime
-                    )
-                  )
-                );
-              }
-      );
+        return Icon(Icons.videocam, size: 35);
       }
       else {
-        return IconButton(icon: Icon(Icons.photo_camera, size: 35),
-          color: Colors.orange,
-              tooltip: 'Take Photo',
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder:  (context) => CameraScreen(
-                      userDetails: widget.userDetails, 
-                      challengeNum: index, 
-                      allChallenges: widget.allChallenges,
-                      allLocations: widget.allLocations,
-                      whichLocation: widget.whichLocation,
-                      beginTime: widget.beginTime
-                    )
-                  )
-                );
-              }
-      );
+        return Icon(Icons.photo_camera, size: 35);
       }
     }
   }
@@ -182,10 +148,28 @@ class _ChallengeScreen extends State<ChallengeScreen> {
             itemCount: snapshot.data.data["challenges"].length,
               itemBuilder: (context, index) {
                 var document = snapshot.data.data["challenges"][(index+1).toString()];
-                return ListTile(
-                  leading: isChallengeCompleted(document["completed"]),
-                  title: Text(document["description"]),
-                  trailing: cameraIconOrPhoto(document["completed"], document["photoUrl"], index),
+                return Card(
+                  child:ListTile(
+                    leading: isChallengeCompleted(document["completed"]),
+                    title: Text(document["description"]),
+                    trailing: cameraIconOrPhoto(document["completed"], document["photoUrl"], index),
+                    onTap: (){
+                      //Navigate to Camera Screen
+                      print("Navigating to Camera Screen...");
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder:  (context) => CameraScreen(
+                            userDetails: widget.userDetails, 
+                            challengeNum: index, 
+                            allChallenges: widget.allChallenges,
+                            allLocations: widget.allLocations,
+                            whichLocation: widget.whichLocation,
+                            beginTime: widget.beginTime
+                          )
+                        )
+                      );
+                    }
+                  ),
                 );
               },
             );
