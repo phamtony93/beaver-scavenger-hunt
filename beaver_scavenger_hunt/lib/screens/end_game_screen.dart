@@ -78,8 +78,23 @@ class EndGameScreen extends StatelessWidget {
             Text(time, style: Styles.blackNormalDefault, textAlign: TextAlign.center,),
             SizedBox(height: 15.0),
             Text('Points:', style: Styles.orangeBoldDefault,),
-            Text(totalPoints.toString(), style: Styles.blackNormalDefault, textAlign: TextAlign.center,),
-            SizedBox(height: 25.0),
+            StreamBuilder(
+              stream: Firestore.instance.collection("leaderboard").where("uid", isEqualTo: userDetails.uid).snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting || snapshot.data.documents.length == 0) {
+                  return Text("Loading...");
+                } 
+                else {
+                  var mySnapshot = snapshot.data.documents[0];
+                  return Text(
+                    "${mySnapshot["totalPoints"]}",
+                    style: Styles.blackNormalDefault,
+                  );
+                }
+              }
+            ),
+            //Text(totalPoints.toString(), style: Styles.blackNormalDefault, textAlign: TextAlign.center,),
+            SizedBox(height: 15.0),
             Text('If you would like to play again,', textAlign: TextAlign.center),
             Text('sign out and join a new game.', textAlign: TextAlign.center),
             SizedBox(height: 20.0),

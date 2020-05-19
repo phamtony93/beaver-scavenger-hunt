@@ -7,7 +7,7 @@ class UserDetails {
   final String userName;
   final String photoUrl;
   final String userEmail;
-  String gameID;
+  String gameCode;
   // final List<ProviderDetails> providerData;
 
   UserDetails(this.providerDetails, this.uid, this.userName, this.photoUrl, this.userEmail); 

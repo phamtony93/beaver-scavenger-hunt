@@ -201,7 +201,7 @@ class _LoginScreen extends State<LoginScreen> {
     } 
     // IF PREV ADMIN
     else {
-      user.gameID = adminGameCode;
+      user.gameCode = adminGameCode;
       //Navigate to Admin Teams List Screen (with user details and game code)
       Navigator.push(
         context,

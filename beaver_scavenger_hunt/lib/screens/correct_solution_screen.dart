@@ -352,7 +352,7 @@ class _CorrectSolutionScreenState extends State<CorrectSolutionScreen> {
                                 allLocations: widget.allLocations, 
                                 allChallenges: widget.allChallenges,
                                 whichLocation: widget.whichLocation,
-                                beginTime: widget.beginTime,
+                                beginTime: widget.beginTime
                               )
                             )
                           );

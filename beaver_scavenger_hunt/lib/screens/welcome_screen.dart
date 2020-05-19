@@ -137,7 +137,7 @@ class WelcomeScreen extends StatelessWidget {
                               print("Navigating to Clue Screen...");
 
                               // add game code to user
-                              userDetails.gameID = gameCode;
+                              userDetails.gameCode = gameCode;
                               print(gameCode);
                               
                               //Go to clue screen
