@@ -146,7 +146,7 @@ class HuntCompleteScreen extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Container(
-                color: Color.fromRGBO(255,117, 26, 1),
+                color: Styles.osuOrange,
                 height: 80, width: 300,
                 padding: EdgeInsets.all(8),
                 child: ClipRRect(
@@ -210,8 +210,8 @@ class HuntCompleteScreen extends StatelessWidget {
     );
   }
   
+
   Future<int> getTotalPoints(DateTime endTime) async {
-    
     print("Calculating total points...");
     Duration difference;
     difference = endTime.difference(beginTime);
