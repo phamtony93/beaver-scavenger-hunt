@@ -11,6 +11,7 @@ Future<void> addUserLeaderboard(UserDetails user, String time, int points, List<
 
   DocumentSnapshot temp =  await Firestore.instance.collection("users").document(user.uid).get();
   String gameID =  temp.data['gameCode'];
+  int incorrectClues = temp.data['incorrectClues'];
 
   print('gets here');
   String userName = user.userEmail + '_' + gameID;
@@ -20,6 +21,7 @@ Future<void> addUserLeaderboard(UserDetails user, String time, int points, List<
   Map jsonMap = jsonDecode(json);
   jsonMap["totalTime"] = time;
   jsonMap["totalPoints"] = points;
+  jsonMap["incorrectClues"] = incorrectClues;
   
   int count = 0;
   for (int i = 0; i < allChallenges.length; i++){
