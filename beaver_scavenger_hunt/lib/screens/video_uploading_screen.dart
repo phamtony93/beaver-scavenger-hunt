@@ -10,6 +10,8 @@ import '../models/media_model.dart';
 import '../models/challenge_model.dart';
 // Functions
 import '../functions/upload_media.dart';
+// Styles
+import '../styles/styles_class.dart';
 
 class VideoUploading extends StatefulWidget {
   final String path;
@@ -41,7 +43,14 @@ class _VideoUploadingState extends State<VideoUploading> {
   Widget build (BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('Uploading...'),
+          title: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(text: 'U', style: Styles.whiteBoldDefault),
+                TextSpan(text: 'ploading', style: Styles.orangeNormalDefault),
+              ]
+            )
+          ),
           centerTitle: true,
       ),
       body: Column(

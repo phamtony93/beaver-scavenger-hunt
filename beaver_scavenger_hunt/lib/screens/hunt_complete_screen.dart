@@ -99,12 +99,12 @@ class HuntCompleteScreen extends StatelessWidget {
     return RichText(
       text: TextSpan(
         children: [
-          TextSpan(text: 'H', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
-          TextSpan(text: 'unt ', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
-          TextSpan(text: 'N', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
-          TextSpan(text: 'ot ', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
-          TextSpan(text: 'C', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
-          TextSpan(text: 'omplete', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
+          TextSpan(text: 'H', style: Styles.whiteBoldDefault),
+          TextSpan(text: 'unt ', style: Styles.orangeNormalDefault),
+          TextSpan(text: 'N', style: Styles.whiteBoldDefault),
+          TextSpan(text: 'ot ', style: Styles.orangeNormalDefault),
+          TextSpan(text: 'C', style: Styles.whiteBoldDefault),
+          TextSpan(text: 'omplete', style: Styles.orangeNormalDefault),
         ]
       )
     );
@@ -114,15 +114,16 @@ class HuntCompleteScreen extends StatelessWidget {
     return RichText(
       text: TextSpan(
         children: [
-          TextSpan(text: 'H', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
-          TextSpan(text: 'unt ', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
-          TextSpan(text: 'C', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
-          TextSpan(text: 'omplete', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
+          TextSpan(text: 'H', style: Styles.whiteBoldDefault),
+          TextSpan(text: 'unt ', style: Styles.orangeNormalDefault),
+          TextSpan(text: 'C', style: Styles.whiteBoldDefault),
+          TextSpan(text: 'omplete', style: Styles.orangeNormalDefault),
         ]
       )
     );
   }
 
+  // if user completed a minimum of 5 challenges, they can end the game
   Widget complete(BuildContext context) {
      return Padding(
        padding: const EdgeInsets.all(8.0),
@@ -189,6 +190,7 @@ class HuntCompleteScreen extends StatelessWidget {
      );
   }
 
+  // if user hasn't completed a minimum of 5 challenges, they cannot end the game
   Widget notComplete(BuildContext context) {
     return Center(
       child: Column(mainAxisAlignment: MainAxisAlignment.start,

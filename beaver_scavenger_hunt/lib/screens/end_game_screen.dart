@@ -113,31 +113,14 @@ class EndGameScreen extends StatelessWidget {
     );
   }
 
-  // Widget getTime()  {
-  //   Duration difference;
-  //   difference = endTime.difference(beginTime);
-
-  //   return Text((difference.inHours).toString().padLeft(2, '0') + 
-  //       ':' + (difference.inMinutes%60).toString().padLeft(2, '0') + 
-  //       ':' + (difference.inSeconds%60).toString().padLeft(2, '0'),
-  //       style: Styles.blackNormalDefault, textAlign: TextAlign.center,);
-  // }
-
-  // Widget points() {
-  //   totalPoints = calculatePoints(allLocations, allChallenges);
-  //   addPoints(userDetails, totalPoints);
-  //   return Text(
-  //     totalPoints.toString(), 
-  //     style: Styles.blackNormalDefault,
-  //     textAlign: TextAlign.center,);
-  // }
-
+// sign out of application
   void _signOut(BuildContext context) {
     FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
     _firebaseAuth.signOut();
     Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 
+// load leaderboard
   Widget leaderboard() {
     return StreamBuilder(
         stream: Firestore.instance.collection("leaderboard").orderBy('totalPoints', descending: true).snapshots(),
@@ -179,7 +162,8 @@ class EndGameScreen extends StatelessWidget {
       );
   }
 
-   Future<bool> _onBackPress() {
+  // Don't let user go back to previous screens
+  Future<bool> _onBackPress() {
     return Future<bool>.value(false);
   }
 

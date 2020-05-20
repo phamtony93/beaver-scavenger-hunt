@@ -6,6 +6,8 @@ import '../models/user_details_model.dart';
 import '../models/challenge_model.dart';
 // Widgets
 import '../widgets/camera.dart';
+// Styles
+import '../styles/styles_class.dart';
 
 class CameraScreen extends StatelessWidget {
   final UserDetails userDetails;
@@ -24,12 +26,12 @@ class CameraScreen extends StatelessWidget {
           title: RichText(
             text: TextSpan(
               children: [
-                TextSpan(text: 'T', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
-                TextSpan(text: 'ake a ', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
-                TextSpan(text: 'P', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
-                TextSpan(text: 'hoto/', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
-                TextSpan(text: 'V', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
-                TextSpan(text: 'ideo', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
+                TextSpan(text: 'T', style: Styles.whiteBoldDefault),
+                TextSpan(text: 'ake a ', style: Styles.orangeNormalDefault),
+                TextSpan(text: 'P', style: Styles.whiteBoldDefault),
+                TextSpan(text: 'hoto/', style: Styles.orangeNormalDefault),
+                TextSpan(text: 'V', style: Styles.whiteBoldDefault),
+                TextSpan(text: 'ideo', style: Styles.orangeNormalDefault),
               ]
             )
           ),

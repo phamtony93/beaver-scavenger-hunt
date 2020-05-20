@@ -117,10 +117,6 @@ class _CameraState extends State<Camera> {
 
 
   Widget preview() {
-    // if(!_controller.value.isInitialized || _controller == null) {
-    //   return Text('Camera Error: Please accept camera permissions.', style: Styles.bold, textAlign: TextAlign.center,);
-    // }
-    // else {
       return FutureBuilder<void> (
         future: _initializeControllerFuture,
         builder: (context, snapshot) {
@@ -141,7 +137,6 @@ class _CameraState extends State<Camera> {
           }
         }
       );
-    // }
   }
 
   Future<void> takePhoto() async {

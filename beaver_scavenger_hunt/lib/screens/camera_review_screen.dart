@@ -6,6 +6,8 @@ import '../models/challenge_model.dart';
 import '../models/clue_location_model.dart';
 // Widgets
 import '../widgets/camera_review.dart';
+// Styles
+import '../styles/styles_class.dart';
 
 class CameraReviewScreen extends StatelessWidget {
    final String path;
@@ -28,12 +30,12 @@ class CameraReviewScreen extends StatelessWidget {
           title: RichText(
             text: TextSpan(
               children: [
-                TextSpan(text: 'R', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
-                TextSpan(text: 'eview ', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
-                TextSpan(text: 'P', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
-                TextSpan(text: 'hoto/', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
-                TextSpan(text: 'V', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
-                TextSpan(text: 'ideo', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
+                TextSpan(text: 'R', style: Styles.whiteBoldDefault),
+                TextSpan(text: 'eview ', style: Styles.orangeNormalDefault),
+                TextSpan(text: 'P', style: Styles.whiteBoldDefault),
+                TextSpan(text: 'hoto/', style: Styles.orangeNormalDefault),
+                TextSpan(text: 'V', style: Styles.whiteBoldDefault),
+                TextSpan(text: 'ideo', style: Styles.orangeNormalDefault),
               ]
             )
           ),

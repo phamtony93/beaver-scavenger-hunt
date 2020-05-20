@@ -168,10 +168,10 @@ Widget AppBarTextSpan(BuildContext context){
   return RichText(
     text: TextSpan(
       children: [
-        TextSpan(text: 'P', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
-        TextSpan(text: 'layer', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1))),
-        TextSpan(text: ' P', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
-        TextSpan(text: 'rofile', style: TextStyle(fontSize: 30, color: Color.fromRGBO(255,117, 26, 1)))
+        TextSpan(text: 'P', style: Styles.whiteBoldDefault),
+        TextSpan(text: 'layer', style: Styles.orangeNormalDefault),
+        TextSpan(text: ' P', style: Styles.whiteBoldDefault),
+        TextSpan(text: 'rofile', style: Styles.orangeNormalDefault)
       ]
     )
   );
