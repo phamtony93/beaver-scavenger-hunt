@@ -9,3 +9,4 @@ void uploadNewAdmin(UserDetails userDetails, String gameCode) async {
   print("Adding new game to 'games'...");
   await Firestore.instance.collection('games').document(gameCode).setData({'open': true});
 }
+
