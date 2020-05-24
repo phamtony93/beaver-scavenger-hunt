@@ -151,74 +151,82 @@ class _ClueScreenState extends State<ClueScreen> {
     }
   }
 
+  // Don't let user go back to previous screens
+  Future<bool> _onBackPress() {
+    return Future<bool>.value(false);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: Styles.osuTheme,
-        child: Scaffold(
-        resizeToAvoidBottomPadding: false,
-        appBar: AppBar(
-          title: AppBarTextSpan(context, widget.allLocations, widget.whichLocation),
-          centerTitle: true,
-          leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: Icon(Icons.menu),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                tooltip: "Menu",
-              );
-            },
-          ),
-          // Profile Icon in top-right of appbar
-          actions: [
-            IconButton(
-              icon: Icon(Icons.account_circle),
-              onPressed: () {
-                
-                //Naviage to Profile Screen (with userDetails,
-                // allChallenges, allLocations, and beginTime)
-                print("Navigating to Profile Screen...");
-                Navigator.push(
-                  context, 
-                  MaterialPageRoute(
-                    builder: (context) => 
-                    ProfileScreen(
-                    userDetails: widget.userDetails, 
-                    allChallenges: widget.allChallenges, 
-                    allLocations: widget.allLocations,
-                    beginTime: widget.beginTime,
-                    points: points,
-                    )
-                  )
+    return WillPopScope(
+      onWillPop: () => _onBackPress(),
+      child: Theme(
+        data: Styles.osuTheme,
+          child: Scaffold(
+          resizeToAvoidBottomPadding: false,
+          appBar: AppBar(
+            title: AppBarTextSpan(context, widget.allLocations, widget.whichLocation),
+            centerTitle: true,
+            leading: Builder(
+              builder: (BuildContext context) {
+                return IconButton(
+                  icon: Icon(Icons.menu),
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                  tooltip: "Menu",
                 );
               },
+            ),
+            // Profile Icon in top-right of appbar
+            actions: [
+              IconButton(
+                icon: Icon(Icons.account_circle),
+                onPressed: () {
+                  
+                  //Naviage to Profile Screen (with userDetails,
+                  // allChallenges, allLocations, and beginTime)
+                  print("Navigating to Profile Screen...");
+                  Navigator.push(
+                    context, 
+                    MaterialPageRoute(
+                      builder: (context) => 
+                      ProfileScreen(
+                      userDetails: widget.userDetails, 
+                      allChallenges: widget.allChallenges, 
+                      allLocations: widget.allLocations,
+                      beginTime: widget.beginTime,
+                      points: points,
+                      )
+                    )
+                  );
+                },
+              )
+            ],
+          ),
+          drawer: Builder(
+            builder: (BuildContext cntx) {
+              //Menu Drawer Widget (widgets folder)
+              return MenuDrawer(
+                context, 
+                widget.allLocations, 
+                widget.whichLocation, 
+                widget.allChallenges, 
+                widget.userDetails,
+                widget.beginTime
+              );
+            }
+          ),
+          body: SingleChildScrollView(
+            child: ClueScreenWidget(
+              context, widget.allLocations, 
+              formKey, widget.whichLocation, 
+              widget.userDetails, setMyState, 
+              _saveForm, _myLocation, 
+              _myLocationResult, _incorrect, 
+              dropdownDataList, widget.beginTime,
+              widget.allChallenges
             )
-          ],
-        ),
-        drawer: Builder(
-          builder: (BuildContext cntx) {
-            //Menu Drawer Widget (widgets folder)
-            return MenuDrawer(
-              context, 
-              widget.allLocations, 
-              widget.whichLocation, 
-              widget.allChallenges, 
-              widget.userDetails,
-              widget.beginTime
-            );
-          }
-        ),
-        body: SingleChildScrollView(
-          child: ClueScreenWidget(
-            context, widget.allLocations, 
-            formKey, widget.whichLocation, 
-            widget.userDetails, setMyState, 
-            _saveForm, _myLocation, 
-            _myLocationResult, _incorrect, 
-            dropdownDataList, widget.beginTime,
-            widget.allChallenges
           )
         )
       )

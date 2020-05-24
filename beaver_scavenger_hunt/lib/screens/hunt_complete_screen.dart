@@ -131,7 +131,7 @@ class HuntCompleteScreen extends StatelessWidget {
         child: Column(mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             SizedBox(height: 25.0),
-            Text('Congratulations! Your Hunt is Complete!', style: Styles.titles, textAlign: TextAlign.center,),
+            Text('Congratulations!\nYour Hunt is Complete!', style: Styles.titles, textAlign: TextAlign.center,),
             SizedBox(height: 10,),
             completedChallengesCount(allChallenges) < 10 ? Text('You can complete all 10 challenges to earn more points. Or click End Game to finish now.', textAlign: TextAlign.center,) :
               Text('You have finished all clues and challenges. Click on End Game now.', textAlign: TextAlign.center,),
