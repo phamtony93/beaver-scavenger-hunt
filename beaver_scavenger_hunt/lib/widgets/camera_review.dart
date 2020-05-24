@@ -192,7 +192,7 @@ class _CameraReviewState extends State<CameraReview> {
     GallerySaver.saveImage(widget.path, albumName: 'Beavers').then((bool success) {
       print('Photo saved to phone');
       Scaffold.of(context).showSnackBar(
-        SnackBar(content: Text('Photo Saved to Phone'))
+        SnackBar(content: Text('Photo Saved to Phone', textAlign: TextAlign.center))
       );
     });
   }
@@ -205,7 +205,7 @@ class _CameraReviewState extends State<CameraReview> {
       addURLtoFirebase();
       updateList();
       Scaffold.of(context).showSnackBar(
-        SnackBar(content: Text('Photo Uploaded'))
+        SnackBar(content: Text('Photo Uploaded', textAlign: TextAlign.center))
       );
       Navigator.pop(context);
       Navigator.pop(context);
