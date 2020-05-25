@@ -3,12 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:beaver_scavenger_hunt/models/user_details_model.dart';
 
 // Functions
-import '../lib/functions/add_points.dart';
+import '../lib/functions/get_final_time.dart';
 
 // Models
+import '../lib/models/user_details_model.dart';
 import '../lib/models/provider_details_model.dart';
 
 void main() async{
@@ -41,23 +41,18 @@ void main() async{
       // providerData
     );
 
-Future getPoints(UserDetails userDetails) async {
-  DocumentSnapshot user =  await Firestore.instance.collection("users").document(userDetails.uid).get();
-  return user.data['points'];
-}
+  test('Get Final Time 1', () async {
+      DateTime beginTime = DateTime.parse("2020-05-25 12:13:00Z");
+      DateTime endTime = DateTime.parse("2020-05-25 20:18:04Z");
+      String finalTime = getFinalTime(beginTime, endTime);
+      expect(finalTime, "08:05:04");
+  });
 
-    
-  test('Add Positive Points to DB', () async {
-    int points = 156;
-    addPoints(user, points);
-    int retrievedPoints = await getPoints(user);
-      expect(retrievedPoints, points);
+  test('Get Final Time 2', () async {
+      DateTime beginTime = DateTime.parse("2020-05-25 12:13:00Z");
+      DateTime endTime = DateTime.parse("2020-05-26 20:18:04Z");
+      String finalTime = getFinalTime(beginTime, endTime);
+      expect(finalTime, "32:05:04");
   });
   
-  test('Add Negative Points to DB', () async {
-    int points = -2000;
-    addPoints(user, points);
-    int retrievedPoints = await getPoints(user);
-      expect(retrievedPoints, points);
-  });
 }
