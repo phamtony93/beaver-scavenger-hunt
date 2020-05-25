@@ -35,7 +35,6 @@ void main() {
       double test_longitude = -22.22;
       String test_clue = "test_clue";
       String test_solution = "test_solution";
-      String test_photoURL = "test_photoUrl";
 
       //create clue location using test vars
       final test_clue_location1 = ClueLocation(test_number, test_latitude, test_longitude, test_clue, test_solution);
