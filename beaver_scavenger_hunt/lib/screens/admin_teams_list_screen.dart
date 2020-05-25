@@ -265,11 +265,11 @@ Widget AppBarTextSpan(BuildContext context, String gameCode){
           style: Styles.orangeNormalDefault
         ),
         TextSpan(
-          text: ' I', 
+          text: ' C', 
           style: Styles.whiteBoldDefault
         ),
         TextSpan(
-          text: 'D: ', 
+          text: 'ode: ', 
           style: Styles.orangeNormalDefault
         ),
         TextSpan(
