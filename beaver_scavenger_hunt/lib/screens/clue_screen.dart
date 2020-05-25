@@ -183,7 +183,7 @@ class _ClueScreenState extends State<ClueScreen> {
               IconButton(
                 icon: Icon(Icons.account_circle),
                 onPressed: () {
-                  
+                  getPoints();
                   //Naviage to Profile Screen (with userDetails,
                   // allChallenges, allLocations, and beginTime)
                   print("Navigating to Profile Screen...");
