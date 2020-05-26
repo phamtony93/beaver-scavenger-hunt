@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
 // Screens
 import 'admin_teams_list_screen.dart';
 // Models
@@ -50,12 +49,10 @@ class _AdminSpecificTeamScreenState extends State<AdminSpecificTeamScreen> with 
   void initState() {
     super.initState();
     if (widget.isImage == false){
-      print("must be a video...");
-      _videoController = VideoPlayerController.file(File(widget.completedChallenges[widget.whichChallenge].photoUrl));
+      _videoController = VideoPlayerController.network("${widget.completedChallenges[widget.whichChallenge].photoUrl}");
       _initializeVideoPlayerFuture = _videoController.initialize();
       _videoController.setLooping(true);
     }
-
     transAmount = 0.0;
     rotateAmount = 0.0;
     isAccepted = false;
@@ -63,10 +60,11 @@ class _AdminSpecificTeamScreenState extends State<AdminSpecificTeamScreen> with 
   }
 
   getVideo() async {
-    final StorageReference storageRef = FirebaseStorage.instance.ref().child("${widget.completedChallenges[widget.whichChallenge].photoUrl}");
+    final StorageReference storageRef = FirebaseStorage.instance.ref().child("2020-05-01 12:01:36.776656.mp4");
     downloadUrl = await storageRef.getDownloadURL();
     //print("downloadUrl: $downloadUrl");
-    _videoController = VideoPlayerController.file(File(downloadUrl));
+    _videoController = VideoPlayerController.network(downloadUrl);
+    //_videoController = VideoPlayerController.file(File(downloadUrl));
   }
 
   void setMyState(bool isRejectedOrAccepted){
