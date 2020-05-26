@@ -45,6 +45,7 @@ class _CameraReviewState extends State<CameraReview> {
     print('challenge number:');
     print(widget.challengeNum);
     if(!widget.isImage) {
+      print("widgetPath: ${widget.path}");
       _videoController = VideoPlayerController.file(File(widget.path));
       _initializeVideoPlayerFuture = _videoController.initialize();
       _videoController.setLooping(true);
