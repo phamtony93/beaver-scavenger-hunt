@@ -1,7 +1,9 @@
 // Packages
 import 'package:beaver_scavenger_hunt/models/user_details_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
 // Screens
 import 'admin_teams_list_screen.dart';
 // Models
@@ -36,10 +38,22 @@ class _AdminSpecificTeamScreenState extends State<AdminSpecificTeamScreen> with 
   bool isRejected;
   double transAmount;
   double rotateAmount;
+
+  VideoPlayerController _videoController;
+  Future<void> _initializeVideoPlayerFuture;
+  bool isImage = true;
   
   @override
   void initState() {
     super.initState();
+    String imgORmp4 = widget.completedChallenges[widget.whichChallenge].photoUrl.substring(widget.completedChallenges[widget.whichChallenge].photoUrl.length - 3, widget.completedChallenges[widget.whichChallenge].photoUrl.length);
+    if (imgORmp4 == ".mp4"){
+      isImage = false;
+      _videoController = VideoPlayerController.file(File(widget.completedChallenges[widget.whichChallenge].photoUrl));
+      _initializeVideoPlayerFuture = _videoController.initialize();
+      _videoController.setLooping(true);
+    }
+
     transAmount = 0.0;
     rotateAmount = 0.0;
     isAccepted = false;
@@ -58,6 +72,32 @@ class _AdminSpecificTeamScreenState extends State<AdminSpecificTeamScreen> with 
       rotateAmount = rAmount;
     });
   }
+
+  Widget VideoRow(BuildContext context){
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: <Widget>[
+      Text(_videoController.value.isPlaying ? 'PAUSE' : 'PLAY'),
+      IconButton(icon: Icon(_videoController.value.isPlaying ? Icons.pause : Icons.play_circle_filled),
+        hoverColor: Colors.green,
+        highlightColor: Colors.grey,
+        color: Styles.osuOrange,
+        iconSize: 30.0,
+        tooltip: 'Play/Stop Video',
+        onPressed: () {
+          setState (() {
+            if(_videoController.value.isPlaying) {
+              _videoController.pause();
+            }
+            else {
+              _videoController.play();
+            }
+          });
+        }
+      ),
+    ],
+  );
+}
 
   @override
   Widget build (BuildContext context) {
@@ -91,7 +131,13 @@ class _AdminSpecificTeamScreenState extends State<AdminSpecificTeamScreen> with 
                 children: <Widget>
                 [
                   RejectionBar(context, isRejected, widget.completedChallenges, widget.whichChallenge, widget.teamID, setMyState, widget.adminUser, widget.gameCode, screen_height, screen_width),
-                  PhotoSwiperContainer(context, isAccepted, isRejected, transAmount, rotateAmount, widget.whichChallenge, widget.completedChallenges, screen_height, screen_width),
+                  isImage == true ? PhotoSwiperContainer(context, isAccepted, isRejected, transAmount, rotateAmount, widget.whichChallenge, widget.completedChallenges, screen_height, screen_width)
+                  : Column(
+                    children: <Widget> [
+                      VideoSwiperContainer(context, isAccepted, isRejected, transAmount, rotateAmount, widget.whichChallenge, widget.completedChallenges, screen_height, screen_width, _initializeVideoPlayerFuture, _videoController),
+                      VideoRow(context)
+                    ]
+                  ),
                   AcceptanceBar(context, isAccepted, widget.completedChallenges, widget.whichChallenge, widget.teamID, setMyState, widget.adminUser, widget.gameCode, screen_height, screen_width)
                 ],
               ), 
@@ -175,6 +221,80 @@ Widget PhotoSwiperContainer(
       ),
     ):
     Container(width: screen_width*0.7),
+  );
+}
+
+Widget VideoSwiperContainer(
+  BuildContext context, 
+  bool isAccepted, 
+  bool isRejected, 
+  double transAmount, 
+  double rotateAmount, 
+  whichChallenge, 
+  completedChallenges,
+  screen_height, screen_width,
+  _initializeVideoPlayerFuture,
+  _videoController
+){
+  print("Checking challenge #${completedChallenges[whichChallenge].number}...");
+  return AnimatedContainer(
+    duration: Duration(seconds: 1),
+    curve: Curves.elasticOut,
+    transform: Matrix4.skewY(0)..rotateZ(rotateAmount)..translate(transAmount),
+    child: isAccepted == false && isRejected == false ?
+    Draggable(
+      data: "${completedChallenges[whichChallenge].photoUrl}",
+      feedback: SizedBox(
+        height: screen_height*0.5, width: screen_width*0.7,
+        child: Container(
+          child: Center(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: FutureBuilder(
+                future: _initializeVideoPlayerFuture,
+                builder: (context, snapshot) {
+                  if(snapshot.connectionState == ConnectionState.done) {
+                    return AspectRatio(
+                      aspectRatio: _videoController.value.size != null ? _videoController.value.aspectRatio : 2 / 2,
+                      child: VideoPlayer(_videoController),
+                    );
+                  }
+                  else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                },
+              )
+            )
+          )
+        )
+      ),
+      childWhenDragging: Container(width: screen_width*0.7),
+      child: SizedBox(
+        height: screen_height*0.5, width: screen_width*0.7,
+        child: Container(
+          child: Center(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: FutureBuilder(
+                future: _initializeVideoPlayerFuture,
+                builder: (context, snapshot) {
+                  if(snapshot.connectionState == ConnectionState.done) {
+                    return AspectRatio(
+                      aspectRatio: _videoController.value.size != null ? _videoController.value.aspectRatio : 2 / 2,
+                      child: VideoPlayer(_videoController),
+                    );
+                  }
+                  else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                },
+              )
+            )
+          )
+        )
+      )
+    ):
+    Container(width: screen_width*0.7)
   );
 }
 

@@ -14,6 +14,8 @@ import '../models/media_model.dart';
 import '../models/challenge_model.dart';
 // Functions
 import '../functions/upload_media.dart';
+// Styles
+import '../styles/styles_class.dart';
 
 class CameraReview extends StatefulWidget {
   final String path;
@@ -70,44 +72,42 @@ class _CameraReviewState extends State<CameraReview> {
         videoRow(widget.isImage),
         SizedBox(height:20),
         Container(
-            width: 60,
-            height: 60,
-            margin: EdgeInsets.only(left:10, right: 10),
-            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.orange),
-            child: IconButton(icon: Icon(Icons.file_upload),
-              // splashColor: Colors.purple,
-              hoverColor: Colors.green,
-              // focusColor: Colors.blue,
-              highlightColor: Colors.grey,
-              color: Colors.white,
-              tooltip: 'Submit',
-              onPressed: ()  {
-                if(widget.isImage){
-                  savePhoto();
-                  uploadPhoto();
-                }
-                else {
-                  saveVideo();
-                  //uploadVideo();
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder:  (context) => 
-                    VideoUploading(
-                      path: widget.path, 
-                      fileName: widget.fileName, 
-                      userDetails: widget.userDetails, 
-                      challengeNum: widget.challengeNum, 
-                      allChallenges: widget.allChallenges,
-                      allLocations: widget.allLocations,
-                      whichLocation: widget.whichLocation,
-                      beginTime: widget.beginTime,
-                    )
+          width: 60,
+          height: 60,
+          margin: EdgeInsets.only(left:10, right: 10),
+          decoration: BoxDecoration(shape: BoxShape.circle, color: Styles.osuOrange),
+          child: IconButton(icon: Icon(Icons.file_upload),
+            hoverColor: Colors.green,
+            highlightColor: Colors.grey,
+            color: Colors.white,
+            tooltip: 'Submit',
+            onPressed: ()  {
+              if(widget.isImage){
+                savePhoto();
+                uploadPhoto();
+              }
+              else {
+                saveVideo();
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder:  (context) => 
+                  VideoUploading(
+                    path: widget.path, 
+                    fileName: widget.fileName, 
+                    userDetails: widget.userDetails, 
+                    challengeNum: widget.challengeNum, 
+                    allChallenges: widget.allChallenges,
+                    allLocations: widget.allLocations,
+                    whichLocation: widget.whichLocation,
+                    beginTime: widget.beginTime,
                   )
-                );
+                ));
               }
             }
-          ),),
-          SizedBox(height:20),
-    ]);
+          ),
+        ),
+        SizedBox(height:20),
+      ]
+    );
   }
 
   Widget media(isImage) {
@@ -132,13 +132,13 @@ class _CameraReviewState extends State<CameraReview> {
   }
 
   Widget previewVideo() {
+    /*
     if(_videoController.value.initialized) {
       print('true');
     }
     else {
       print('false');
-    }
-
+    }*/
     return FutureBuilder(
       future: _initializeVideoPlayerFuture,
       builder: (context, snapshot) {
@@ -166,7 +166,7 @@ class _CameraReviewState extends State<CameraReview> {
             hoverColor: Colors.green,
             // focusColor: Colors.blue,
             highlightColor: Colors.grey,
-            color: Colors.orange,
+            color: Styles.osuOrange,
             iconSize: 30.0,
             tooltip: 'Play/Stop Video',
             onPressed: () {
