@@ -53,7 +53,7 @@ class _CameraState extends State<Camera> {
     return Column( children: <Widget>[
         SizedBox(height:20),
         Padding(padding: EdgeInsets.only(left:15, right:15),
-        child: Text(widget.allChallenges[widget.challengeNum].description),),
+        child: Text(widget.allChallenges[widget.challengeNum].description, textAlign: TextAlign.center,),),
         Expanded(child: 
           Padding(padding: EdgeInsets.all(15),
           child: Align(
