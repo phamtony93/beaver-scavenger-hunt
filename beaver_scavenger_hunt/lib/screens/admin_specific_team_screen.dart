@@ -59,14 +59,6 @@ class _AdminSpecificTeamScreenState extends State<AdminSpecificTeamScreen> with 
     isRejected = false;
   }
 
-  getVideo() async {
-    final StorageReference storageRef = FirebaseStorage.instance.ref().child("2020-05-01 12:01:36.776656.mp4");
-    downloadUrl = await storageRef.getDownloadURL();
-    //print("downloadUrl: $downloadUrl");
-    _videoController = VideoPlayerController.network(downloadUrl);
-    //_videoController = VideoPlayerController.file(File(downloadUrl));
-  }
-
   void setMyState(bool isRejectedOrAccepted){
     setState(() {
       isRejectedOrAccepted = true;
