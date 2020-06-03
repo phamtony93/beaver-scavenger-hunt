@@ -4,8 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 
-//Assert that player does not exist in database
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
