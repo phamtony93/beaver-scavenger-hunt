@@ -53,7 +53,7 @@ class _CameraState extends State<Camera> {
     return Column( children: <Widget>[
         SizedBox(height:20),
         Padding(padding: EdgeInsets.only(left:15, right:15),
-        child: Text(widget.allChallenges[widget.challengeNum].description),),
+        child: Text(widget.allChallenges[widget.challengeNum].description, textAlign: TextAlign.center,),),
         Expanded(child: 
           Padding(padding: EdgeInsets.all(15),
           child: Align(
@@ -138,7 +138,7 @@ class _CameraState extends State<Camera> {
   Future<void> takePhoto() async {
     if(!_controller.value.isInitialized) {
       Scaffold.of(context).showSnackBar(
-        SnackBar(content: Text('Camera Error')
+        SnackBar(content: Text('Camera Error', textAlign: TextAlign.center)
         )
       );
       return null;
@@ -171,7 +171,7 @@ class _CameraState extends State<Camera> {
     catch (e) {
       print(e);
       Scaffold.of(context).showSnackBar(
-        SnackBar(content: Text('Camera Error'))
+        SnackBar(content: Text('Camera Error', textAlign: TextAlign.center))
       );
     }
 
@@ -181,7 +181,7 @@ class _CameraState extends State<Camera> {
   void takeVideo() async {
     if(!_controller.value.isInitialized) {
       Scaffold.of(context).showSnackBar(
-        SnackBar(content: Text('Camera Error')
+        SnackBar(content: Text('Camera Error', textAlign: TextAlign.center)
         )
       );
       return null;
@@ -198,14 +198,14 @@ class _CameraState extends State<Camera> {
       print('starting video');
       await _controller.startVideoRecording(pathVideo);
       Scaffold.of(context).showSnackBar(
-        SnackBar(content: Text('Recording')
+        SnackBar(content: Text('Recording', textAlign: TextAlign.center)
         )
       );
     }
     catch (e) {
       print(e);
       Scaffold.of(context).showSnackBar(
-        SnackBar(content: Text('Camera Error'))
+        SnackBar(content: Text('Camera Error', textAlign: TextAlign.center))
       );
     }
   }
@@ -239,7 +239,7 @@ class _CameraState extends State<Camera> {
     catch (e) {
       print(e);
       Scaffold.of(context).showSnackBar(
-        SnackBar(content: Text('Camera Error'))
+        SnackBar(content: Text('Camera Error', textAlign: TextAlign.center))
       );
     }
   }

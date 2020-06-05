@@ -105,7 +105,7 @@ class _ChallengeScreen extends State<ChallengeScreen> {
           IconButton(
             icon: Icon(Icons.account_circle),
             onPressed: () {
-              
+              getPoints();
               print("Navigating to Profile Screen...");
               Navigator.push(
                 context, 

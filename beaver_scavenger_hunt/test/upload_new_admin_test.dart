@@ -1,19 +1,14 @@
-// Packages
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
+import '../lib/functions/upload_new_admin.dart';
+import '../lib/models/user_details_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
-// Functions
-import '../lib/functions/add_begin_time.dart';
-
-// Models
-import '../lib/models/user_details_model.dart';
 import '../lib/models/provider_details_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async{
     TestWidgetsFlutterBinding.ensureInitialized();
-      // AUTHENTICATE PLAYER / USER
+      // AUTHENTICATE ADMIN USER
     final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
     final GoogleSignIn _googleSignIn = GoogleSignIn();
 
@@ -40,20 +35,24 @@ void main() async{
       userDetails.user.email,
       // providerData
     );
-
     
-Future getBeginTime(UserDetails userDetails) async {
-  DocumentSnapshot user =  await Firestore.instance.collection("users").document(userDetails.uid).get();
-  return user.data['beginTime'];
-}
-
-  test('Add Begin Time to DB', () async {
-      DateTime time = addBeginTime(user);
-      var retrievedTime = await getBeginTime(user);
-      var diff = time.difference(retrievedTime.toDate());
-      expect(diff.inHours, 0);
-      expect(diff.inMinutes, 0);
-      expect(diff.inSeconds, 0);
+  test('Testing upload_new_admin function', () async {
+      //create test vars
+      String gameCode = "test_admin_gameCode";
+      
+      //run function to add database entry
+      uploadNewAdmin(user, gameCode);
+      
+      //get database results
+      var ds1 = await Firestore.instance.collection('admins').document(user.uid).get();
+      String gameCodeActual = ds1.data['gameID'];
+      String uidActual = ds1.documentID;
+      var ds2 = await Firestore.instance.collection('games').document(gameCode).get();
+      String openOrNotActual = ds2.data['open'];
+      
+      //assert expected results
+      expect(user.uid, uidActual);
+      expect(gameCode, gameCodeActual);
+      expect(true, openOrNotActual);
   });
-  
 }

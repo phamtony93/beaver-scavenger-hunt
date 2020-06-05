@@ -225,6 +225,8 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
                             Scaffold.of(context).showSnackBar(snackBar);
                           }
                           else{
+                            bool isImage = completedChallenges[0].photoUrl.contains(".jpg");
+                            print("imgORmp4: $isImage");
                             print("Navigating to Admin Specific Team Screen...");
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -233,7 +235,8 @@ class _AdminTeamsListScreenState extends State<AdminTeamsListScreen> with Single
                                   gameCode: widget.gameCode,
                                   teamID: document.documentID.substring(0, document.documentID.length - 5), 
                                   completedChallenges: completedChallenges, 
-                                  whichChallenge: 0
+                                  whichChallenge: 0,
+                                  isImage: isImage
                                 )
                               )
                             );
@@ -265,11 +268,11 @@ Widget AppBarTextSpan(BuildContext context, String gameCode){
           style: Styles.orangeNormalDefault
         ),
         TextSpan(
-          text: ' I', 
+          text: ' C', 
           style: Styles.whiteBoldDefault
         ),
         TextSpan(
-          text: 'D: ', 
+          text: 'ode: ', 
           style: Styles.orangeNormalDefault
         ),
         TextSpan(

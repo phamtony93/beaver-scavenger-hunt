@@ -1,6 +1,8 @@
 // Packages
 import 'package:beaver_scavenger_hunt/models/user_details_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 // Screens
 import 'admin_teams_list_screen.dart';
@@ -16,6 +18,7 @@ class AdminSpecificTeamScreen extends StatefulWidget {
   final String teamID;
   final List<Challenge> completedChallenges;
   final int whichChallenge;
+  final bool isImage;
 
   AdminSpecificTeamScreen({
     Key key, 
@@ -23,7 +26,8 @@ class AdminSpecificTeamScreen extends StatefulWidget {
     this.gameCode,
     this.teamID, 
     this.completedChallenges, 
-    this.whichChallenge
+    this.whichChallenge,
+    this.isImage
   }) : super(key: key);
 
   @override
@@ -36,10 +40,19 @@ class _AdminSpecificTeamScreenState extends State<AdminSpecificTeamScreen> with 
   bool isRejected;
   double transAmount;
   double rotateAmount;
+
+  VideoPlayerController _videoController;
+  Future<void> _initializeVideoPlayerFuture;
+  String downloadUrl;
   
   @override
   void initState() {
     super.initState();
+    if (widget.isImage == false){
+      _videoController = VideoPlayerController.network("${widget.completedChallenges[widget.whichChallenge].photoUrl}");
+      _initializeVideoPlayerFuture = _videoController.initialize();
+      _videoController.setLooping(true);
+    }
     transAmount = 0.0;
     rotateAmount = 0.0;
     isAccepted = false;
@@ -57,6 +70,36 @@ class _AdminSpecificTeamScreenState extends State<AdminSpecificTeamScreen> with 
       transAmount = tAmount;
       rotateAmount = rAmount;
     });
+  }
+
+  Widget VideoRow(BuildContext context){
+    if (!widget.isImage){
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(_videoController.value.isPlaying ? 'PAUSE' : 'PLAY'),
+          IconButton(icon: Icon(_videoController.value.isPlaying ? Icons.pause : Icons.play_circle_filled),
+            hoverColor: Colors.green,
+            highlightColor: Colors.grey,
+            color: Styles.osuOrange,
+            iconSize: 30.0,
+            tooltip: 'Play/Stop Video',
+            onPressed: () {
+              setState (() {
+                if(_videoController.value.isPlaying) {
+                  _videoController.pause();
+                }
+                else {
+                  _videoController.play();
+                }
+              });
+            }
+          ),
+        ],
+      );
+    }
+    else 
+      return SizedBox(height:0);
   }
 
   @override
@@ -91,7 +134,13 @@ class _AdminSpecificTeamScreenState extends State<AdminSpecificTeamScreen> with 
                 children: <Widget>
                 [
                   RejectionBar(context, isRejected, widget.completedChallenges, widget.whichChallenge, widget.teamID, setMyState, widget.adminUser, widget.gameCode, screen_height, screen_width),
-                  PhotoSwiperContainer(context, isAccepted, isRejected, transAmount, rotateAmount, widget.whichChallenge, widget.completedChallenges, screen_height, screen_width),
+                  widget.isImage == true ? PhotoSwiperContainer(context, isAccepted, isRejected, transAmount, rotateAmount, widget.whichChallenge, widget.completedChallenges, screen_height, screen_width)
+                  : Column(
+                    children: <Widget> [
+                      VideoSwiperContainer(context, isAccepted, isRejected, transAmount, rotateAmount, widget.whichChallenge, widget.completedChallenges, screen_height, screen_width, _initializeVideoPlayerFuture, _videoController),
+                      VideoRow(context)
+                    ]
+                  ),
                   AcceptanceBar(context, isAccepted, widget.completedChallenges, widget.whichChallenge, widget.teamID, setMyState, widget.adminUser, widget.gameCode, screen_height, screen_width)
                 ],
               ), 
@@ -178,6 +227,80 @@ Widget PhotoSwiperContainer(
   );
 }
 
+Widget VideoSwiperContainer(
+  BuildContext context, 
+  bool isAccepted, 
+  bool isRejected, 
+  double transAmount, 
+  double rotateAmount, 
+  whichChallenge, 
+  completedChallenges,
+  screen_height, screen_width,
+  _initializeVideoPlayerFuture,
+  _videoController
+){
+  print("Checking challenge #${completedChallenges[whichChallenge].number}...");
+  return AnimatedContainer(
+    duration: Duration(seconds: 1),
+    curve: Curves.elasticOut,
+    transform: Matrix4.skewY(0)..rotateZ(rotateAmount)..translate(transAmount),
+    child: isAccepted == false && isRejected == false ?
+    Draggable(
+      data: "${completedChallenges[whichChallenge].photoUrl}",
+      feedback: SizedBox(
+        height: screen_height*0.5, width: screen_width*0.7,
+        child: Container(
+          child: Center(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: FutureBuilder(
+                future: _initializeVideoPlayerFuture,
+                builder: (context, snapshot) {
+                  if(snapshot.connectionState == ConnectionState.done) {
+                    return AspectRatio(
+                      aspectRatio: _videoController.value.size != null ? _videoController.value.aspectRatio : 2 / 3,
+                      child: VideoPlayer(_videoController),
+                    );
+                  }
+                  else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                },
+              )
+            )
+          )
+        )
+      ),
+      childWhenDragging: Container(width: screen_width*0.7),
+      child: SizedBox(
+        height: screen_height*0.5, width: screen_width*0.7,
+        child: Container(
+          child: Center(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: FutureBuilder(
+                future: _initializeVideoPlayerFuture,
+                builder: (context, snapshot) {
+                  if(snapshot.connectionState == ConnectionState.done) {
+                    return AspectRatio(
+                      aspectRatio: _videoController.value.size != null ? _videoController.value.aspectRatio : 2 / 3,
+                      child: VideoPlayer(_videoController),
+                    );
+                  }
+                  else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                },
+              )
+            )
+          )
+        )
+      )
+    ):
+    Container(width: screen_width*0.7)
+  );
+}
+
 Widget RejectionBar(
   BuildContext context, 
   bool isRejected, 
@@ -233,6 +356,8 @@ Widget RejectionBar(
 
         // if more challenges to check
         if (whichChallenge < completedChallenges.length - 1){
+          bool isImage = completedChallenges[whichChallenge + 1].photoUrl.contains(".jpg");
+          print("imgORmp4: $isImage");
           print("Navigating to same screen, next challenge...");
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -241,7 +366,8 @@ Widget RejectionBar(
                 gameCode: gameCode,
                 teamID: teamID, 
                 completedChallenges: completedChallenges, 
-                whichChallenge: whichChallenge + 1
+                whichChallenge: whichChallenge + 1,
+                isImage: isImage,
               )
             )
           );
@@ -310,6 +436,8 @@ Widget AcceptanceBar(
         
         // if more challenges to check
         if (whichChallenge < completedChallenges.length - 1){
+          bool isImage = completedChallenges[whichChallenge + 1].photoUrl.contains(".jpg");
+          print("imgORmp4: $isImage");
           print("Navigating to same screen, next challenge...");
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -318,7 +446,8 @@ Widget AcceptanceBar(
                 gameCode: gameCode,
                 teamID: teamID, 
                 completedChallenges: completedChallenges, 
-                whichChallenge: whichChallenge + 1
+                whichChallenge: whichChallenge + 1,
+                isImage: isImage,
               )
             )
           );
@@ -372,6 +501,8 @@ Widget RejectButton(
       print("Subtracting 5 points from $teamID" + "_" + "$gameCode's totalScore in leaderboard");
       Firestore.instance.collection("leaderboard").document("$teamID" + "_" + "$gameCode").updateData({'totalPoints': points - 5});
       
+      bool isImage = completedChallenges[whichChallenge + 1].photoUrl.contains(".jpg");
+      print("imgORmp4: $isImage");
       print("Navigating to same screen, next challenge...");
       if (whichChallenge < completedChallenges.length - 1){
         Navigator.of(context).push(
@@ -381,7 +512,8 @@ Widget RejectButton(
               gameCode: gameCode,
               teamID: teamID, 
               completedChallenges: completedChallenges, 
-              whichChallenge: whichChallenge + 1
+              whichChallenge: whichChallenge + 1,
+              isImage: isImage,
             )
           )
         );
@@ -433,6 +565,8 @@ Widget AcceptButton(
       
       // If more challenges to check
       if (whichChallenge < completedChallenges.length - 1){
+        bool isImage = completedChallenges[whichChallenge + 1].photoUrl.contains(".jpg");
+        print("imgORmp4: $isImage");
         print("Navigating to same screen, next challenge...");
         Navigator.of(context).push(
           MaterialPageRoute(
@@ -441,7 +575,8 @@ Widget AcceptButton(
               gameCode: gameCode, 
               completedChallenges: completedChallenges, 
               whichChallenge: whichChallenge + 1, 
-              adminUser: adminUser
+              adminUser: adminUser,
+              isImage: isImage,
             )
           )
         );

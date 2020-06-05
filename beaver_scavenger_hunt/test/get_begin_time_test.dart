@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 // Functions
-import '../lib/functions/add_begin_time.dart';
+import '../lib/functions/get_begin_time.dart';
 
 // Models
 import '../lib/models/user_details_model.dart';
@@ -41,16 +41,18 @@ void main() async{
       // providerData
     );
 
-    
-Future getBeginTime(UserDetails userDetails) async {
-  DocumentSnapshot user =  await Firestore.instance.collection("users").document(userDetails.uid).get();
-  return user.data['beginTime'];
-}
+  DateTime addBeginTime(UserDetails userDetails) {
+    DateTime beginTime = DateTime.now();
+    Firestore.instance.collection('users').document(userDetails.uid).updateData({
+    'beginTime': beginTime});
+    return beginTime;
+  }
 
-  test('Add Begin Time to DB', () async {
-      DateTime time = addBeginTime(user);
+
+  test('Get Begin Time from DB', () async {
+      DateTime beginTime = addBeginTime(user);
       var retrievedTime = await getBeginTime(user);
-      var diff = time.difference(retrievedTime.toDate());
+      var diff = beginTime.difference(retrievedTime.toDate());
       expect(diff.inHours, 0);
       expect(diff.inMinutes, 0);
       expect(diff.inSeconds, 0);

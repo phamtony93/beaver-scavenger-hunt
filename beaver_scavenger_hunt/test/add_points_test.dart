@@ -3,12 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:beaver_scavenger_hunt/models/user_details_model.dart';
 
 // Functions
-import '../lib/functions/add_begin_time.dart';
+import '../lib/functions/add_points.dart';
 
 // Models
-import '../lib/models/user_details_model.dart';
 import '../lib/models/provider_details_model.dart';
 
 void main() async{
@@ -41,19 +41,23 @@ void main() async{
       // providerData
     );
 
-    
-Future getBeginTime(UserDetails userDetails) async {
+Future getPoints(UserDetails userDetails) async {
   DocumentSnapshot user =  await Firestore.instance.collection("users").document(userDetails.uid).get();
-  return user.data['beginTime'];
+  return user.data['points'];
 }
 
-  test('Add Begin Time to DB', () async {
-      DateTime time = addBeginTime(user);
-      var retrievedTime = await getBeginTime(user);
-      var diff = time.difference(retrievedTime.toDate());
-      expect(diff.inHours, 0);
-      expect(diff.inMinutes, 0);
-      expect(diff.inSeconds, 0);
+    
+  test('Add Positive Points to DB', () async {
+    int points = 156;
+    addPoints(user, points);
+    int retrievedPoints = await getPoints(user);
+      expect(retrievedPoints, points);
   });
   
+  test('Add Negative Points to DB', () async {
+    int points = -2000;
+    addPoints(user, points);
+    int retrievedPoints = await getPoints(user);
+      expect(retrievedPoints, points);
+  });
 }
