@@ -22,23 +22,21 @@ void main() {
   });
 
   //Add gameTest123
-  Firestore.instance.collection('admin').document(user.uid).setData({'gameID': 'gameTest123'});
+  String gameCode = 'gameTest123';
+  Firestore.instance.collection('admin').document(user.uid).setData({'gameID': gameCode});
 
   test('Check admin game is active', () {
     Future<bool> isActive = checkAdminGameIsActive(user);
     isActive.then((value) => expect(value, true));
   });
 
-  //End Game
+  //Remove admin and end game
   Firestore.instance.collection('admins').document(user.uid).delete();
 
   test('Check admin game is not active', () {
     Future<bool> isActive = checkAdminGameIsActive(user);
     isActive.then((value) => expect(value, false));
   });
-
-  //Remove testAdmin
-  Firestore.instance.collection('admin').document(user.uid).delete();
 
    test('Check admin deleted', () {
     Future<DocumentSnapshot> admin = Firestore.instance.collection('admin').document(user.uid).get();

@@ -4,7 +4,7 @@ import 'package:beaver_scavenger_hunt/functions/delete_user_document.dart';
 import 'package:beaver_scavenger_hunt/functions/upload_new_user_and_challenges.dart';
 import 'package:beaver_scavenger_hunt/models/user_details_model.dart';
 
-void main() {
+void main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
 
    UserDetails testUser = UserDetails(
@@ -31,7 +31,7 @@ void main() {
   });
 
   //Delete user
-  deleteUserDocument(testUser);
+  var temp = await deleteUserDocument(testUser);
 
   test('Check user deleted', () {
     Future<DocumentSnapshot> user = Firestore.instance.collection('users').document(testUser.uid).get();
